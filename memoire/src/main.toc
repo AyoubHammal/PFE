@@ -1,0 +1,8 @@
+\babel@toc {french}{}
+\contentsline {chapter}{\numberline {1}Introduction}{1}{}%
+\contentsline {section}{\numberline {1.1}Internet of Things}{1}{}%
+\contentsline {subsection}{\numberline {1.1.1}Définition}{1}{}%
+\contentsline {subsection}{\numberline {1.1.2}Histoire et Évolution}{1}{}%
+\contentsline {subsection}{\numberline {1.1.3}Architecture}{1}{}%
+\contentsline {subsection}{\numberline {1.1.4}Quelque domaines d'application}{2}{}%
+\contentsline {subsection}{\numberline {1.1.5}Problèmes et difficultés}{2}{}%
