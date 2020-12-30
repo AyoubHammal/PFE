@@ -1,9 +1,0 @@
-# Allocation des ressources:
-  # J. Sladjana et D. Gyorgy , «Decentralized Algorithm for Randomized Task Allocation in Fog Computing Systems,» IEEE/ACM Transactions on Networking, vol. 27, n°%11, pp. 85-97, 2018. 
-  # X.-Q. Pham et E.-N. Huh, «Towards task scheduling in a cloud-fog computing system,» chez 18th Asia-Pacific Network Operations and Management Symposium (APNOMS), Kanazawa, Japan , 2016.
-  # R. Deng, R. Lu, C. Lai, T. H. Luan et H. Liang, «Optimal Workload Allocation in Fog-Cloud Computing Toward Balanced Delay and Power Consumption,» IEEE Internet of Things Journal, vol. 3, n°%16, pp. 1171-1181, 2016. 
-  # M. REDOWAN, R. KOTAGIRI et R. B. , «Latency-Aware Application Module Management for Fog Computing Environments,» ACM Transactions on Internet Technology, 2018.
-  # D. Zeng, L. Gu, S. Guo, Z. Cheng et S. Yu, «Joint Optimization of Task Scheduling and Image Placement in Fog Computing Supported Software-Defined Embedded System,» IEEE Transactions on Computers, vol. 65, n°%112, pp. 3702-3712, 2016
-
-# IFogSim:
-  # H. Gupta, D. Vahid, G. S. A et R. Buyya, «iFogSim: A toolkit for modeling and simulation of resource management techniques in the Internet of Things, Edge and Fog computing environments,» Softw Pract Expr, vol. 47, pp. 1275-1296, 2017. 
