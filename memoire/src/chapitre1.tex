@@ -50,21 +50,21 @@ En créant donc une couche auprès de la production des données, ceci entraîne
 \subsection{Architecture}
 La plupart des recherche qui s'oriente vers la définition d'un modèle architectural semblent se diriger vers un même modèle, à savoir un modèle en 3 couches\cite{de2019}.\\
 Les couches de ce modèle sont présenté comme suit :
-\begin{itemize}
-  \item \emph{Couche IoT:} Cette couche désigne l'ensemble des appareils se trouvant à l'extrémité du réseau, elle est composée essentiellement d'appareils IoT tels que des véhicules intelligents, des smartphones, des drones militaires, des capteurs sensoriels, etc. Le rôle de ces derniers étant la collecte et la transmission des données vers la couche supérieure pour stockage ou traitement.
-  \item \emph{Couche de Fog:} Cette couche constitue le point central du paradigme \emph{Fog}, elle est constituée d'un ensemble de nœuds \emph{Fog}, qui selon le OpenFog Consortium, ce dernier se définit comme 
+\begin{description}
+  \item[Couche IoT :] Cette couche désigne l'ensemble des appareils se trouvant à l'extrémité du réseau, elle est composée essentiellement d'appareils IoT tels que des véhicules intelligents, des smartphones, des drones militaires, des capteurs sensoriels, etc. Le rôle de ces derniers étant la collecte et la transmission des données vers la couche supérieure pour stockage ou traitement.
+  \item[Couche de Fog :] Cette couche constitue le point central du paradigme \emph{Fog}, elle est constituée d'un ensemble de nœuds \emph{Fog}, qui selon le OpenFog Consortium, ce dernier se définit comme 
   \og{}un élément physique ou logique qui implémente les services informatiques \emph{Fog}\fg\cite{de2019}.\par
   L'ensemble des nœuds constitue un centre de traitement et de stockage distribué connecté à la fois à la couche inférieure et celle supérieure à travers des nœuds passerelles. Permettant ainsi de bénéficier des différents services fournis par la couche supérieure qu'est le \emph{Cloud} par exemple le stockage, tout en fournissant des informations contextuelles aux utilisateurs au niveau de la couche inférieure.
-  \item \emph{Couche cloud:} Cette couche représente une infrastructure \emph{Cloud} centralisée , elle composé de ressource matérielle élevé et fournit différent service, ayant comme différences avec une architecture en \emph{Cloud} classique, certains traitements et services sont déchargés de la couche \emph{Cloud} au profit de la couche \emph{Fog} afin d'équilibrer la charge de travail et d'augmenter l'efficacité et la fiabilité.
-\end{itemize}
+  \item[Couche cloud :] Cette couche représente une infrastructure \emph{Cloud} centralisée , elle composé de ressource matérielle élevé et fournit différent service, ayant comme différences avec une architecture en \emph{Cloud} classique, certains traitements et services sont déchargés de la couche \emph{Cloud} au profit de la couche \emph{Fog} afin d'équilibrer la charge de travail et d'augmenter l'efficacité et la fiabilité.
+\end{description}
 \subsection{Avantages}
 Le Fog computing présente de nombreux avantages qui convient de souligner, ils sont généralement résumés sous le sigle SCALE pour :
 \begin{itemize}
-  \item \emph{Sécurité:} Dans ce paradigme, la sécurité est prise en considération lors de l'élaboration de l'architecture plutôt qu'une partie optionnelle.
-  \item \emph{Cognition:} Vient du fait que l'infrastructure \emph{Fog} est consciente des besoins et exigences des utilisateurs, ainsi elle distribue plus finement les ressources en fonction de chaque utilisateur contrairement au \emph{Cloud}.
-  \item \emph{Agilité:} Ce qui désigne la capacité d'adaptation rapide à l'innovation.
-  \item \emph{Latence:} En raison de sa proximité avec les utilisateurs finaux, le \emph{Fog} a la capacité de supporter des applications qui nécessitent des latences courtes et stables, évitant ainsi les problèmes résultant des systèmes centralisés.
-  \item \emph{Efficacité:} Vient du fait que cette vision étant les capacités du \emph{Cloud} en intégrant
+  \item \emph{Sécurité :} Dans ce paradigme, la sécurité est prise en considération lors de l'élaboration de l'architecture plutôt qu'une partie optionnelle.
+  \item \emph{Cognition :} Vient du fait que l'infrastructure \emph{Fog} est consciente des besoins et exigences des utilisateurs, ainsi elle distribue plus finement les ressources en fonction de chaque utilisateur contrairement au \emph{Cloud}.
+  \item \emph{Agilité :} Ce qui désigne la capacité d'adaptation rapide à l'innovation.
+  \item \emph{Latence :} En raison de sa proximité avec les utilisateurs finaux, le \emph{Fog} a la capacité de supporter des applications qui nécessitent des latences courtes et stables, évitant ainsi les problèmes résultant des systèmes centralisés.
+  \item \emph{Efficacité :} Vient du fait que cette vision étant les capacités du \emph{Cloud} en intégrant
   les différents nœuds qui composent le réseau à l'infrastructure de traitement et de stockage, augmentant ainsi la capacité ainsi que l'efficacité globale du système.
 \end{itemize}
 \subsection{Défis et verrous scientifiques}
@@ -159,5 +159,97 @@ Les travaux réalisés dans le domaine de virtualisation et migration de ressour
   \item \emph{Optimisation du coût de la migration} : Visant soit à réduire les migrations coûteuses ou à trouver des compromis de coût de migration. Les processus de décision markovien constituent l'une des approches les plus utilisées pour modéliser le compromis de migration. Plus récemment, les efforts se sont progressivement déplacés vers la résolution du problème MDP en utilisant des approches apprentissage approfondies, qui ne nécessitent pas de connaissances préalables sur la dynamique de l'environnement MDP.
   \item \emph{Optimisation du temps de migration} : Les optimisations de migration focalisées sur l'axe du temps peuvent être divisées en optimisations proposées au niveau de la technologie de virtualisation et optimisations résultant de la prise d'actions proactives.
   \item \emph{Optimisation du taux d'erreur de la migration} : Les recherches sur ce sujet viennent exclusivement du domaine du cloud véhiculaire, à cause de la dynamicité le caractérisant, et qui peut potentiellement troubler le taux de succès de la migration. Ici, des techniques d'intelligence artificielle sont employées pour prédire la durée de disponibilité d'un véhicule dans une zone de couverture. Des protocoles de communication plus adaptés (comme le V2V) ont été aussi proposés.
-
 \end{itemize}
+%------------------------------------------------------------
+\section{Gestion des ressources dans les environnements Fog Computing}
+Contrairement au \emph{Cloud}, les ressources du \emph{Fog} sont : 
+\begin{itemize}
+  \item limitées en termes performance et d'énergie - La plupart des noeuds \emph{Fog} possèdent généralement une  puissance de calcul ainsi que des ressources énergétiques limitées, dues principalement au fait que ces derniers sont constitués généralement des équipements d’interconnexion qui composent le réseau.
+  \item hétérogène - Aussi bien sur le plan matériel, tel que différentes architectures de processeur, que sur le plan logiciel tel que différent systèmes d’exploitation.
+  \item sujet à des défaillances - Les nœuds \emph{Fog} sont très susceptibles de subir des anomalies tels que des pannes de courant ou des défauts de capacité qui empêchent l'exécution des applications affectée à eux.
+\end{itemize}
+Dans de telles conditions, une gestion optimale des ressources est indispensable pour faire du \emph{Fog computing} une réalité. Ce qui fait de la gestion de ressource l’un des principaux défis du paradigme.
+\subsection{Définition}
+Selon \cite{red2020}, la gestion de ressources dans les environnement \emph{Fog} désigne \og{}les opérations administratives telles que le déploiement, la virtualisation et la surveillance des nœuds \emph{Fog} qui favorise les services d'infrastructure et de plate-forme basés sur le \emph{Fog}. De plus, la gestion des ressources du \emph{Fog} réalise l'équilibrage de charge, l'approvisionnement dynamique et la mise à l'échelle automatique pour assurer disponibilité du service et multi-location\fg{}.
+\subsection{Dimensions du problème}
+Le problème de la gestion des ressources dans les environnements \emph{Fog} est un problème complexe. Il ne peut donc pas être considéré comme étant un seul problème, mais plusieurs problèmes suivant plusieurs aspects
+\cite{mos2019}.Le problème peut être vu suivant  6 axes principaux que sont : le placement d’application, l’ordonnancement des tâches, le déchargement des tâches, l’équilibrage de charges, l’allocation de ressources ainsi que l'approvisionnement en ressources.
+\begin{figure}[H]
+  \centering
+  \includegraphics[]{organigrame_gestion_de_ressources.pdf}
+  \caption{Organigramme qui illustre les domaines de gestion de ressource ainsi que leurs approches}
+  \label{fig:organigrame_de_gestion_de_ressources}
+  \end{figure}
+\subsubsection{Placement d'application}
+Le problème de placement d’application désigne le problème de trouver une manière d’associer un service iot aux nœuds \emph{Fog} répondant aux exigences de la QdS, tout en essayant maximiser l'utilisation des différents nœuds .\\
+D’une manière plus formelle, \\ 
+Soit $S$ un service iot avec des exigences de QdS $Q$, et soit $N$ l’ensemble des noeuds \emph{Fog}.\\
+Une solution au problème de placement d’application consiste à associer au service $S$ un nœud \emph{Fog} de $N$ satisfaisant les exigences de QdS $Q$, tout en optimisant un ensemble de fonctions objectives $O$.\\
+Il convient de préciser que les solutions peuvent être des relations multivaluées \emph{i.e} un service \emph{Iot} peut être placer sur un ou plusieurs nœuds et réciproquement, un nœud peut héberger un ou plusieurs services.\par
+Les approches basées sur la gestion de courtier “Broker” peuvent être organisées en 3 catégories que sont : l’approche centralisée, décentralisée et hiérarchique.
+\begin{itemize}
+  \item Dans l’approche centralisée, le broker nécessite d’avoir une vision globale de tout l'environnement \emph{Fog} afin de prendre des décisions d’optimisation pour l’ensemble du système. Cette approche ne garantit pas une optimisation efficace due à la difficulté d’obtenir toutes les informations de toutes les entités du \emph{Fog}, ainsi qu’une mauvaise tolérance aux pannes dues à son architecture centralisée.
+  \item Tandis que  l’approche décentralisée, elle consiste en un ensemble d’optimisation locale ce qui la rend très intéressante en termes de scalabilité.
+  \item Quant à l’approche hiérarchique, l'idée est  de relier et de coordonner les différents gestionnaires locaux afin qu’il puisse collaborer entre eux et ainsi bénéficier des avantages des deux premières approches. 
+\end{itemize}
+\subsubsection{Ordonnancement des ressources :}
+Dans les environnements \emph{Fog}, un service \emph{Iot} peut être placé sur plusieurs nœuds, et chaque service peut être divisé en plusieurs sous-service.\\ 
+Soit un ensemble de sous-services $S=\{S_{1},...,S_{n}\}$ (avec de différentes exigences en termes de QdS) placer sur un ensemble de nœuds $N=\{N_{1},...,N_{m}\}$ ayant différentes capacités de traitement.\\
+La planification de ressource consiste à trouver une affectation optimale des différents sous-services $S_{i}$ aux différents nœuds $N_{j}$ suivant les objectifs considérés par la politique d'ordonnancement (par exemple, minimiser le temps d'exécution).\\
+Parmi les approches utilisées dans l'ordonnancement des ressources, les approches : 
+\begin{itemize}
+  \item \emph{Statique :} Dans cette approche, l'attribution des nœuds au différent sous-service s’effectue d’une manière statique i.e la décision est déjà prise avant même que la demande ne soit soumise, ce qui présuppose une connaissance au préalable de toutes les informations nécessaires des différentes demandes.
+  \item \emph{Dynamique :} contrairement à la précédente, le processus d’attribution  n’est pas fixé au préalable, les décisions sont prises une fois les demandes formulées.
+  \item \emph{Hybride :} elle consiste en une combinaison des deux approches précédentes afin de répondre à la diversité des types d’application. 
+\end{itemize}
+\subsubsection{Déchargement des tâches}
+Le déchargement de tâches désigne le processus de transfert des tâches qui ne peuvent pas être exécutées en local pour manque de ressource vers des nœuds disposant des capacités nécessaires. Vu les ressources matérielle et énergétique limitées dont disposent les appareils \emph{Iot}, ils souvent nécessaire de recourir à des entités externes telles que le Fog ou le \emph{Cloud} afin d'exécuter des tâches gourmandes en ressource telle que des calculs graphiques, réalité augmentée, etc.\\
+Le déchargement de tâche dépend principalement de trois composants que sont :
+\begin{itemize}
+  \item \emph{les appareils Iot:} dont le rôle est de spécifier comment les applications doivent être partitionnées, ensuite de déterminer quelle partie doit être exécutée en local, et quelle partie doit être déchargée.
+  \item \emph{Les liaisons de communication:}  elles permettent d’assurer le transfert de tâche, et donc, la qualité des transferts dépend des capacités physiques des liaisons.
+  \item \emph{Les nœuds fog:} ces derniers disposent d'une capacité plus faible que le \emph{Cloud}, mais plus importante que les appareils \emph{Iot}.
+\end{itemize}
+Le déchargement de tâche peut se produire également afin d’assurer l’équilibrage de charge, minimiser la latence, efficacité énergétique, etc.
+\subsubsection{Equilibrage de charge}
+L’équilibrage de charge \cite{Ash2019} consiste à distribuer l'excédent de charges sur les différents nœuds Fog suivant une certaine stratégie, afin d’assurer qu’aucun nœud fog ne soit en surcharge ou en sous-charge, améliorant ainsi les performances globales du système. Cependant, en réalité les mécanismes d’équilibrage de charge rencontrent de nombreux défis, principalement le problème de latence qui est due à la migration en continu des différents processus.\\
+Les stratégies d'équilibrage sont implémentées suivant une architecture centralisée et décentralisée.
+\begin{itemize}
+  \item L’approche centralisée s’appuie sur un contrôleur central, nécessitant ainsi une connaissance globale et en temps réel de l’état des différents nœuds.
+  Cette approche est donc difficile à implémenter dû à la difficulté de connaître et en continu l’état des différents nœuds du système, mais aussi une tolérance faible aux pannes dues à son architecture centralisée.
+  \item Quant à l’approche décentralisée, elle utilise un contrôleur décentralisé dont le rôle est de coordonner les différents contrôleurs locaux, ce qui assure une plus grande scalabilité.
+\end{itemize}
+\subsubsection{Allocation des ressources}
+Le problème d'allocation des ressources dans les environnements Fog peut être considéré comme un problème de double correspondance, car les serveurs cloud et les nœuds fog sont couplés pour les utilisateurs et l'utilisateur et les nœuds fog sont couplé pour les serveurs cloud. En d’autres termes, les utilisateurs doivent prendre en considération la relation entre les nœuds fog et les serveurs cloud, et les serveurs cloud doivent prendre en considération la relation entre les nœuds et les utilisateurs.\\ 
+Les techniques d’allocation de ressource peuvent être classées en 2 principale méthode :
+\begin{itemize}
+  \item \emph{Basé sur l’enchère “auction-basde”:} les clients soumettent leurs demandes de ressources au broker avec un système de tarification des demandes, et les ressources se verront attribuer au plus offrant, en utilisant des mécanismes d'enchères calculés suivant diverses techniques mathématiques.
+  \item \emph{Basée sur des techniques d’optimisation:} elle consiste à trouver la combinaison optimale (serveurs-cloud,noeud-fog,utilisateur) pour chaque utilisateur en effectuant des d’optimisation de fonctions objectives, telles que la minimisation du temps de réponse, la maximisation de la QdS, etc.
+\end{itemize}
+\subsubsection{Approvisionnement en ressources}
+Dus aux fluctuations permanentes des charges de travail des différentes applications, les problèmes de sur-approvisionnement ou sous-approvisionnement de  ressources risquent de se poser.\\
+Le problème de sur-approvisionnement consiste en une attribution d’une quantité de ressources supérieure à la charge de travail réelle d’une application. ( Et réciproquement pour le problème de sous-approvisionnement ).\\
+Dans un environnement en constantes variations,  un modèle statique d’approvisionnement de ressources peut être problématique, il est par conséquent indispensable d’adopter une approche dynamique permettant ainsi adaptation en continu vis-à- vis des charges de travail.\\ 
+Les stratégies d’approvisionnement dynamique sont classées en 3 types de politique :
+\begin{itemize}
+  \item \emph{Politique réactive:} elle consiste à répondre seulement aux différentes demandes, avec aucune tentative de prédiction des prochaines demandes.
+  \item \emph{Politique proactive:} elle repose sur des techniques de prédiction permettant d’anticiper les prochaines évolutions des charges de travail et adapter les décisions en fonction.
+  \item \emph{Politique hybride:} elle adopte par conséquent les deux précédentes politiques,  la politique réactive est souvent utilisée pour approvisionner des ressources à une nouvelle demande qui arrive dans le système, tandis que la politique proactive permet d’anticiper les prochaines évolutions de la demande. 
+\end{itemize}
+ \section{Taxonomie des travaux réalisés}
+ Les différentes approches de gestion de ressources dans les environnements fog ont été classées suivant leurs architectures 3 types\cite{ch2019} :
+ \begin{itemize}
+   \item \emph{Les architectures basé sur flux de données (Data flow architectures):} Ces types d’architecture se basent sur le sens de transfère des charges de travail, par exemple les charges de travail peuvent être transférées de l’utilisateur au nœud fog ou des serveurs cloud vers les nœuds.
+   \item \emph{Les architectures de contrôle (Control architectures):} Ces architectures sont basées sur la manière dont les ressources sont gérées au niveau du système, par exemple un contrôleur ou un algorithme central peut être utilisé pour gérer un ensemble de nœuds.
+   \item \emph{L’architecture de location (Tenancy architecture):} cette architecture se base sur la capacité des différents nœuds à héberger plusieurs applications,  par exemple, une ou plusieurs applications peuvent s'exécuter sur un nœud fog.
+ \end{itemize}
+
+ 
+ 
+ 
+   
+  
+
+
+
+ 
