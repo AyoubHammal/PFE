@@ -179,7 +179,7 @@ Les travaux réalisés dans le domaine de virtualisation et migration de ressour
 \section{Gestion des ressources dans les environnements Fog Computing}
 Contrairement au \emph{Cloud}, les ressources du \emph{Fog} sont : 
 \begin{itemize}
-  \item limitées en termes performance et d'énergie - La plupart des noeuds \emph{Fog} possèdent généralement une  puissance de calcul ainsi que des ressources énergétiques limitées, dues principalement au fait que ces derniers sont constitués généralement des équipements d'interconnexion qui composent le réseau.
+  \item limitées en termes de performance et d'énergie - La plupart des noeuds \emph{Fog} possèdent généralement une  puissance de calcul ainsi que des ressources énergétiques limitées, dues principalement au fait que ces derniers sont constitués généralement des équipements d'interconnexion qui composent le réseau.
   \item hétérogène - Aussi bien sur le plan matériel, tel que différentes architectures de processeur, que sur le plan logiciel tel que différent systèmes d'exploitation.
   \item sujet à des défaillances - Les nœuds \emph{Fog} sont très susceptibles de subir des anomalies tels que des pannes de courant ou des défauts de capacité qui empêchent l'exécution des applications affectée à eux.
 \end{itemize}
@@ -196,11 +196,10 @@ Le problème de la gestion des ressources dans les environnements \emph{Fog} est
   \label{fig:organigrame_de_gestion_de_ressources}
   \end{figure}
 \subsubsection{Placement d'application}
-Le problème de placement d'application désigne le problème de trouver une manière d'associer un service iot aux nœuds \emph{Fog} répondant aux exigences de la QdS, tout en essayant maximiser l'utilisation des différents nœuds .\\
-D'une manière plus formelle, \\ 
-Soit $S$ un service iot avec des exigences de QdS $Q$, et soit $N$ l'ensemble des noeuds \emph{Fog}.\\
-Une solution au problème de placement d'application consiste à associer au service $S$ un nœud \emph{Fog} de $N$ satisfaisant les exigences de QdS $Q$, tout en optimisant un ensemble de fonctions objectives $O$.\\
-Il convient de préciser que les solutions peuvent être des relations multivaluées \emph{i.e} un service \emph{Iot} peut être placer sur un ou plusieurs nœuds et réciproquement, un nœud peut héberger un ou plusieurs services.\par
+Le problème de placement d'application désigne le problème de trouver une manière d'associer un service \emph{IoT} aux nœuds \emph{Fog} répondant aux exigences de la QdS, tout en essayant maximiser l'utilisation des différents nœuds .\\
+D'une manière plus formelle, soit $S$ un service \emph{IoT} avec des exigences de QdS $Q$, et soit $N$ l'ensemble des noeuds \emph{Fog}.\\
+Une solution au problème de placement d'application consiste à associer au service $S$ un nœud \emph{Fog} $N_{i}$ de $N$ satisfaisant les exigences de QdS $Q$, tout en optimisant un ensemble de fonctions objectives $O$.\\
+Il convient de préciser que les solutions peuvent être des relations multivaluées \emph{i.e.} un service \emph{IoT} peut être placer sur un ou plusieurs nœuds et réciproquement, un nœud peut héberger un ou plusieurs services.\par
 Les approches basées sur la gestion de courtier “Broker” peuvent être organisées en 3 catégories que sont : l'approche centralisée, décentralisée et hiérarchique.
 \begin{itemize}
   \item Dans l'approche centralisée, le broker nécessite d'avoir une vision globale de tout l'environnement \emph{Fog} afin de prendre des décisions d'optimisation pour l'ensemble du système. Cette approche ne garantit pas une optimisation efficace due à la difficulté d'obtenir toutes les informations de toutes les entités du \emph{Fog}, ainsi qu'une mauvaise tolérance aux pannes dues à son architecture centralisée.
@@ -208,8 +207,8 @@ Les approches basées sur la gestion de courtier “Broker” peuvent être orga
   \item Quant à l'approche hiérarchique, l'idée est  de relier et de coordonner les différents gestionnaires locaux afin qu'il puisse collaborer entre eux et ainsi bénéficier des avantages des deux premières approches. 
 \end{itemize}
 \subsubsection{Ordonnancement des ressources :}
-Dans les environnements \emph{Fog}, un service \emph{Iot} peut être placé sur plusieurs nœuds, et chaque service peut être divisé en plusieurs sous-service.\\ 
-Soit un ensemble de sous-services $S=\{S_{1},...,S_{n}\}$ (avec de différentes exigences en termes de QdS) placer sur un ensemble de nœuds $N=\{N_{1},...,N_{m}\}$ ayant différentes capacités de traitement.\\
+Dans les environnements \emph{Fog}, un service \emph{IoT} peut être placé sur plusieurs nœuds, et chaque service peut être divisé en plusieurs sous-service.\\ 
+Soit un ensemble de sous-services $S=\{S_{1},...,S_{n}\}$ (avec de différentes exigences en termes de QdS) placer sur un ensemble de nœuds $N=\{N_{1},...,N_{m}\}$ (ayant différentes capacités de traitement).\\
 La planification de ressource consiste à trouver une affectation optimale des différents sous-services $S_{i}$ aux différents nœuds $N_{j}$ suivant les objectifs considérés par la politique d'ordonnancement (par exemple, minimiser le temps d'exécution).\\
 Parmi les approches utilisées dans l'ordonnancement des ressources, les approches : 
 \begin{itemize}
@@ -218,16 +217,16 @@ Parmi les approches utilisées dans l'ordonnancement des ressources, les approch
   \item \emph{Hybride :} elle consiste en une combinaison des deux approches précédentes afin de répondre à la diversité des types d'application. 
 \end{itemize}
 \subsubsection{Déchargement des tâches}
-Le déchargement de tâches désigne le processus de transfert des tâches qui ne peuvent pas être exécutées en local pour manque de ressource vers des nœuds disposant des capacités nécessaires. Vu les ressources matérielle et énergétique limitées dont disposent les appareils \emph{Iot}, ils souvent nécessaire de recourir à des entités externes telles que le Fog ou le \emph{Cloud} afin d'exécuter des tâches gourmandes en ressource telle que des calculs graphiques, réalité augmentée, etc.\\
+Le déchargement de tâches désigne le processus de transfert des tâches qui ne peuvent pas être exécutées en local pour manque de ressource vers des nœuds disposant des capacités nécessaires. Vu les ressources matérielle et énergétique limitées dont disposent les appareils \emph{IoT}, ils souvent nécessaire de recourir à des entités externes telles que le \emph{Fog} ou le \emph{Cloud} afin d'exécuter des tâches gourmandes en ressource telle que des calculs graphiques, réalité augmentée, etc.\\
 Le déchargement de tâche dépend principalement de trois composants que sont :
 \begin{itemize}
-  \item \emph{les appareils Iot:} dont le rôle est de spécifier comment les applications doivent être partitionnées, ensuite de déterminer quelle partie doit être exécutée en local, et quelle partie doit être déchargée.
+  \item \emph{les appareils IoT:} dont le rôle est de spécifier comment les applications doivent être partitionnées, ensuite de déterminer quelle partie doit être exécutée en local, et quelle partie doit être déchargée.
   \item \emph{Les liaisons de communication:}  elles permettent d'assurer le transfert de tâche, et donc, la qualité des transferts dépend des capacités physiques des liaisons.
-  \item \emph{Les nœuds fog:} ces derniers disposent d'une capacité plus faible que le \emph{Cloud}, mais plus importante que les appareils \emph{Iot}.
+  \item \emph{Les nœuds Fog:} ces derniers disposent d'une capacité plus faible que le \emph{Cloud}, mais plus importante que les appareils \emph{IoT}.
 \end{itemize}
 Le déchargement de tâche peut se produire également afin d'assurer l'équilibrage de charge, minimiser la latence, efficacité énergétique, etc.
 \subsubsection{Equilibrage de charge}
-L'équilibrage de charge \cite{Ash2019} consiste à distribuer l'excédent de charges sur les différents nœuds Fog suivant une certaine stratégie, afin d'assurer qu'aucun nœud fog ne soit en surcharge ou en sous-charge, améliorant ainsi les performances globales du système. Cependant, en réalité les mécanismes d'équilibrage de charge rencontrent de nombreux défis, principalement le problème de latence qui est due à la migration en continu des différents processus.\\
+L'équilibrage de charge \cite{Ash2019} consiste à distribuer l'excédent de charges sur les différents nœuds \emph{Fog} suivant une certaine stratégie, afin d'assurer qu'aucun nœud \emph{Fog} ne soit en surcharge ou en sous-charge, améliorant ainsi les performances globales du système. Cependant, en réalité les mécanismes d'équilibrage de charge rencontrent de nombreux défis, principalement le problème de latence qui est due à la migration en continu des différents processus.\\
 Les stratégies d'équilibrage sont implémentées suivant une architecture centralisée et décentralisée.
 \begin{itemize}
   \item L'approche centralisée s'appuie sur un contrôleur central, nécessitant ainsi une connaissance globale et en temps réel de l'état des différents nœuds.
@@ -235,7 +234,7 @@ Les stratégies d'équilibrage sont implémentées suivant une architecture cent
   \item Quant à l'approche décentralisée, elle utilise un contrôleur décentralisé dont le rôle est de coordonner les différents contrôleurs locaux, ce qui assure une plus grande scalabilité.
 \end{itemize}
 \subsubsection{Allocation des ressources}
-Le problème d'allocation des ressources dans les environnements Fog peut être considéré comme un problème de double correspondance, car les serveurs cloud et les nœuds fog sont couplés pour les utilisateurs et l'utilisateur et les nœuds fog sont couplé pour les serveurs cloud. En d'autres termes, les utilisateurs doivent prendre en considération la relation entre les nœuds fog et les serveurs cloud, et les serveurs cloud doivent prendre en considération la relation entre les nœuds et les utilisateurs.\\ 
+Le problème d'allocation des ressources dans les environnements \emph{Fog} peut être considéré comme un problème de double correspondance, car les serveurs \emph{Cloud} et les nœuds \emph{Fog} sont couplés pour les utilisateurs et l'utilisateur et les nœuds \emph{Fog} sont couplé pour les serveurs \emph{Cloud}. En d'autres termes, les utilisateurs doivent prendre en considération la relation entre les nœuds \emph{Fog} et les serveurs \emph{Cloud}, et les serveurs \emph{Cloud} doivent prendre en considération la relation entre les nœuds et les utilisateurs.\\ 
 Les techniques d'allocation de ressource peuvent être classées en 2 principale méthode :
 \begin{itemize}
   \item \emph{Basé sur l'enchère “auction-basde”:} les clients soumettent leurs demandes de ressources au broker avec un système de tarification des demandes, et les ressources se verront attribuer au plus offrant, en utilisant des mécanismes d'enchères calculés suivant diverses techniques mathématiques.
@@ -243,7 +242,7 @@ Les techniques d'allocation de ressource peuvent être classées en 2 principale
 \end{itemize}
 \subsubsection{Approvisionnement en ressources}
 Dus aux fluctuations permanentes des charges de travail des différentes applications, les problèmes de sur-approvisionnement ou sous-approvisionnement de  ressources risquent de se poser.\\
-Le problème de sur-approvisionnement consiste en une attribution d'une quantité de ressources supérieure à la charge de travail réelle d'une application. ( Et réciproquement pour le problème de sous-approvisionnement ).\\
+Le problème de sur-approvisionnement consiste en une attribution d'une quantité de ressources supérieure à la charge de travail réelle d'une application. (Et réciproquement pour le problème de sous-approvisionnement).\\
 Dans un environnement en constantes variations,  un modèle statique d'approvisionnement de ressources peut être problématique, il est par conséquent indispensable d'adopter une approche dynamique permettant ainsi adaptation en continu vis-à- vis des charges de travail.\\ 
 Les stratégies d'approvisionnement dynamique sont classées en 3 types de politique :
 \begin{itemize}
@@ -252,11 +251,11 @@ Les stratégies d'approvisionnement dynamique sont classées en 3 types de polit
   \item \emph{Politique hybride:} elle adopte par conséquent les deux précédentes politiques,  la politique réactive est souvent utilisée pour approvisionner des ressources à une nouvelle demande qui arrive dans le système, tandis que la politique proactive permet d'anticiper les prochaines évolutions de la demande. 
 \end{itemize}
  \subsection{Taxonomie des architectures}
- Les différentes approches de gestion de ressources dans les environnements fog ont été classées suivant leurs architectures 3 types\cite{ch2019} :
+ Les différentes approches de gestion de ressources dans les environnements \emph{Fog} ont été classées suivant leurs architectures 3 types\cite{ch2019} :
  \begin{itemize}
-   \item \emph{Les architectures basé sur flux de données (Data flow architectures):} Ces types d'architecture se basent sur le sens de transfère des charges de travail, par exemple les charges de travail peuvent être transférées de l'utilisateur au nœud fog ou des serveurs cloud vers les nœuds.
+   \item \emph{Les architectures basé sur flux de données (Data flow architectures):} Ces types d'architecture se basent sur le sens de transfère des charges de travail, par exemple les charges de travail peuvent être transférées de l'utilisateur au nœud \emph{Fog} ou des serveurs \emph{Cloud} vers les nœuds.
    \item \emph{Les architectures de contrôle (Control architectures):} Ces architectures sont basées sur la manière dont les ressources sont gérées au niveau du système, par exemple un contrôleur ou un algorithme central peut être utilisé pour gérer un ensemble de nœuds.
-   \item \emph{L'architecture de location (Tenancy architecture):} cette architecture se base sur la capacité des différents nœuds à héberger plusieurs applications,  par exemple, une ou plusieurs applications peuvent s'exécuter sur un nœud fog.
+   \item \emph{L'architecture de location (Tenancy architecture):} cette architecture se base sur la capacité des différents nœuds à héberger plusieurs applications,  par exemple, une ou plusieurs applications peuvent s'exécuter sur un nœud \emph{Fog}.
  \end{itemize}
 
  
