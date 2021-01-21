@@ -134,19 +134,31 @@ Nous distinguons deux type de migrations \cite{puliafito2019}:
         \end{enumerate}
       \end{enumerate}
 \end{itemize}
-\textbf{La migration avec pré-copie (méthode itérative)}: Dans ce cas, toutes les pages sont transférées au serveur de destination avant de geler le container. Mais quand les processus continuent leur exécution normale, les pages peuvent être modifiées et les pages transférées peuvent devenir obsolètes. C'est pourquoi les pages doivent être transférées itérativement. Sur la première étape, toutes les pages sont marquées d'un drapeau propre (clean flag) et transférées sur le serveur de destination [46]. Certaines pages peuvent être modifiées pendant ce processus, et l'indicateur propre sera supprimé dans ce cas. Sur la deuxième étape, seules les pages modifiées sont transférées vers le serveur de destination (voir figure \ref{fig:migration_avec_precopie}).\par
+\textbf{La migration avec pré-copie (méthode itérative)}: Dans ce cas, toutes les pages sont transférées au serveur de destination avant de geler le container. Mais quand les processus continuent leur exécution normale, les pages peuvent être modifiées et les pages transférées peuvent devenir obsolètes. C'est pourquoi les pages doivent être transférées itérativement. Sur la première étape, toutes les pages sont marquées d'un drapeau propre (clean flag) et transférées sur le serveur de destination [46]. Certaines pages peuvent être modifiées pendant ce processus, et l'indicateur propre sera supprimé dans ce cas. Sur la deuxième étape, seules les pages modifiées sont transférées vers le serveur de destination (voir figure \ref{fig:migration_avec_precopie1}). La figure \ref{fig:migration_avec_precopie2} montre le séquencement des opérations de cette migration.\par
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.7]{iterative_migration.png}
-\caption{La migration avec pré-copie \cite{mirkin2008}}
-\label{fig:migration_avec_precopie}
+\includegraphics[scale=0.5]{iterative_migration.png}
+\caption{Itérations de la migration avec pré-copie \cite{mirkin2008}}
+\label{fig:migration_avec_precopie1}
 \end{figure}
-\textbf{La migration avec post-copie (fainéante)}: Par opposition à la technique précédente, le conteneur est d'abord suspendu et seulement le contexte d'exécution est transféré, et l'instance destination est lancée. Puis au besoin, la machine destination génère des demandes de pages défectueuses (page-in swap), auxquelles la machine source répond en envoyant ces pages (à l'aide du daemon “page-out”)(voir figure \ref{fig:migration_avec_postcopie}). C'est pour cette raison qu'elle est appelée migration fainéante.\par
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{migration_avec_precopie.png}
+\caption{La migration avec pré-copie \cite{puliafito2019}}
+\label{fig:migration_avec_precopie2}
+\end{figure}
+\textbf{La migration avec post-copie (fainéante)}: Par opposition à la technique précédente, le conteneur est d'abord suspendu et seulement le contexte d'exécution est transféré, et l'instance destination est lancée. Puis au besoin, la machine destination génère des demandes de pages défectueuses (page-in swap), auxquelles la machine source répond en envoyant ces pages (à l'aide du daemon “page-out”)(voir figure \ref{fig:migration_avec_postcopie1}). C'est pour cette raison qu'elle est appelée migration fainéante. La figure \ref{fig:migration_avec_postcopie2} donne le schémas global de cette migration.\par
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{lazy_migration.png}
-\caption{La migration avec post-copie \cite{mirkin2008}}
-\label{fig:migration_avec_postcopie}
+\caption{Envoi des pages défectueuses \cite{mirkin2008}}
+\label{fig:migration_avec_postcopie1}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{migration_avec_postcopie.png}
+\caption{La migration avec post-copie \cite{puliafito2019}}
+\label{fig:migration_avec_postcopie2}
 \end{figure}
 \textbf{La migration hybride}: Les premières étapes coïncident avec celles de la migration avec pré-copie, à savoir la sauvegarde de l'état du conteneur en plein exécution et son transfert. Puis le conteneur source est arrêté, et une sauvegarde hybride est effectuée, une partie est transférée pour que le conteneur destination reprend son exécution (comme en pré-copie), et le reste des pages est transféré comme pages défectueuses à la demande (comme en post-copie) (voir figure \ref{fig:migration_hybride}).
 \begin{figure}[H]
