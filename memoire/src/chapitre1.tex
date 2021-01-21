@@ -147,7 +147,7 @@ Nous distinguons deux type de migrations \cite{puliafito2019}:
 \caption{La migration avec pré-copie \cite{puliafito2019}}
 \label{fig:migration_avec_precopie2}
 \end{figure}
-\textbf{La migration avec post-copie (fainéante)}: Par opposition à la technique précédente, le conteneur est d'abord suspendu et seulement le contexte d'exécution est transféré, et l'instance destination est lancée. Puis au besoin, la machine destination génère des demandes de pages défectueuses (page-in swap), auxquelles la machine source répond en envoyant ces pages (à l'aide du daemon “page-out”)(voir figure \ref{fig:migration_avec_postcopie1}). C'est pour cette raison qu'elle est appelée migration fainéante. La figure \ref{fig:migration_avec_postcopie2} donne le schémas global de cette migration.\par
+\textbf{La migration avec post-copie (fainéante)}: Par opposition à la technique précédente, toutes les pages mémoire allouées par les processus sont marquées d'un drapeau spécial, qui est effacé si une page est modifiée. Après cela, un conteneur peut être gelé et son état peut être sauvegardé, mais dans ce cas, seules les pages sans cet indicateur sont stockées. Cela permet de réduire la taille d'un fichier de vidage (dump). Puis au besoin, la machine destination génère des demandes de pages défectueuses (page-in swap), auxquelles la machine source répond en envoyant ces pages (à l'aide du daemon “page-out”), puis ces pages sont chargées en mémoire sur le serveur de destination (voir figure \ref{fig:migration_avec_postcopie1}). C'est pour cette raison qu'elle est appelée migration fainéante. La figure \ref{fig:migration_avec_postcopie2} donne le schémas global de cette migration.\par
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{lazy_migration.png}
@@ -160,7 +160,7 @@ Nous distinguons deux type de migrations \cite{puliafito2019}:
 \caption{La migration avec post-copie \cite{puliafito2019}}
 \label{fig:migration_avec_postcopie2}
 \end{figure}
-\textbf{La migration hybride}: Les premières étapes coïncident avec celles de la migration avec pré-copie, à savoir la sauvegarde de l'état du conteneur en plein exécution et son transfert. Puis le conteneur source est arrêté, et une sauvegarde hybride est effectuée, une partie est transférée pour que le conteneur destination reprend son exécution (comme en pré-copie), et le reste des pages est transféré comme pages défectueuses à la demande (comme en post-copie) (voir figure \ref{fig:migration_hybride}).
+\textbf{La migration hybride}: Les premières étapes coïncident avec celles de la migration avec pré-copie, une seule phase de pré-copie est effectuée avant la phase de post-copie,de cette manière l'hôte cible dispose déjà de toute la mémoire, seules les pages sales devront être transférées en post-copie. Une fois la mémoire copiée, le conteneur source est arrêté, et le conteneur destination est lancé sur l'hôte cible et la phase de post-copie commence \cite{wikimigration} (voir figure \ref{fig:migration_hybride}).
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{migration_hybride.png}
