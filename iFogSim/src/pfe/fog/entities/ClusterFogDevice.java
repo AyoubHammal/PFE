@@ -1,6 +1,7 @@
 package pfe.fog.entities;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
@@ -17,17 +18,21 @@ public class ClusterFogDevice extends FogDevice {
 	protected List<Boolean> isNorthLinkBusyById = new ArrayList<Boolean>();
 	protected List<Queue<Tuple>> northTupleQueues = new ArrayList<Queue<Tuple>>();
 	
+	protected long availableMips;
+	protected int availableRam;
+	
 	public ClusterFogDevice(String name, FogDeviceCharacteristics characteristics, VmAllocationPolicy vmAllocationPolicy,
 			List<Storage> storageList, double schedulingInterval, double uplinkBandwidth, double downlinkBandwidth,
 			double uplinkLatency, double ratePerMips) throws Exception {
 		super(name, characteristics, vmAllocationPolicy, storageList, schedulingInterval, uplinkBandwidth, downlinkBandwidth, uplinkLatency, ratePerMips);
-		
+		availableMips = characteristics.getMips();
+		availableRam = characteristics.getHostList().get(0).getRam();
 	}
 	
 	public void addParent(int patendId) {
 		parentsIds.add(parentId);
 		isNorthLinkBusyById.add(false);
-		northTupleQueues.add(new Queue<Tuple>());
+		northTupleQueues.add(new LinkedList<Tuple>());
 	}
 	
 	public List<Integer> getParentsId() {
@@ -50,4 +55,45 @@ public class ClusterFogDevice extends FogDevice {
 		send(parentsIds.get(linkId), networkDelay + getUplinkLatency(), FogEvents.TUPLE_ARRIVAL, tuple);
 		NetworkUsageMonitor.sendingTuple(getUplinkLatency(), tuple.getCloudletFileSize());
 	}
+	
+	public List<Integer> getParentsIds() {
+		return parentsIds;
+	}
+
+	public void setParentsIds(List<Integer> parentsIds) {
+		this.parentsIds = parentsIds;
+	}
+
+	public List<Boolean> getIsNorthLinkBusyById() {
+		return isNorthLinkBusyById;
+	}
+
+	public void setIsNorthLinkBusyById(List<Boolean> isNorthLinkBusyById) {
+		this.isNorthLinkBusyById = isNorthLinkBusyById;
+	}
+
+	public List<Queue<Tuple>> getNorthTupleQueues() {
+		return northTupleQueues;
+	}
+
+	public void setNorthTupleQueues(List<Queue<Tuple>> northTupleQueues) {
+		this.northTupleQueues = northTupleQueues;
+	}
+
+	public long getAvailableMips() {
+		return availableMips;
+	}
+
+	public void setAvailableMips(long availableMips) {
+		this.availableMips = availableMips;
+	}
+
+	public int getAvailableRam() {
+		return availableRam;
+	}
+
+	public void setAvailableRam(int availableRam) {
+		this.availableRam = availableRam;
+	}
+
 }
