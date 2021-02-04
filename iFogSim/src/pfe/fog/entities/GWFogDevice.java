@@ -330,31 +330,4 @@ public class GWFogDevice extends FogDevice {
 	
 	
 }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-}
+
