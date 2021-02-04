@@ -185,7 +185,7 @@ public class GWFogDevice extends FogDevice {
 			{
 			    m = new MatchedTuple(waitingQueue.poll());
 				toBeMatchedTupleList.add(m);
-				tuple_prepositionsList.put(m,clusterFogDevicesIds);
+				tuple_prepositionsList.put(m,new ArrayList<Integer>(clusterFogDevicesIds));
 				// initailement chaque tuple peut se proposé à tout les noeuds.
 			}
 		
