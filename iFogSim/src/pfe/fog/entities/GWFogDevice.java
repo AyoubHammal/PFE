@@ -23,7 +23,8 @@ import org.fog.utils.NetworkUsageMonitor;
 public class GWFogDevice extends FogDevice {
 	protected Queue<Tuple> waitingQueue;
 	protected Map<Tuple, Integer> tupleToMatchedDevice = new HashMap<Tuple, Integer>();
-	protected boolean token;
+	protected List<GWFogDevice> gwDevices;
+
 	protected List<Integer> parentsIds = new ArrayList<Integer>();
 	protected List<Boolean> isNorthLinkBusyById = new ArrayList<Boolean>();
 	protected List<Queue<Tuple>> northTupleQueues = new ArrayList<Queue<Tuple>>();
@@ -111,12 +112,13 @@ public class GWFogDevice extends FogDevice {
 						if (parentsIds.contains(mt.getDestinationFogDevice()))
 							link = parentsIds.indexOf(mt.getDestinationFogDevice());
 						
-						sendUp(tuple, link == -1 ? 0 : link);
+						sendUp(mt, link == -1 ? 0 : link);
 					}
 					
 					for (MatchedTuple mt : toCloudTupleList)
-						sendUp(tuple, 0);
+						sendUp(mt, 0);
 					
+					sendTokenToNextGW(tuple);
 				} else {
 					int vmId = -1;
 					for (Vm vm : getHost().getVmList()) {
@@ -231,6 +233,12 @@ public class GWFogDevice extends FogDevice {
 		return bestTuple;
 	}
 	
+	private void sendTokenToNextGW(Tuple token) {
+		int index = gwDevices.indexOf(getId());
+		index = (index + 1) % gwDevices.size();
+		// A faire
+	}
+	
 	private double calculateDistance(ClusterFogDevice d, Tuple t) {
 		return Math.sqrt(t.getUtilizationModelCpu().getUtilization(d.getAvailableMips()) + t.getUtilizationModelRam().getUtilization(d.getAvailableRam()));
 	}
@@ -281,5 +289,13 @@ public class GWFogDevice extends FogDevice {
 
 	public void setClusterFogDevicesIds(List<Integer> clusterFogDevicesIds) {
 		this.clusterFogDevicesIds = clusterFogDevicesIds;
+	}
+	
+	public List<GWFogDevice> getGwDevices() {
+		return gwDevices;
+	}
+
+	public void setGwDevices(List<GWFogDevice> gwDevices) {
+		this.gwDevices = gwDevices;
 	}
 }
