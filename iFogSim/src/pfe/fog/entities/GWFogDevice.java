@@ -158,10 +158,13 @@ public class GWFogDevice extends FogDevice {
 	}
 	
 	private void mapTupleToDevice() {
+		MatchedTuple m;
 		matchedTupleList = new ArrayList<MatchedTuple>();
 		toCloudTupleList = new ArrayList<MatchedTuple>();
-		
+
 		int n = clusterFogDevicesIds.size();
+		
+		HashMap<MatchedTuple,List<Integer>> tuple_prepositionsList = new HashMap<MatchedTuple,List<Integer>>();
 		
 		// La liste des tuples a matcher 
 		ArrayList<MatchedTuple> toBeMatchedTupleList = new ArrayList<MatchedTuple>();
@@ -176,29 +179,52 @@ public class GWFogDevice extends FogDevice {
 			selectedTupleForDevice.put(clusterFogDevicesIds.get(i), null);
 		}
 		
+		
+		
 		for(int i = 0; (i < waitingQueue.size()) && (i < n); i++)
-			toBeMatchedTupleList.add(new MatchedTuple(waitingQueue.poll()));
+			{
+			    m = new MatchedTuple(waitingQueue.poll());
+				toBeMatchedTupleList.add(m);
+				tuple_prepositionsList.put(m,clusterFogDevicesIds);
+				// initailement chaque tuple peut se proposé à tout les noeuds.
+			}
 		
 		while (!toBeMatchedTupleList.isEmpty()) {
 			for (MatchedTuple mt : toBeMatchedTupleList) {
-				int id = selectBestDeviceForTuple(mt);
+				int id = selectBestDeviceForTuple(mt,tuple_prepositionsList.get(mt));
 				if (id == -1) {
 					toBeMatchedTupleList.remove(mt);
 					toCloudTupleList.add(mt);
 				} else {
-					tuplesRequestingDevice.get(id).add(mt);
+					tuplesRequestingDevice.get(id).add(mt); 
+			//Chaque tuple se propose au noeud qu'il préfère parmi ceux à qui il ne s'est pas déja présenté.
 				}
 			}
 			for (int id : clusterFogDevicesIds) {
 				MatchedTuple mt = selectBestTupleForDevice(id , tuplesRequestingDevice.get(id));
-				if (selectedTupleForDevice.get(id) != null) {
-					toBeMatchedTupleList.add(selectedTupleForDevice.get(id));
-					matchedTupleList.remove(selectedTupleForDevice.get(id));
+				// On choise le meilleur tuple pour le noeud parmi les proposition.
+				for(MatchedTuple mt2 : tuplesRequestingDevice.get(id))
+				{
+					if(!mt2.equals(mt)) tuple_prepositionsList.get(mt2).remove(Integer.valueOf(id));
+				}
+				/* Si id préfère mt à tout les autres tuple qui se sont proposé à lui, alors ces tuples
+				  ne peuvent plus se proposé à lui. 
+				 */
+				if (selectedTupleForDevice.get(id) != null) 
+					// si le noeud est déja pris, alors on éclate le couple.
+				{
+					m = selectedTupleForDevice.get(id);
+					toBeMatchedTupleList.add(m);
+					// on ajoute l'ancien tuple à l'ensemble des tuple à matcher.
+					tuple_prepositionsList.get(m).remove(Integer.valueOf(id));
+					// on supprime le neuds de la liste des neuds que le tuple peut se proposer.
+					matchedTupleList.remove(m);
+					// et on le supprime de la liste des tuples matcher.
 				}
 				toBeMatchedTupleList.remove(mt);
-				matchedTupleList.add(mt);
-				selectedTupleForDevice.put(id, mt);
-				
+				// on supprime le nouveau tuple préféré de la liste des tuples à matcher.
+				matchedTupleList.add(mt);// on ajoute le nouveau tuple préféré de la liste des tuples matchés. 
+				selectedTupleForDevice.put(id, mt);// et on place le nouveau couple.
 				tuplesRequestingDevice.clear();
 			}
 		}
@@ -209,12 +235,12 @@ public class GWFogDevice extends FogDevice {
 			mt.setDestinationFogDeviceId(CloudSim.getEntityId("cloud"));
 	}
 	
-	private int selectBestDeviceForTuple(MatchedTuple mt) {
-		double minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(clusterFogDevicesIds.get(0)), mt);
+	private int selectBestDeviceForTuple(MatchedTuple mt, List<Integer> prepositionsList) {
+		double minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(prepositionsList.get(0)), mt);
 		int bestId = 0;
-		for (int id : clusterFogDevicesIds) {
-			if (minDist > calculateDistance((ClusterFogDevice)CloudSim.getEntity(clusterFogDevicesIds.get(id)), mt)) {
-				minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(clusterFogDevicesIds.get(id)), mt);
+		for (int id : prepositionsList) {
+			if (minDist > calculateDistance((ClusterFogDevice)CloudSim.getEntity(prepositionsList.get(id)), mt)) {
+				minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(prepositionsList.get(id)), mt);
 				bestId = id;
 			}
 		}
@@ -298,4 +324,37 @@ public class GWFogDevice extends FogDevice {
 	public void setGwDevices(List<GWFogDevice> gwDevices) {
 		this.gwDevices = gwDevices;
 	}
+	
+	
+	
+	
+	
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
