@@ -30,6 +30,8 @@ public class GWFogDevice extends FogDevice {
 	protected long availableMips;
 	protected int availableRam;
 	
+	protected int tokenDelay = 50;
+	
 	// La liste des tuples matches
 	ArrayList<MatchedTuple> matchedTupleList = new ArrayList<MatchedTuple>();
 	// La liste des tuples delegues au cloud
@@ -103,6 +105,7 @@ public class GWFogDevice extends FogDevice {
 		}
 
 		if (tuple.getTupleType() == "TOKEN") {
+			System.out.println("Token arrived to " + getName());
 			// Match
 			mapTupleToDevice();
 			// Envoi
@@ -119,7 +122,8 @@ public class GWFogDevice extends FogDevice {
 			
 			// Envoi a la prochaine gateway
 			tuple.setSourceDeviceId(getId());
-			sendUp(tuple, 0);
+			send(parentsIds.get(0), tokenDelay, FogEvents.TUPLE_ARRIVAL, tuple);
+			System.out.println("Sending token from " + getName() + " to " + CloudSim.getEntityName(getParentsIds().get(0)));
 		} else
 			// Ajout a la queue
 			waitingQueue.add(tuple);	

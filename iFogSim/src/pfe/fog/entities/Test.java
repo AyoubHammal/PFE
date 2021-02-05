@@ -42,18 +42,19 @@ import pfe.fog.entities.GWFogDevice;
  * Topologie: matrice de noeuds fog 2x2
  * 				Cloud
  * 				/	\
- * 			Node0/0	Node0/1
+ * 			Node1/1	Node1/2
  * 			|		|
- * 			Node1/0	Node1/1
- *			|		|
- * 			GW0 	GW1
+ * 			Node2/1	Node2/2
  * 			|	|	|	|
  * 			S1	A1	S2	A2
  *
  * DDF de l'application:
+ * 			    m2
+ * 			  ^   |
+ * 			e2| e3v
  * 				m1
  * 			  ^   |
- * 			T1|	A1v
+ * 			e1|	e4v
  * 			  s   a
  */
 
@@ -90,6 +91,7 @@ public class Test {
 			
 			Application application = createApplication(appId, broker.getId());
 			application.setUserId(broker.getId());
+			System.out.println(broker.getId());
 			
 			ModuleMapping moduleMapping = ModuleMapping.createModuleMapping();
 			
@@ -164,7 +166,7 @@ public class Test {
 			GWFogDevice gwd = createGWFogDevice("GW" + j, 2800, 4000, 10000, 10000,  nbOfLayers, 0.0, 107.339, 83.4333, clusterFogDevicesIds);
 			currentLayer.add(gwd);
 			fogDevices.add(gwd);
-			Sensor s = new Sensor("s" + j, "T1", userId, appId, new DeterministicDistribution(5));
+			Sensor s = new Sensor("s" + j, "T1", userId, appId, new DeterministicDistribution(20)); // inter-transmission time of EEG sensor follows a deterministic distribution
 			sensors.add(s);
 			Actuator a = new Actuator("a" + j, userId, appId, "A1");
 			actuators.add(a);
@@ -356,16 +358,13 @@ public class Test {
 		Application application = Application.createApplication(appId, userId);
 		
 		application.addAppModule("m1", 10);
-		//application.addAppModule("m2", 10);
 		
-		application.addAppEdge("T1", "m1", 3000, 500, "T1", Tuple.UP, AppEdge.SENSOR);
-		//application.addAppEdge("m1", "m2", 3000, 500, "e2", Tuple.UP, AppEdge.MODULE);
-		//application.addAppEdge("m2", "m1", 3000, 500, "e3", Tuple.DOWN, AppEdge.MODULE);
-		application.addAppEdge("m1", "A1", 3000, 500, "A1", Tuple.DOWN, AppEdge.ACTUATOR);
+		application.addAppEdge("T1", "m1", 300, 50, "T1", Tuple.UP, AppEdge.SENSOR);
+
+		application.addAppEdge("m1", "A1", 300, 50, "A1", Tuple.DOWN, AppEdge.ACTUATOR);
 		
-		application.addTupleMapping("m1", "T1", "e2", new FractionalSelectivity(1.0));
-		//application.addTupleMapping("m2", "e2", "e3", new FractionalSelectivity(1.0));
-		application.addTupleMapping("m1", "e3", "A1", new FractionalSelectivity(1.0));
+		application.addTupleMapping("m1", "T1", "A1", new FractionalSelectivity(1.0));
+
 		
 		final AppLoop loop = new AppLoop(new ArrayList<String>() {
 				{	
