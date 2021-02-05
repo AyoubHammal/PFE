@@ -148,7 +148,7 @@ public class ClusterFogDevice extends FogDevice {
 					// ce node n'est pas la destination
 					if (getParentsIds().contains(((MatchedTuple) tuple).getDestinationFogDevice())) {
 						// destination est au prohain niveau
-						int id = getParentsIds().get(((MatchedTuple) tuple).getDestinationFogDevice());
+						int id = getParentsIds().indexOf(((MatchedTuple) tuple).getDestinationFogDevice());
 						sendUp(tuple, id);
 					} else {
 						// sinon
