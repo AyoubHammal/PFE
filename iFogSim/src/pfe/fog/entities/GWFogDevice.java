@@ -150,9 +150,10 @@ public class GWFogDevice extends FogDevice {
 		
 		
 		for(int i = 0; (i < waitingQueue.size()) && (i < n); i++) {
-			m = new MatchedTuple(waitingQueue.poll());
-			toBeMatchedTupleList.add(m);
-			tuple_prepositionsList.put(m,new ArrayList<Integer>(clusterFogDevicesIds));
+			Tuple t = waitingQueue.poll();
+			MatchedTuple mt = new MatchedTuple(t);
+			toBeMatchedTupleList.add(mt);
+			tuple_prepositionsList.put(mt, new ArrayList<Integer>(clusterFogDevicesIds));
 			// initailement chaque tuple peut se proposé à tout les noeuds.
 		}
 		

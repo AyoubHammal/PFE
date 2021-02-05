@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Queue;
 
 import org.cloudbus.cloudsim.Storage;
+import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.SimEvent;
+import org.fog.application.AppModule;
 import org.fog.entities.FogDevice;
 import org.fog.entities.FogDeviceCharacteristics;
 import org.fog.entities.Tuple;
@@ -85,6 +87,104 @@ public class ClusterFogDevice extends FogDevice {
 			index = (index + 1) % getChildrenIds().size();
 			sendDown(tuple, getChildrenIds().get(index));
 			return;
+		} else {
+			if (tuple instanceof MatchedTuple) {
+				if (((MatchedTuple) tuple).getDestinationFogDevice() == getId()) {
+					// ce node est la destination
+					if(appToModulesMap.containsKey(tuple.getAppId())){
+						if(appToModulesMap.get(tuple.getAppId()).contains(tuple.getDestModuleName())){
+							int vmId = -1;
+							for(Vm vm : getHost().getVmList()){
+								if(((AppModule)vm).getName().equals(tuple.getDestModuleName()))
+									vmId = vm.getId();
+							}
+							if(vmId < 0
+									|| (tuple.getModuleCopyMap().containsKey(tuple.getDestModuleName()) && 
+											tuple.getModuleCopyMap().get(tuple.getDestModuleName())!=vmId )){
+								return;
+							}
+							tuple.setVmId(vmId);
+							//Logger.error(getName(), "Executing tuple for operator " + moduleName);
+							
+							updateTimingsOnReceipt(tuple);
+							
+							executeTuple(ev, tuple.getDestModuleName());
+						}else if(tuple.getDestModuleName()!=null){
+							
+							if(tuple.getDirection() == Tuple.UP) {
+								Logger.debug(getName(), "Sending UP tuple " + tuple.getCloudletId());
+								sendUp(tuple);
+							}
+							else if(tuple.getDirection() == Tuple.DOWN){
+								Logger.debug(getName(), "Sending UP tuple " + tuple.getCloudletId());
+								for(int childId : getChildrenIds())
+									sendDown(tuple, childId);
+							}
+						}else{
+							sendUp(tuple);
+						}
+					}else{
+						if(tuple.getDirection() == Tuple.UP)
+							sendUp(tuple);
+						else if(tuple.getDirection() == Tuple.DOWN){
+							for(int childId : getChildrenIds())
+								sendDown(tuple, childId);
+						}
+					}
+				} else {
+					// ce node n'est pas la destination
+					if (getParentsIds().contains(((MatchedTuple) tuple).getDestinationFogDevice())) {
+						// destination est au prohain niveau
+						int id = getParentsIds().get(((MatchedTuple) tuple).getDestinationFogDevice());
+						sendUp(tuple, id);
+					} else {
+						// sinon
+						sendUp(tuple, 0);
+					}
+				}
+			} else {
+				// le tuple n'est pas un matchedtuple
+				if(appToModulesMap.containsKey(tuple.getAppId())){
+					if(appToModulesMap.get(tuple.getAppId()).contains(tuple.getDestModuleName())){
+						int vmId = -1;
+						for(Vm vm : getHost().getVmList()){
+							if(((AppModule)vm).getName().equals(tuple.getDestModuleName()))
+								vmId = vm.getId();
+						}
+						if(vmId < 0
+								|| (tuple.getModuleCopyMap().containsKey(tuple.getDestModuleName()) && 
+										tuple.getModuleCopyMap().get(tuple.getDestModuleName())!=vmId )){
+							return;
+						}
+						tuple.setVmId(vmId);
+						//Logger.error(getName(), "Executing tuple for operator " + moduleName);
+						
+						updateTimingsOnReceipt(tuple);
+						
+						executeTuple(ev, tuple.getDestModuleName());
+					}else if(tuple.getDestModuleName()!=null){
+						
+						if(tuple.getDirection() == Tuple.UP) {
+							Logger.debug(getName(), "Sending UP tuple " + tuple.getCloudletId());
+							sendUp(tuple);
+						}
+						else if(tuple.getDirection() == Tuple.DOWN){
+							Logger.debug(getName(), "Sending UP tuple " + tuple.getCloudletId());
+							for(int childId : getChildrenIds())
+								sendDown(tuple, childId);
+						}
+					}else{
+						sendUp(tuple);
+					}
+				}else{
+					if(tuple.getDirection() == Tuple.UP)
+						sendUp(tuple);
+					else if(tuple.getDirection() == Tuple.DOWN){
+						for(int childId : getChildrenIds())
+							sendDown(tuple, childId);
+					}
+				}
+			}
 		}
 	}
 	

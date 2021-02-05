@@ -164,7 +164,7 @@ public class Test {
 			GWFogDevice gwd = createGWFogDevice("GW" + j, 2800, 4000, 10000, 10000,  nbOfLayers, 0.0, 107.339, 83.4333, clusterFogDevicesIds);
 			currentLayer.add(gwd);
 			fogDevices.add(gwd);
-			Sensor s = new Sensor("s" + j, "T1", userId, appId, new DeterministicDistribution(50)); // inter-transmission time of EEG sensor follows a deterministic distribution
+			Sensor s = new Sensor("s" + j, "T1", userId, appId, new DeterministicDistribution(5));
 			sensors.add(s);
 			Actuator a = new Actuator("a" + j, userId, appId, "A1");
 			actuators.add(a);

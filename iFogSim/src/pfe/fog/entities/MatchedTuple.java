@@ -1,5 +1,7 @@
 package pfe.fog.entities;
 
+import java.util.HashMap;
+
 import org.cloudbus.cloudsim.UtilizationModel;
 import org.fog.entities.Tuple;
 
@@ -23,6 +25,14 @@ public class MatchedTuple extends Tuple {
 				tuple.getUtilizationModelCpu(),
 				tuple.getUtilizationModelRam(),
 				tuple.getUtilizationModelBw());
+		this.setTupleType(tuple.getTupleType());
+		this.setDestModuleName(tuple.getDestModuleName());
+		this.setSrcModuleName(tuple.getSrcModuleName());
+		this.setActualTupleId(tuple.getActualTupleId());
+		this.setActuatorId(tuple.getActuatorId());
+		this.setSourceDeviceId(tuple.getSourceDeviceId());
+		this.setSourceModuleId(tuple.getSourceModuleId());
+		this.setModuleCopyMap(new HashMap<String, Integer>(tuple.getModuleCopyMap()));
 	}
 	
 	public void setDestinationFogDeviceId(int id) {
