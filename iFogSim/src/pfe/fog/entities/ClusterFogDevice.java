@@ -21,6 +21,7 @@ import org.fog.utils.NetworkUsageMonitor;
 public class ClusterFogDevice extends FogDevice {
 	protected List<Integer> parentsIds = new ArrayList<Integer>();
 	protected List<Boolean> isNorthLinkBusyById = new ArrayList<Boolean>();
+	protected List<Boolean> isNorthLinkBusyByid = new ArrayList<Boolean>();
 	protected List<Queue<Tuple>> northTupleQueues = new ArrayList<Queue<Tuple>>();
 	
 	protected long availableMips;
@@ -36,7 +37,7 @@ public class ClusterFogDevice extends FogDevice {
 	
 	public void addParent(int patendId) {
 		parentsIds.add(parentId);
-		isNorthLinkBusyById.add(false);
+		isNorthLinkBusyByid.add(false);
 		northTupleQueues.add(new LinkedList<Tuple>());
 	}
 	
@@ -45,7 +46,7 @@ public class ClusterFogDevice extends FogDevice {
 	}
 	
 	protected void sendUp(Tuple tuple, int linkId) {
-		if (!isNorthLinkBusyById.get(linkId)) {
+		if (!isNorthLinkBusyByid.get(linkId)) {
 			sendUpFreeLink(tuple, linkId);
 		} else {
 			northTupleQueues.get(linkId).add(tuple);
@@ -55,10 +56,23 @@ public class ClusterFogDevice extends FogDevice {
 	protected void sendUpFreeLink(Tuple tuple, int linkId) {
 		double networkDelay = tuple.getCloudletFileSize() / getUplinkBandwidth();
 		
-		isNorthLinkBusyById.set(linkId, true);
+		isNorthLinkBusyByid.set(linkId, true);
 		send(getId(), networkDelay, FogEvents.UPDATE_NORTH_TUPLE_QUEUE);
 		send(parentsIds.get(linkId), networkDelay + getUplinkLatency(), FogEvents.TUPLE_ARRIVAL, tuple);
 		NetworkUsageMonitor.sendingTuple(getUplinkLatency(), tuple.getCloudletFileSize());
+	}
+	
+	protected void updateNorthTupleQueue(){
+		int i = 0;
+		for (Queue<Tuple> q : getNorthTupleQueues()) {
+			if(!q.isEmpty()) {
+				Tuple tuple = q.poll();
+				sendUpFreeLink(tuple, i);
+			} else{
+				isNorthLinkBusyByid.set(i, false);
+			}
+			i++;
+		}
 	}
 	
 	protected void processTupleArrival(SimEvent ev) {
@@ -82,7 +96,6 @@ public class ClusterFogDevice extends FogDevice {
 		
 		if (tuple.getTupleType() == "TOKEN") {
 			int srcId = tuple.getSourceDeviceId();
-			System.out.println(srcId);
 			int index = getChildrenIds().indexOf(srcId);
 			index = (index + 1) % getChildrenIds().size();
 			sendDown(tuple, getChildrenIds().get(index));

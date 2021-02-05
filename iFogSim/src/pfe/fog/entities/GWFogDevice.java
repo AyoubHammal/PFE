@@ -24,6 +24,7 @@ public class GWFogDevice extends FogDevice {
 	protected List<GWFogDevice> gwDevices;
 	protected boolean token;
 	protected List<Integer> parentsIds = new ArrayList<Integer>();
+	protected List<Boolean> isNorthLinkBusyByid = new ArrayList<Boolean>();
 	protected List<Queue<Tuple>> northTupleQueues = new ArrayList<Queue<Tuple>>();
 	protected List<Integer> clusterFogDevicesIds = new ArrayList<Integer>();
 
@@ -50,6 +51,7 @@ public class GWFogDevice extends FogDevice {
 	
 	public void addParent(int patendId) {
 		parentsIds.add(parentId);
+		isNorthLinkBusyByid.add(false);
 		northTupleQueues.add(new LinkedList<Tuple>()); // Queue est une interface !!
 	}
 	
@@ -58,7 +60,7 @@ public class GWFogDevice extends FogDevice {
 	}
 	
 	protected void sendUp(Tuple tuple, int linkId) {
-		if (!isNorthLinkBusy()) {
+		if (!isNorthLinkBusyByid.get(linkId)) {
 			sendUpFreeLink(tuple, linkId);
 		} else {
 			northTupleQueues.get(linkId).add(tuple);
@@ -68,10 +70,23 @@ public class GWFogDevice extends FogDevice {
 	protected void sendUpFreeLink(Tuple tuple, int linkId) {
 		double networkDelay = tuple.getCloudletFileSize() / getUplinkBandwidth();
 		
-		setNorthLinkBusy(true);
+		isNorthLinkBusyByid.set(linkId, true);
 		send(getId(), networkDelay, FogEvents.UPDATE_NORTH_TUPLE_QUEUE);
 		send(parentsIds.get(linkId), networkDelay + getUplinkLatency(), FogEvents.TUPLE_ARRIVAL, tuple);
 		NetworkUsageMonitor.sendingTuple(getUplinkLatency(), tuple.getCloudletFileSize());
+	}
+	
+	protected void updateNorthTupleQueue(){
+		int i = 0;
+		for (Queue<Tuple> q : getNorthTupleQueues()) {
+			if(!q.isEmpty()) {
+				Tuple tuple = q.poll();
+				sendUpFreeLink(tuple, i);
+			} else{
+				isNorthLinkBusyByid.set(i, false);
+			}
+			i++;
+		}
 	}
 	
 	@Override
@@ -109,6 +124,7 @@ public class GWFogDevice extends FogDevice {
 			// Match
 			mapTupleToDevice();
 			// Envoi
+
 			for (MatchedTuple mt : matchedTupleList) {
 				int link = -1;
 				if (parentsIds.contains(mt.getDestinationFogDevice()))
@@ -134,7 +150,7 @@ public class GWFogDevice extends FogDevice {
 		matchedTupleList = new ArrayList<MatchedTuple>();
 		toCloudTupleList = new ArrayList<MatchedTuple>();
 
-		int n = clusterFogDevicesIds.size();
+		int n = Math.min(clusterFogDevicesIds.size(), waitingQueue.size());
 		
 		HashMap<MatchedTuple,List<Integer>> tuple_prepositionsList = new HashMap<MatchedTuple,List<Integer>>();
 		
@@ -152,14 +168,14 @@ public class GWFogDevice extends FogDevice {
 		}
 		
 		
-		
-		for(int i = 0; (i < waitingQueue.size()) && (i < n); i++) {
+		for(int i = 0; i < n ; i++) {
 			Tuple t = waitingQueue.poll();
 			MatchedTuple mt = new MatchedTuple(t);
 			toBeMatchedTupleList.add(mt);
 			tuple_prepositionsList.put(mt, new ArrayList<Integer>(clusterFogDevicesIds));
 			// initailement chaque tuple peut se proposé à tout les noeuds.
 		}
+		System.out.println(toBeMatchedTupleList);
 		
 		while (!toBeMatchedTupleList.isEmpty()) {
 			for (MatchedTuple mt : toBeMatchedTupleList) {
@@ -202,7 +218,7 @@ public class GWFogDevice extends FogDevice {
 				}
 			}
 		}
-
+		System.out.println(selectedTupleForDevice);
 		for (Map.Entry<Integer, MatchedTuple> e : selectedTupleForDevice.entrySet())
 			if (e.getValue() != null)
 				matchedTupleList.get(matchedTupleList.indexOf(e.getValue())).setDestinationFogDeviceId(e.getKey());

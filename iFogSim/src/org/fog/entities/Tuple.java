@@ -122,5 +122,10 @@ public class Tuple extends Cloudlet{
 	public void setSourceModuleId(int sourceModuleId) {
 		this.sourceModuleId = sourceModuleId;
 	}
-
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return Integer.toString(getCloudletId());
+	}
 }
