@@ -58,10 +58,8 @@ public class GWFogDevice extends FogDevice {
 	protected void sendUp(Tuple tuple, int linkId) {
 		if (!isNorthLinkBusy()) {
 			sendUpFreeLink(tuple, linkId);
-			System.out.println("-------------------Sending up");
 		} else {
 			northTupleQueues.get(linkId).add(tuple);
-			System.out.println("-------------------Sending up but busy");
 		}
 	}
 	
@@ -151,13 +149,12 @@ public class GWFogDevice extends FogDevice {
 		
 		
 		
-		for(int i = 0; (i < waitingQueue.size()) && (i < n); i++)
-			{
-			    m = new MatchedTuple(waitingQueue.poll());
-				toBeMatchedTupleList.add(m);
-				tuple_prepositionsList.put(m,new ArrayList<Integer>(clusterFogDevicesIds));
-				// initailement chaque tuple peut se proposé à tout les noeuds.
-			}
+		for(int i = 0; (i < waitingQueue.size()) && (i < n); i++) {
+			m = new MatchedTuple(waitingQueue.poll());
+			toBeMatchedTupleList.add(m);
+			tuple_prepositionsList.put(m,new ArrayList<Integer>(clusterFogDevicesIds));
+			// initailement chaque tuple peut se proposé à tout les noeuds.
+		}
 		
 		while (!toBeMatchedTupleList.isEmpty()) {
 			for (MatchedTuple mt : toBeMatchedTupleList) {
@@ -171,46 +168,49 @@ public class GWFogDevice extends FogDevice {
 				}
 			}
 			for (int id : clusterFogDevicesIds) {
-				MatchedTuple mt = selectBestTupleForDevice(id , tuplesRequestingDevice.get(id));
-				// On choise le meilleur tuple pour le noeud parmi les proposition.
-				for(MatchedTuple mt2 : tuplesRequestingDevice.get(id))
-				{
-					if(!mt2.equals(mt)) tuple_prepositionsList.get(mt2).remove(Integer.valueOf(id));
+				if (tuplesRequestingDevice.get(id).size() > 0) {
+					MatchedTuple mt = selectBestTupleForDevice(id , tuplesRequestingDevice.get(id));
+					// On choise le meilleur tuple pour le noeud parmi les proposition.
+					for(MatchedTuple mt2 : tuplesRequestingDevice.get(id))
+					{
+						if(!mt2.equals(mt)) tuple_prepositionsList.get(mt2).remove(Integer.valueOf(id));
+					}
+					/* Si id préfère mt à tout les autres tuple qui se sont proposé à lui, alors ces tuples
+				  	ne peuvent plus se proposé à lui. 
+					 */
+					if (selectedTupleForDevice.get(id) != null) 
+						// si le noeud est déja pris, alors on éclate le couple.
+					{
+						m = selectedTupleForDevice.get(id);
+						toBeMatchedTupleList.add(m);
+						// on ajoute l'ancien tuple à l'ensemble des tuple à matcher.
+						tuple_prepositionsList.get(m).remove(Integer.valueOf(id));
+						// on supprime le neuds de la liste des neuds que le tuple peut se proposer.
+						matchedTupleList.remove(m);
+						// et on le supprime de la liste des tuples matcher.
+					}
+					toBeMatchedTupleList.remove(mt);
+					// on supprime le nouveau tuple préféré de la liste des tuples à matcher.
+					matchedTupleList.add(mt);// on ajoute le nouveau tuple préféré de la liste des tuples matchés. 
+					selectedTupleForDevice.put(id, mt);// et on place le nouveau couple.
+					tuplesRequestingDevice.get(id).clear();
 				}
-				/* Si id préfère mt à tout les autres tuple qui se sont proposé à lui, alors ces tuples
-				  ne peuvent plus se proposé à lui. 
-				 */
-				if (selectedTupleForDevice.get(id) != null) 
-					// si le noeud est déja pris, alors on éclate le couple.
-				{
-					m = selectedTupleForDevice.get(id);
-					toBeMatchedTupleList.add(m);
-					// on ajoute l'ancien tuple à l'ensemble des tuple à matcher.
-					tuple_prepositionsList.get(m).remove(Integer.valueOf(id));
-					// on supprime le neuds de la liste des neuds que le tuple peut se proposer.
-					matchedTupleList.remove(m);
-					// et on le supprime de la liste des tuples matcher.
-				}
-				toBeMatchedTupleList.remove(mt);
-				// on supprime le nouveau tuple préféré de la liste des tuples à matcher.
-				matchedTupleList.add(mt);// on ajoute le nouveau tuple préféré de la liste des tuples matchés. 
-				selectedTupleForDevice.put(id, mt);// et on place le nouveau couple.
-				tuplesRequestingDevice.clear();
 			}
 		}
-		System.out.println(selectedTupleForDevice);
-//		for (Map.Entry<Integer, MatchedTuple> e : selectedTupleForDevice.entrySet())
-//			matchedTupleList.get(matchedTupleList.indexOf(e.getValue())).setDestinationFogDeviceId(e.getKey());
-//		for (MatchedTuple mt : toCloudTupleList)
-//			mt.setDestinationFogDeviceId(CloudSim.getEntityId("cloud"));
+
+		for (Map.Entry<Integer, MatchedTuple> e : selectedTupleForDevice.entrySet())
+			if (e.getValue() != null)
+				matchedTupleList.get(matchedTupleList.indexOf(e.getValue())).setDestinationFogDeviceId(e.getKey());
+		for (MatchedTuple mt : toCloudTupleList)
+			mt.setDestinationFogDeviceId(CloudSim.getEntityId("cloud"));
 	}
 	
 	private int selectBestDeviceForTuple(MatchedTuple mt, List<Integer> prepositionsList) {
 		double minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(prepositionsList.get(0)), mt);
-		int bestId = 0;
+		int bestId = prepositionsList.get(0);
 		for (int id : prepositionsList) {
-			if (minDist > calculateDistance((ClusterFogDevice)CloudSim.getEntity(prepositionsList.get(id)), mt)) {
-				minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(prepositionsList.get(id)), mt);
+			if (minDist > calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), mt)) {
+				minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), mt);
 				bestId = id;
 			}
 		}
