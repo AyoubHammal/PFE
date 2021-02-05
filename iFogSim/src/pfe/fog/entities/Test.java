@@ -152,9 +152,6 @@ public class Test {
 					}
 				}
 			}
-			for (FogDevice d : previousLayer)
-				for (FogDevice dd : currentLayer)
-					d.getChildrenIds().add(dd.getId());
 			
 			previousLayer.clear();
 			previousLayer = new ArrayList<FogDevice>(currentLayer);
@@ -181,11 +178,6 @@ public class Test {
 			lastGw = gwd;
 		}
 		lastGw.setToken(true);
-		
-		for (FogDevice d : previousLayer)
-			for (FogDevice dd : currentLayer)
-				d.getChildrenIds().add(dd.getId());
-		
 		
 		PhysicalTopology pt = new PhysicalTopology();
 		pt.setFogDevices(fogDevices);

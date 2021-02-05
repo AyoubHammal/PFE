@@ -26,7 +26,8 @@ public class ClusterFogDevice extends FogDevice {
 	
 	protected long availableMips;
 	protected int availableRam;
-	
+	private int i = 0;
+	private int j = 0;
 	public ClusterFogDevice(String name, FogDeviceCharacteristics characteristics, VmAllocationPolicy vmAllocationPolicy,
 			List<Storage> storageList, double schedulingInterval, double uplinkBandwidth, double downlinkBandwidth,
 			double uplinkLatency, double ratePerMips) throws Exception {
@@ -72,6 +73,17 @@ public class ClusterFogDevice extends FogDevice {
 				isNorthLinkBusyByid.set(i, false);
 			}
 			i++;
+		}
+	}
+	
+	protected void sendTupleToActuator(Tuple tuple) {
+		if (CloudSim.getEntity(getChildrenIds().get(0)) instanceof GWFogDevice) {
+			for (int id : getChildrenIds()) {
+				sendDown(tuple, id);
+			}
+		} else {
+			sendDown(tuple, getChildrenIds().get(j));
+			j = (j + 1) % getChildrenIds().size();
 		}
 	}
 	
@@ -152,7 +164,8 @@ public class ClusterFogDevice extends FogDevice {
 						sendUp(tuple, id);
 					} else {
 						// sinon
-						sendUp(tuple, 0);
+						sendUp(tuple, i);
+						i = (i + 1) % parentsIds.size();
 					}
 				}
 			} else {

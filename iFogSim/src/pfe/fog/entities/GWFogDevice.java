@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import org.apache.commons.math3.util.Pair;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.SimEvent;
+import org.fog.entities.Actuator;
 import org.fog.entities.FogDevice;
 import org.fog.entities.FogDeviceCharacteristics;
 import org.fog.entities.Tuple;
@@ -89,6 +91,18 @@ public class GWFogDevice extends FogDevice {
 		}
 	}
 	
+	protected void sendTupleToActuator(Tuple tuple) {
+		for(Pair<Integer, Double> actuatorAssociation : getAssociatedActuatorIds()){
+			int actuatorId = actuatorAssociation.getFirst();
+			double delay = actuatorAssociation.getSecond();
+			String actuatorType = ((Actuator)CloudSim.getEntity(actuatorId)).getActuatorType();
+			if(tuple.getDestModuleName().equals(actuatorType)){
+				send(actuatorId, delay, FogEvents.TUPLE_ARRIVAL, tuple);
+				return;
+			}
+		}
+	}
+	
 	@Override
 	public void startEntity() {
 		super.startEntity();
@@ -124,13 +138,14 @@ public class GWFogDevice extends FogDevice {
 			// Match
 			mapTupleToDevice();
 			// Envoi
-
+			int i = 0;
 			for (MatchedTuple mt : matchedTupleList) {
 				int link = -1;
 				if (parentsIds.contains(mt.getDestinationFogDevice()))
 					link = parentsIds.indexOf(mt.getDestinationFogDevice());
 				
-				sendUp(mt, link == -1 ? 0 : link);
+				sendUp(mt, link == -1 ? i : link);
+				i = (i + 1) % parentsIds.size();
 			}
 			
 			for (MatchedTuple mt : toCloudTupleList)
@@ -142,7 +157,7 @@ public class GWFogDevice extends FogDevice {
 			System.out.println("Sending token from " + getName() + " to " + CloudSim.getEntityName(getParentsIds().get(0)));
 		} else
 			// Ajout a la queue
-			waitingQueue.add(tuple);	
+			waitingQueue.add(tuple);
 	}
 	
 	private void mapTupleToDevice() {
