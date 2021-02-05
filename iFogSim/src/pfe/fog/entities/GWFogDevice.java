@@ -24,7 +24,6 @@ public class GWFogDevice extends FogDevice {
 	protected List<GWFogDevice> gwDevices;
 	protected boolean token;
 	protected List<Integer> parentsIds = new ArrayList<Integer>();
-	protected List<Boolean> isNorthLinkBusyById = new ArrayList<Boolean>();
 	protected List<Queue<Tuple>> northTupleQueues = new ArrayList<Queue<Tuple>>();
 	protected List<Integer> clusterFogDevicesIds = new ArrayList<Integer>();
 
@@ -49,7 +48,6 @@ public class GWFogDevice extends FogDevice {
 	
 	public void addParent(int patendId) {
 		parentsIds.add(parentId);
-		isNorthLinkBusyById.add(false);
 		northTupleQueues.add(new LinkedList<Tuple>()); // Queue est une interface !!
 	}
 	
@@ -58,17 +56,19 @@ public class GWFogDevice extends FogDevice {
 	}
 	
 	protected void sendUp(Tuple tuple, int linkId) {
-		if (!isNorthLinkBusyById.get(linkId)) {
+		if (!isNorthLinkBusy()) {
 			sendUpFreeLink(tuple, linkId);
+			System.out.println("-------------------Sending up");
 		} else {
 			northTupleQueues.get(linkId).add(tuple);
+			System.out.println("-------------------Sending up but busy");
 		}
 	}
 	
 	protected void sendUpFreeLink(Tuple tuple, int linkId) {
 		double networkDelay = tuple.getCloudletFileSize() / getUplinkBandwidth();
 		
-		isNorthLinkBusyById.set(linkId, true);
+		setNorthLinkBusy(true);
 		send(getId(), networkDelay, FogEvents.UPDATE_NORTH_TUPLE_QUEUE);
 		send(parentsIds.get(linkId), networkDelay + getUplinkLatency(), FogEvents.TUPLE_ARRIVAL, tuple);
 		NetworkUsageMonitor.sendingTuple(getUplinkLatency(), tuple.getCloudletFileSize());
@@ -239,14 +239,6 @@ public class GWFogDevice extends FogDevice {
 
 	public void setParentsIds(List<Integer> parentsIds) {
 		this.parentsIds = parentsIds;
-	}
-
-	public List<Boolean> getIsNorthLinkBusyById() {
-		return isNorthLinkBusyById;
-	}
-
-	public void setIsNorthLinkBusyById(List<Boolean> isNorthLinkBusyById) {
-		this.isNorthLinkBusyById = isNorthLinkBusyById;
 	}
 
 	public List<Queue<Tuple>> getNorthTupleQueues() {
