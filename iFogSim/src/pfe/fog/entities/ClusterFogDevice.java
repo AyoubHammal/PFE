@@ -7,10 +7,13 @@ import java.util.Queue;
 
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
+import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.core.SimEvent;
 import org.fog.entities.FogDevice;
 import org.fog.entities.FogDeviceCharacteristics;
 import org.fog.entities.Tuple;
 import org.fog.utils.FogEvents;
+import org.fog.utils.Logger;
 import org.fog.utils.NetworkUsageMonitor;
 
 public class ClusterFogDevice extends FogDevice {
@@ -56,6 +59,35 @@ public class ClusterFogDevice extends FogDevice {
 		NetworkUsageMonitor.sendingTuple(getUplinkLatency(), tuple.getCloudletFileSize());
 	}
 	
+	protected void processTupleArrival(SimEvent ev) {
+		Tuple tuple = (Tuple)ev.getData();
+		
+		if(getName().equals("cloud")){
+			updateCloudTraffic();
+		}
+		
+		Logger.debug(getName(),
+				"Received tuple " + tuple.getCloudletId() + " with tupleType = " + tuple.getTupleType() + "\t| Source : "
+						+ CloudSim.getEntityName(ev.getSource()) + "|Dest : "
+						+ CloudSim.getEntityName(ev.getDestination()));
+		
+		send(ev.getSource(), CloudSim.getMinTimeBetweenEvents(), FogEvents.TUPLE_ACK);
+		
+		if (tuple.getDirection() == Tuple.ACTUATOR) {
+			sendTupleToActuator(tuple);
+			return;
+		}
+		
+		if (tuple.getTupleType() == "TOKEN") {
+			int srcId = tuple.getSourceDeviceId();
+			System.out.println(srcId);
+			int index = getChildrenIds().indexOf(srcId);
+			index = (index + 1) % getChildrenIds().size();
+			sendDown(tuple, getChildrenIds().get(index));
+			return;
+		}
+	}
+	
 	public List<Integer> getParentsIds() {
 		return parentsIds;
 	}
@@ -80,8 +112,9 @@ public class ClusterFogDevice extends FogDevice {
 		this.northTupleQueues = northTupleQueues;
 	}
 
-	public long getAvailableMips() {
-		return availableMips;
+	public double getAvailableMips() {
+		return getHostList().get(0).getAvailableMips();
+		// return availableMips;
 	}
 
 	public void setAvailableMips(long availableMips) {
@@ -89,7 +122,8 @@ public class ClusterFogDevice extends FogDevice {
 	}
 
 	public int getAvailableRam() {
-		return availableRam;
+		return getHostList().get(0).getRam();
+		// return availableRam;
 	}
 
 	public void setAvailableRam(int availableRam) {

@@ -21,6 +21,9 @@ import org.fog.utils.FogUtils;
 import org.fog.utils.NetworkUsageMonitor;
 import org.fog.utils.TimeKeeper;
 
+import pfe.fog.entities.ClusterFogDevice;
+import pfe.fog.entities.GWFogDevice;
+
 public class Controller extends SimEntity{
 	
 	public static boolean ONLY_CLOUD = false;
@@ -57,13 +60,38 @@ public class Controller extends SimEntity{
 	}
 	
 	private void connectWithLatencies(){
+//		for(FogDevice fogDevice : getFogDevices()){
+//			FogDevice parent = getFogDeviceById(fogDevice.getParentId());
+//			if(parent == null)
+//				continue;
+//			double latency = fogDevice.getUplinkLatency();
+//			parent.getChildToLatencyMap().put(fogDevice.getId(), latency);
+//			parent.getChildrenIds().add(fogDevice.getId());
+//		}
 		for(FogDevice fogDevice : getFogDevices()){
-			FogDevice parent = getFogDeviceById(fogDevice.getParentId());
-			if(parent == null)
-				continue;
-			double latency = fogDevice.getUplinkLatency();
-			parent.getChildToLatencyMap().put(fogDevice.getId(), latency);
-			parent.getChildrenIds().add(fogDevice.getId());
+			if (fogDevice instanceof ClusterFogDevice) {
+				for (int parentId : ((ClusterFogDevice)fogDevice).getParentsIds()) {
+					FogDevice parent = getFogDeviceById(parentId);
+					double latency = fogDevice.getUplinkLatency();
+					parent.getChildrenIds().add(fogDevice.getId());
+					parent.getChildToLatencyMap().put(fogDevice.getId(), latency);
+				}
+			}
+			else if (fogDevice instanceof GWFogDevice) {
+				for (int parentId : ((GWFogDevice)fogDevice).getParentsIds()) {
+					FogDevice parent = getFogDeviceById(parentId);
+					double latency = fogDevice.getUplinkLatency();
+					parent.getChildrenIds().add(fogDevice.getId());
+					parent.getChildToLatencyMap().put(fogDevice.getId(), latency);
+				}
+			} else {
+				FogDevice parent = getFogDeviceById(fogDevice.getParentId());
+				if(parent == null)
+					continue;
+				double latency = fogDevice.getUplinkLatency();
+				parent.getChildrenIds().add(fogDevice.getId());
+				parent.getChildToLatencyMap().put(fogDevice.getId(), latency);
+			}
 		}
 	}
 	

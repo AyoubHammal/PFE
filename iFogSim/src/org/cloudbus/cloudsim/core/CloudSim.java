@@ -54,7 +54,7 @@ public class CloudSim {
 
 	/** The trace flag. */
 	@SuppressWarnings("unused")
-	private static boolean traceFlag = false;
+	private static boolean traceFlag = true;
 
 	/** The calendar. */
 	private static Calendar calendar = null;

@@ -8,11 +8,9 @@ import java.util.Map;
 import java.util.Queue;
 
 import org.cloudbus.cloudsim.Storage;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.SimEvent;
-import org.fog.application.AppModule;
 import org.fog.entities.FogDevice;
 import org.fog.entities.FogDeviceCharacteristics;
 import org.fog.entities.Tuple;
@@ -21,10 +19,10 @@ import org.fog.utils.Logger;
 import org.fog.utils.NetworkUsageMonitor;
 
 public class GWFogDevice extends FogDevice {
-	protected Queue<Tuple> waitingQueue;
+	protected Queue<Tuple> waitingQueue = new LinkedList<Tuple>();
 	protected Map<Tuple, Integer> tupleToMatchedDevice = new HashMap<Tuple, Integer>();
 	protected List<GWFogDevice> gwDevices;
-
+	protected boolean token;
 	protected List<Integer> parentsIds = new ArrayList<Integer>();
 	protected List<Boolean> isNorthLinkBusyById = new ArrayList<Boolean>();
 	protected List<Queue<Tuple>> northTupleQueues = new ArrayList<Queue<Tuple>>();
@@ -76,6 +74,16 @@ public class GWFogDevice extends FogDevice {
 		NetworkUsageMonitor.sendingTuple(getUplinkLatency(), tuple.getCloudletFileSize());
 	}
 	
+	@Override
+	public void startEntity() {
+		super.startEntity();
+		if (token) {
+			token = false;
+			Tuple t = new Tuple(null, 0, 0, 0, 0, 0, 0, null, null, null);
+			t.setTupleType("TOKEN");
+			sendToSelf(t);
+		}
+	}
 	
 	protected void processTupleArrival(SimEvent ev){
 		Tuple tuple = (Tuple)ev.getData();
@@ -85,11 +93,7 @@ public class GWFogDevice extends FogDevice {
 		}
 		
 		Logger.debug(getName(),
-				"Received tuple " + tuple.getCloudletId() + "with tupleType = " + tuple.getTupleType() + "\t| Source : "
-						+ CloudSim.getEntityName(ev.getSource()) + "|Dest : "
-						+ CloudSim.getEntityName(ev.getDestination()));
-		System.out.println(getName() + 
-				" Received tuple " + tuple.getCloudletId() + "with tupleType = " + tuple.getTupleType() + "\t| Source : "
+				"Received tuple " + tuple.getCloudletId() + " with tupleType = " + tuple.getTupleType() + "\t| Source : "
 						+ CloudSim.getEntityName(ev.getSource()) + "|Dest : "
 						+ CloudSim.getEntityName(ev.getDestination()));
 		
@@ -100,61 +104,27 @@ public class GWFogDevice extends FogDevice {
 			return;
 		}
 
-		if (appToModulesMap.containsKey(tuple.getAppId())) {
-			if (appToModulesMap.get(tuple.getAppId()).contains(tuple.getDestModuleName())) {
+		if (tuple.getTupleType() == "TOKEN") {
+			// Match
+			mapTupleToDevice();
+			// Envoi
+			for (MatchedTuple mt : matchedTupleList) {
+				int link = -1;
+				if (parentsIds.contains(mt.getDestinationFogDevice()))
+					link = parentsIds.indexOf(mt.getDestinationFogDevice());
 				
-				if (tuple.getTupleType() == "TOKEN") {
-					// Match
-					mapTupleToDevice();
-					// Envoi
-					for (MatchedTuple mt : matchedTupleList) {
-						int link = -1;
-						if (parentsIds.contains(mt.getDestinationFogDevice()))
-							link = parentsIds.indexOf(mt.getDestinationFogDevice());
-						
-						sendUp(mt, link == -1 ? 0 : link);
-					}
-					
-					for (MatchedTuple mt : toCloudTupleList)
-						sendUp(mt, 0);
-					
-					sendTokenToNextGW(tuple);
-				} else {
-					int vmId = -1;
-					for (Vm vm : getHost().getVmList()) {
-						if (((AppModule) vm).getName().equals(tuple.getDestModuleName()))
-							vmId = vm.getId();
-					}
-					if (vmId < 0 || (tuple.getModuleCopyMap().containsKey(tuple.getDestModuleName())
-							&& tuple.getModuleCopyMap().get(tuple.getDestModuleName()) != vmId)) {
-						return;
-					}
-					tuple.setVmId(vmId);
-					updateTimingsOnReceipt(tuple);
-					
-					// Ajout a la queue
-					waitingQueue.add(tuple);
-				}
-				
-			} else if (tuple.getDestModuleName() != null) {
-				if (tuple.getDirection() == Tuple.UP)
-					sendUp(tuple);
-				else if (tuple.getDirection() == Tuple.DOWN) {
-					for (int childId : getChildrenIds())
-						sendDown(tuple, childId);
-				}
-			} else {
-				sendUp(tuple);
+				sendUp(mt, link == -1 ? 0 : link);
 			}
-		} else {
-			if (tuple.getDirection() == Tuple.UP)
-				sendUp(tuple);
-			else if (tuple.getDirection() == Tuple.DOWN) {
-				for (int childId : getChildrenIds())
-					sendDown(tuple, childId);
-			}
-		}
-		
+			
+			for (MatchedTuple mt : toCloudTupleList)
+				sendUp(mt, 0);
+			
+			// Envoi a la prochaine gateway
+			tuple.setSourceDeviceId(getId());
+			sendUp(tuple, 0);
+		} else
+			// Ajout a la queue
+			waitingQueue.add(tuple);	
 	}
 	
 	private void mapTupleToDevice() {
@@ -228,11 +198,11 @@ public class GWFogDevice extends FogDevice {
 				tuplesRequestingDevice.clear();
 			}
 		}
-		
-		for (Map.Entry<Integer, MatchedTuple> e : selectedTupleForDevice.entrySet())
-			matchedTupleList.get(matchedTupleList.indexOf(e.getValue())).setDestinationFogDeviceId(e.getKey());
-		for (MatchedTuple mt : toCloudTupleList)
-			mt.setDestinationFogDeviceId(CloudSim.getEntityId("cloud"));
+		System.out.println(selectedTupleForDevice);
+//		for (Map.Entry<Integer, MatchedTuple> e : selectedTupleForDevice.entrySet())
+//			matchedTupleList.get(matchedTupleList.indexOf(e.getValue())).setDestinationFogDeviceId(e.getKey());
+//		for (MatchedTuple mt : toCloudTupleList)
+//			mt.setDestinationFogDeviceId(CloudSim.getEntityId("cloud"));
 	}
 	
 	private int selectBestDeviceForTuple(MatchedTuple mt, List<Integer> prepositionsList) {
@@ -257,12 +227,6 @@ public class GWFogDevice extends FogDevice {
 			}
 		}
 		return bestTuple;
-	}
-	
-	private void sendTokenToNextGW(Tuple token) {
-		int index = gwDevices.indexOf(getId());
-		index = (index + 1) % gwDevices.size();
-		// A faire
 	}
 	
 	private double calculateDistance(ClusterFogDevice d, Tuple t) {
@@ -324,10 +288,13 @@ public class GWFogDevice extends FogDevice {
 	public void setGwDevices(List<GWFogDevice> gwDevices) {
 		this.gwDevices = gwDevices;
 	}
-	
-	
-	
-	
-	
+
+	public boolean isToken() {
+		return token;
+	}
+
+	public void setToken(boolean token) {
+		this.token = token;
+	}
 }
 
