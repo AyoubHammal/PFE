@@ -34,6 +34,7 @@ public class MatchedTuple extends Tuple {
 		this.setSourceModuleId(tuple.getSourceModuleId());
 		this.setModuleCopyMap(new HashMap<String, Integer>(tuple.getModuleCopyMap()));
 		this.setUserId(tuple.getUserId());
+		this.setDirection(Tuple.UP);
 	}
 	
 	public void setDestinationFogDeviceId(int id) {

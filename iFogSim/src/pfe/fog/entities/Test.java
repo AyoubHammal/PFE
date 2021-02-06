@@ -38,7 +38,6 @@ import org.fog.utils.distribution.DeterministicDistribution;
 import pfe.fog.entities.ClusterFogDevice;
 import pfe.fog.entities.GWFogDevice;
 
-
 public class Test {
 	private static String topologyFile = "topologies/topologie2x2";
 	static List<FogDevice> fogDevices = new ArrayList<FogDevice>();
@@ -47,15 +46,15 @@ public class Test {
 	static List<Integer> clusterFogDevicesIds = new ArrayList<Integer>();
 	static List<ClusterFogDevice> clusterFogDevices = new ArrayList<ClusterFogDevice>();
 	
-	static int nbOfLayers = 5;
-	static int nbOfNodePerLayer = 5;
-	static int tokenDelay = 20;
-	static int sensorTransfertDelay = 2;
+	static int nbOfLayers = 2;
+	static int nbOfNodePerLayer = 1;
+	static int tokenDelay = 10;
+	static int transmitRate = 20;
 	
 	public static void main(String[] args) {
 		GWFogDevice.tokenDelay = tokenDelay;
 		try {
-			// Log.disable();
+			Log.disable();
 			Log.printLine("Initialisation");
 			int num_user = 1;
 			Calendar calendar = Calendar.getInstance();
@@ -81,6 +80,7 @@ public class Test {
 			
 			for (ClusterFogDevice d : clusterFogDevices) {
 				moduleMapping.addModuleToDevice("m1", d.getName());
+				moduleMapping.addModuleToDevice("m2", d.getName());
 			}
 			
 			/*
@@ -147,7 +147,7 @@ public class Test {
 			GWFogDevice gwd = createGWFogDevice("GW" + j, 2800, 4000, 10000, 10000,  nbOfLayers, 0.0, 107.339, 83.4333, clusterFogDevicesIds);
 			currentLayer.add(gwd);
 			fogDevices.add(gwd);
-			Sensor s = new Sensor("s" + j, "T1", userId, appId, new DeterministicDistribution(sensorTransfertDelay)); // inter-transmission time of EEG sensor follows a deterministic distribution
+			Sensor s = new Sensor("s" + j, "T1", userId, appId, new DeterministicDistribution(transmitRate));
 			sensors.add(s);
 			Actuator a = new Actuator("a" + j, userId, appId, "A1");
 			actuators.add(a);
@@ -162,6 +162,7 @@ public class Test {
 			lastGw = gwd;
 		}
 		lastGw.setToken(true);
+		
 		
 		PhysicalTopology pt = new PhysicalTopology();
 		pt.setFogDevices(fogDevices);
@@ -333,21 +334,24 @@ public class Test {
 	private static Application createApplication(String appId, int userId) {
 		Application application = Application.createApplication(appId, userId);
 		
-		application.addAppModule("m1", 10);
+		application.addAppModule("m1", 100);
+		application.addAppModule("m2", 100);
 		
-		application.addAppEdge("T1", "m1", 300, 50, "T1", Tuple.UP, AppEdge.SENSOR);
-
-		application.addAppEdge("m1", "A1", 300, 50, "A1", Tuple.DOWN, AppEdge.ACTUATOR);
+		application.addAppEdge("T1", "m1", 9000, 500, "T1", Tuple.UP, AppEdge.SENSOR);
+		application.addAppEdge("m1", "m2", 9000, 500, "e1", Tuple.UP, AppEdge.MODULE);
+		application.addAppEdge("m2", "m1", 9000, 500, "e2", Tuple.UP, AppEdge.MODULE);
+		application.addAppEdge("m1", "A1", 9000, 500, "A1", Tuple.DOWN, AppEdge.ACTUATOR);
 		
-		application.addTupleMapping("m1", "T1", "A1", new FractionalSelectivity(1.0));
-
+		application.addTupleMapping("m1", "T1", "e1", new FractionalSelectivity(1.0));
+		application.addTupleMapping("m2", "e1", "e2", new FractionalSelectivity(1.0));
+		application.addTupleMapping("m1", "e2", "A1", new FractionalSelectivity(1.0));
 		
 		final AppLoop loop = new AppLoop(new ArrayList<String>() {
 				{	
 					add("T1");
 					add("m1");
-					//add("m2");
-					//add("m1");
+					add("m2");
+					add("m1");
 					add("A1");
 				}
 			});

@@ -375,7 +375,7 @@ public class FogDevice extends PowerDatacenter {
 		double minTime = Double.MAX_VALUE;
 		double timeDiff = currentTime - getLastProcessTime();
 		double timeFrameDatacenterEnergy = 0.0;
-
+		
 		for (PowerHost host : this.<PowerHost> getHostList()) {
 			Log.printLine();
 

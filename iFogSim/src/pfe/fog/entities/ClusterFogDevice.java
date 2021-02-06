@@ -87,6 +87,11 @@ public class ClusterFogDevice extends FogDevice {
 		}
 	}
 	
+	protected void sendTupleDownToGW(Tuple tuple) {
+		sendDown(tuple, getChildrenIds().get(j));
+		j = (j + 1) % getChildrenIds().size();
+	}
+	
 	protected void processTupleArrival(SimEvent ev) {
 		Tuple tuple = (Tuple)ev.getData();
 		
@@ -134,18 +139,18 @@ public class ClusterFogDevice extends FogDevice {
 							updateTimingsOnReceipt(tuple);
 							
 							executeTuple(ev, tuple.getDestModuleName());
-						}else if(tuple.getDestModuleName()!=null){
+						} else if (tuple.getDestModuleName()!=null){
 							
-							if(tuple.getDirection() == Tuple.UP) {
+							if (tuple.getDirection() == Tuple.UP) {
 								Logger.debug(getName(), "Sending UP tuple " + tuple.getCloudletId());
 								sendUp(tuple);
 							}
-							else if(tuple.getDirection() == Tuple.DOWN){
+							else if (tuple.getDirection() == Tuple.DOWN){
 								Logger.debug(getName(), "Sending UP tuple " + tuple.getCloudletId());
-								for(int childId : getChildrenIds())
+								for (int childId : getChildrenIds())
 									sendDown(tuple, childId);
 							}
-						}else{
+						} else {
 							sendUp(tuple);
 						}
 					}else{
@@ -170,46 +175,8 @@ public class ClusterFogDevice extends FogDevice {
 				}
 			} else {
 				// le tuple n'est pas un matchedtuple
-				if(appToModulesMap.containsKey(tuple.getAppId())){
-					if(appToModulesMap.get(tuple.getAppId()).contains(tuple.getDestModuleName())){
-						int vmId = -1;
-						for(Vm vm : getHost().getVmList()){
-							if(((AppModule)vm).getName().equals(tuple.getDestModuleName()))
-								vmId = vm.getId();
-						}
-						if(vmId < 0
-								|| (tuple.getModuleCopyMap().containsKey(tuple.getDestModuleName()) && 
-										tuple.getModuleCopyMap().get(tuple.getDestModuleName())!=vmId )){
-							return;
-						}
-						tuple.setVmId(vmId);
-						//Logger.error(getName(), "Executing tuple for operator " + moduleName);
-						
-						updateTimingsOnReceipt(tuple);
-						
-						executeTuple(ev, tuple.getDestModuleName());
-					}else if(tuple.getDestModuleName()!=null){
-						
-						if(tuple.getDirection() == Tuple.UP) {
-							Logger.debug(getName(), "Sending UP tuple " + tuple.getCloudletId());
-							sendUp(tuple);
-						}
-						else if(tuple.getDirection() == Tuple.DOWN){
-							Logger.debug(getName(), "Sending UP tuple " + tuple.getCloudletId());
-							for(int childId : getChildrenIds())
-								sendDown(tuple, childId);
-						}
-					}else{
-						sendUp(tuple);
-					}
-				}else{
-					if(tuple.getDirection() == Tuple.UP)
-						sendUp(tuple);
-					else if(tuple.getDirection() == Tuple.DOWN){
-						for(int childId : getChildrenIds())
-							sendDown(tuple, childId);
-					}
-				}
+				tuple.setDirection(Tuple.DOWN);
+				sendTupleDownToGW(tuple);
 			}
 		}
 	}
