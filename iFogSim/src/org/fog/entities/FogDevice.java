@@ -291,7 +291,8 @@ public class FogDevice extends PowerDatacenter {
 	 * @param ev
 	 */
 	private void manageResources(SimEvent ev) {
-		updateEnergyConsumption();
+//		updateEnergyConsumption();
+		updateAllocatedMips(null);
 		send(getId(), Config.RESOURCE_MGMT_INTERVAL, FogEvents.RESOURCE_MGMT);
 	}
 

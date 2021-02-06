@@ -152,7 +152,7 @@ public class Vm {
 	 */
 	public List<Double> getCurrentRequestedMips() {
 		List<Double> currentRequestedMips = getCloudletScheduler().getCurrentRequestedMips();
-		if (isBeingInstantiated()) {
+		if (!isBeingInstantiated()) {
 			currentRequestedMips = new ArrayList<Double>();
 			for (int i = 0; i < getNumberOfPes(); i++) {
 				currentRequestedMips.add(getMips());
@@ -195,7 +195,7 @@ public class Vm {
 	 * @return the current requested bw
 	 */
 	public long getCurrentRequestedBw() {
-		if (isBeingInstantiated()) {
+		if (!isBeingInstantiated()) {
 			return getBw();
 		}
 		return (long) (getCloudletScheduler().getCurrentRequestedUtilizationOfBw() * getBw());
@@ -207,7 +207,7 @@ public class Vm {
 	 * @return the current requested ram
 	 */
 	public int getCurrentRequestedRam() {
-		if (isBeingInstantiated()) {
+		if (!isBeingInstantiated()) {
 			return getRam();
 		}
 		return (int) (getCloudletScheduler().getCurrentRequestedUtilizationOfRam() * getRam());
