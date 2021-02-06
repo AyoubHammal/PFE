@@ -54,7 +54,7 @@ public class Test {
 	public static void main(String[] args) {
 		GWFogDevice.tokenDelay = tokenDelay;
 		try {
-			Log.disable();
+			//Log.disable();
 			Log.printLine("Initialisation");
 			int num_user = 1;
 			Calendar calendar = Calendar.getInstance();
@@ -74,7 +74,6 @@ public class Test {
 			
 			Application application = createApplication(appId, broker.getId());
 			application.setUserId(broker.getId());
-			System.out.println(broker.getId());
 			
 			ModuleMapping moduleMapping = ModuleMapping.createModuleMapping();
 			
