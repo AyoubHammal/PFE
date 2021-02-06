@@ -38,25 +38,6 @@ import org.fog.utils.distribution.DeterministicDistribution;
 import pfe.fog.entities.ClusterFogDevice;
 import pfe.fog.entities.GWFogDevice;
 
-/**
- * Topologie: matrice de noeuds fog 2x2
- * 				Cloud
- * 				/	\
- * 			Node1/1	Node1/2
- * 			|		|
- * 			Node2/1	Node2/2
- * 			|	|	|	|
- * 			S1	A1	S2	A2
- *
- * DDF de l'application:
- * 			    m2
- * 			  ^   |
- * 			e2| e3v
- * 				m1
- * 			  ^   |
- * 			e1|	e4v
- * 			  s   a
- */
 
 public class Test {
 	private static String topologyFile = "topologies/topologie2x2";
@@ -66,10 +47,13 @@ public class Test {
 	static List<Integer> clusterFogDevicesIds = new ArrayList<Integer>();
 	static List<ClusterFogDevice> clusterFogDevices = new ArrayList<ClusterFogDevice>();
 	
-	static int nbOfLayers = 1;
-	static int nbOfNodePerLayer = 2;
+	static int nbOfLayers = 5;
+	static int nbOfNodePerLayer = 5;
+	static int tokenDelay = 20;
+	static int sensorTransfertDelay = 2;
 	
 	public static void main(String[] args) {
+		GWFogDevice.tokenDelay = tokenDelay;
 		try {
 			// Log.disable();
 			Log.printLine("Initialisation");
@@ -163,7 +147,7 @@ public class Test {
 			GWFogDevice gwd = createGWFogDevice("GW" + j, 2800, 4000, 10000, 10000,  nbOfLayers, 0.0, 107.339, 83.4333, clusterFogDevicesIds);
 			currentLayer.add(gwd);
 			fogDevices.add(gwd);
-			Sensor s = new Sensor("s" + j, "T1", userId, appId, new DeterministicDistribution(20)); // inter-transmission time of EEG sensor follows a deterministic distribution
+			Sensor s = new Sensor("s" + j, "T1", userId, appId, new DeterministicDistribution(sensorTransfertDelay)); // inter-transmission time of EEG sensor follows a deterministic distribution
 			sensors.add(s);
 			Actuator a = new Actuator("a" + j, userId, appId, "A1");
 			actuators.add(a);

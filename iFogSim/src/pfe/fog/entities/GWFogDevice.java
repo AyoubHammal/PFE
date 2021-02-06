@@ -33,7 +33,7 @@ public class GWFogDevice extends FogDevice {
 	protected long availableMips;
 	protected int availableRam;
 	
-	protected int tokenDelay = 50;
+	public static int tokenDelay = 20;
 	
 	// La liste des tuples matches
 	ArrayList<MatchedTuple> matchedTupleList = new ArrayList<MatchedTuple>();
@@ -245,7 +245,7 @@ public class GWFogDevice extends FogDevice {
 		double minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(prepositionsList.get(0)), mt);
 		int bestId = prepositionsList.get(0);
 		for (int id : prepositionsList) {
-			if (minDist > calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), mt)) {
+			if (minDist >= calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), mt)) {
 				minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), mt);
 				bestId = id;
 			}
@@ -257,7 +257,7 @@ public class GWFogDevice extends FogDevice {
 		double minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), tuplesRequestingDevice.get(0));
 		MatchedTuple bestTuple = tuplesRequestingDevice.get(0);
 		for (MatchedTuple mt : tuplesRequestingDevice) {
-			if (minDist > calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), mt)) {
+			if (minDist >= calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), mt)) {
 				minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), mt);
 				bestTuple = mt;
 			}
