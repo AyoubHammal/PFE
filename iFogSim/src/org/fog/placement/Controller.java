@@ -172,12 +172,14 @@ public class Controller extends SimEntity{
 	
 	private void printPowerDetails() {
 		double sum = 0;
+		int tupleCount = 0;
 		for(FogDevice fogDevice : getFogDevices()){
 			System.out.println(fogDevice.getName() + " : Energy Consumed = " + fogDevice.getEnergyConsumption() + " | Executed tuples = " + fogDevice.nbExecutedTuples);
 			sum += fogDevice.getEnergyConsumption();
+			tupleCount += fogDevice.nbExecutedTuples;
 		}
 		double avg = sum / getFogDevices().size();
-		System.out.println("Average energy consumed = " + avg);
+		System.out.println("Average energy consumed = " + avg + " | Total Executed Tuple Count = " + tupleCount);
 	}
 
 	private String getStringForLoopId(int loopId){
