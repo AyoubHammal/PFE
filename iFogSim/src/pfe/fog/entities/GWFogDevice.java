@@ -247,26 +247,30 @@ public class GWFogDevice extends FogDevice {
 	}
 	
 	private int selectBestDeviceForTuple(MatchedTuple mt, List<Integer> prepositionsList) {
+		System.out.println("SELECTION BEST DEVICE FOR TUPLE");
 		double minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(prepositionsList.get(0)), mt);
 		int bestId = prepositionsList.get(0);
 		for (int id : prepositionsList) {
-			if (minDist >= calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), mt)) {
-				minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), mt);
+			double dist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), mt);
+			if (dist != -1 && minDist >= dist) {
+				minDist = dist;
 				bestId = id;
 			}
 		}
 		
-		if (calculateDistance((ClusterFogDevice)CloudSim.getEntity(bestId), mt) < 0)
+		double dist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(bestId), mt);
+		if (dist == -1)
 			return -1;
-		
 		return bestId;
 	}
 	
 	private MatchedTuple selectBestTupleForDevice(int id, List<MatchedTuple> tuplesRequestingDevice) {
+		System.out.println("SELECTION BEST TUPLE FOR DEVICE");
 		double minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), tuplesRequestingDevice.get(0));
 		MatchedTuple bestTuple = tuplesRequestingDevice.get(0);
 		for (MatchedTuple mt : tuplesRequestingDevice) {
-			if (minDist >= calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), mt)) {
+			double dist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), mt);
+			if (minDist >= dist) {
 				minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), mt);
 				bestTuple = mt;
 			}
@@ -277,8 +281,16 @@ public class GWFogDevice extends FogDevice {
 	private double calculateDistance(ClusterFogDevice d, Tuple t) {
 		AppModule m = ((Controller)CloudSim.getEntity(getControllerId())).getApplications().get(t.getAppId()).getModuleByName(t.getDestModuleName());
 		double hostAvailableMips = d.getHost().getAvailableMips();
+		double hostUsedMips = d.getHost().getUtilizationMips();
+		double hostMips = d.getHost().getTotalMips();
 		double moduleMips = m.getMips();
-		return (hostAvailableMips - moduleMips);
+		
+//		System.out.println("-- Host: " + d.getName() + " MipsAvailable: " + hostAvailableMips + " Tuple: " + t.getCloudletId() + " Mips: " + moduleMips + " Dist: " + (hostAvailableMips > moduleMips ? hostAvailableMips - moduleMips : -1));
+//		return hostAvailableMips > moduleMips ? hostAvailableMips - moduleMips : -1;
+		
+		// formule de l'article
+		System.out.println("-- Host: " + d.getName() + " MipsAvailable: " + hostAvailableMips + " Tuple: " + t.getCloudletId() + " Mips: " + moduleMips + " Dist: " + (hostAvailableMips > moduleMips ? (hostUsedMips + moduleMips) / hostMips : -1));
+		return hostAvailableMips > moduleMips ? (hostUsedMips + moduleMips) / hostMips : -1;
 	}
 	
 	public List<Integer> getParentsIds() {

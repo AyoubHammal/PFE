@@ -44,7 +44,7 @@ public class Test {
 	static List<Integer> clusterFogDevicesIds = new ArrayList<Integer>();
 	static List<ClusterFogDevice> clusterFogDevices = new ArrayList<ClusterFogDevice>();
 	
-	static int nbOfLayers = 5;
+	static int nbOfLayers = 7;
 	static int nbOfNodePerLayer = 3;
 	
 	static double transmitRate = 1;
@@ -154,6 +154,10 @@ public class Test {
 			s.setLatency(1.0);
 			a.setGatewayDeviceId(gwd.getId());
 			a.setLatency(1.0);
+			s = new Sensor("s" + j, "T2", userId, appId, new DeterministicDistribution(transmitRate));
+			sensors.add(s);
+			s.setGatewayDeviceId(gwd.getId());
+			s.setLatency(1.0);
 			for (FogDevice cd : previousLayer) {
 				gwd.setParentId(cd.getId());
 				gwd.addParent(cd.getId());
@@ -333,30 +337,38 @@ public class Test {
 	private static Application createApplication(String appId, int userId) {
 		Application application = Application.createApplication(appId, userId);
 		
-		application.addAppModule("m1", 100, 1500, 1000, 100);
-		//application.addAppModule("m2", 100, 500, 1000, 100);
+		application.addAppModule("m1", 100, 500, 1000, 100);
+		application.addAppModule("m2", 100, 1500, 1000, 100);
 		
-		application.addAppEdge("T1", "m1", 300, 50, "T1", Tuple.UP, AppEdge.SENSOR);
+		application.addAppEdge("T1", "m1", 3000, 50, "T1", Tuple.UP, AppEdge.SENSOR);
+		application.addAppEdge("T2", "m2", 9000, 50, "T2", Tuple.UP, AppEdge.SENSOR);
 		//application.addAppEdge("m1", "m2", 3000, 500, "e1", Tuple.UP, AppEdge.MODULE);
 		//application.addAppEdge("m2", "m1", 3000, 500, "e2", Tuple.UP, AppEdge.MODULE);
-		application.addAppEdge("m1", "A1", 300, 50, "A1", Tuple.DOWN, AppEdge.ACTUATOR);
+		application.addAppEdge("m1", "A1", 3000, 50, "A1", Tuple.DOWN, AppEdge.ACTUATOR);
+		application.addAppEdge("m2", "A1", 3000, 50, "A1", Tuple.DOWN, AppEdge.ACTUATOR);
 		
 		application.addTupleMapping("m1", "T1", "A1", new FractionalSelectivity(1.0));
+		application.addTupleMapping("m2", "T2", "A1", new FractionalSelectivity(1.0));
 		//application.addTupleMapping("m1", "T1", "e1", new FractionalSelectivity(1.0));
 		//application.addTupleMapping("m2", "e1", "e2", new FractionalSelectivity(1.0));
 		//application.addTupleMapping("m1", "e2", "A1", new FractionalSelectivity(1.0));
 		
-		final AppLoop loop = new AppLoop(new ArrayList<String>() {
+		final AppLoop loop1 = new AppLoop(new ArrayList<String>() {
 				{	
 					add("T1");
 					add("m1");
-					//add("m2");
-					//add("m1");
 					add("A1");
 				}
 			});
+		final AppLoop loop2 = new AppLoop(new ArrayList<String>() {
+			{	
+				add("T2");
+				add("m2");
+				add("A1");
+			}
+		});
 		List<AppLoop> loops = new ArrayList<AppLoop>() {
-			{add(loop);}
+			{add(loop1);add(loop2);}
 		};
 		application.setLoops(loops);
 		
