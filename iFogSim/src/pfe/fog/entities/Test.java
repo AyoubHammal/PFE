@@ -44,15 +44,15 @@ public class Test {
 	static List<Integer> clusterFogDevicesIds = new ArrayList<Integer>();
 	static List<ClusterFogDevice> clusterFogDevices = new ArrayList<ClusterFogDevice>();
 	
-	static int nbOfLayers = 1;
-	static int nbOfNodePerLayer = 5;
-	static int tokenDelay = 3;
-	static double transmitRate = 0.5;
+	static int nbOfLayers = 5;
+	static int nbOfNodePerLayer = 3;
+	static int tokenDelay = 5;
+	static double transmitRate = 1;
 	
 	public static void main(String[] args) {
 		GWFogDevice.tokenDelay = tokenDelay;
 		try {
-			//Log.disable();
+			Log.disable();
 			Log.printLine("Initialisation");
 			int num_user = 1;
 			Calendar calendar = Calendar.getInstance();
@@ -117,7 +117,7 @@ public class Test {
 		List<FogDevice> currentLayer = new ArrayList<FogDevice>();
 		for (int i = 0; i < nbOfLayers; i++) {
 			for (int j = 0; j < nbOfNodePerLayer; j++) {
-				ClusterFogDevice d = createClusterFogDevice("n" + i + "/" + j, 2200, 4000, 10000, 10000, i + 1, 0.0, 107.339, 83.4333);
+				ClusterFogDevice d = createClusterFogDevice("n" + i + "/" + j, 2200, 4000, 10000, 10000, i + 1, 0.0, 100, 50);
 				currentLayer.add(d);
 				fogDevices.add(d);
 				clusterFogDevices.add(d);
@@ -140,7 +140,7 @@ public class Test {
 		// creation gw
 		GWFogDevice lastGw = null;
 		for (int j = 0; j < nbOfNodePerLayer; j++) {
-			GWFogDevice gwd = createGWFogDevice("GW" + j, 2200, 4000, 10000, 10000,  nbOfLayers, 0.0, 107.339, 83.4333, clusterFogDevicesIds);
+			GWFogDevice gwd = createGWFogDevice("GW" + j, 2200, 4000, 10000, 10000,  nbOfLayers, 0.0, 100, 50, clusterFogDevicesIds);
 			currentLayer.add(gwd);
 			fogDevices.add(gwd);
 			Sensor s = new Sensor("s" + j, "T1", userId, appId, new DeterministicDistribution(transmitRate));
@@ -331,15 +331,16 @@ public class Test {
 	private static Application createApplication(String appId, int userId) {
 		Application application = Application.createApplication(appId, userId);
 		
-		application.addAppModule("m1", 100, 1000, 1000, 100);
+		application.addAppModule("m1", 100, 1500, 1000, 100);
 		//application.addAppModule("m2", 100, 500, 1000, 100);
 		
-		application.addAppEdge("T1", "m1", 3000, 500, "T1", Tuple.UP, AppEdge.SENSOR);
+		application.addAppEdge("T1", "m1", 300, 50, "T1", Tuple.UP, AppEdge.SENSOR);
 		//application.addAppEdge("m1", "m2", 3000, 500, "e1", Tuple.UP, AppEdge.MODULE);
 		//application.addAppEdge("m2", "m1", 3000, 500, "e2", Tuple.UP, AppEdge.MODULE);
-		application.addAppEdge("m1", "A1", 3000, 500, "A1", Tuple.DOWN, AppEdge.ACTUATOR);
+		application.addAppEdge("m1", "A1", 300, 50, "A1", Tuple.DOWN, AppEdge.ACTUATOR);
 		
 		application.addTupleMapping("m1", "T1", "A1", new FractionalSelectivity(1.0));
+		//application.addTupleMapping("m1", "T1", "e1", new FractionalSelectivity(1.0));
 		//application.addTupleMapping("m2", "e1", "e2", new FractionalSelectivity(1.0));
 		//application.addTupleMapping("m1", "e2", "A1", new FractionalSelectivity(1.0));
 		
