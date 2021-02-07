@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
+import org.cloudbus.cloudsim.power.PowerHost;
 import org.fog.application.AppEdge;
 import org.fog.application.AppLoop;
 import org.fog.application.AppModule;
@@ -60,26 +62,42 @@ public class Controller extends SimEntity{
 	}
 	
 	private void connectWithLatencies(){
-//		for(FogDevice fogDevice : getFogDevices()){
-//			FogDevice parent = getFogDeviceById(fogDevice.getParentId());
-//			if(parent == null)
-//				continue;
-//			double latency = fogDevice.getUplinkLatency();
-//			parent.getChildToLatencyMap().put(fogDevice.getId(), latency);
-//			parent.getChildrenIds().add(fogDevice.getId());
-//		}
 		for(FogDevice fogDevice : getFogDevices()){
-			if (fogDevice instanceof ClusterFogDevice) {
-				for (int parentId : ((ClusterFogDevice)fogDevice).getParentsIds()) {
+			if (fogDevice instanceof pfe.fog.entities.ClusterFogDevice) {
+				for (int parentId : ((pfe.fog.entities.ClusterFogDevice)fogDevice).getParentsIds()) {
 					FogDevice parent = getFogDeviceById(parentId);
+					if(parent == null)
+						continue;
 					double latency = fogDevice.getUplinkLatency();
 					parent.getChildrenIds().add(fogDevice.getId());
 					parent.getChildToLatencyMap().put(fogDevice.getId(), latency);
 				}
 			}
-			else if (fogDevice instanceof GWFogDevice) {
-				for (int parentId : ((GWFogDevice)fogDevice).getParentsIds()) {
+			else if (fogDevice instanceof pfe.fog.entities.GWFogDevice) {
+				for (int parentId : ((pfe.fog.entities.GWFogDevice)fogDevice).getParentsIds()) {
 					FogDevice parent = getFogDeviceById(parentId);
+					if(parent == null)
+						continue;
+					double latency = fogDevice.getUplinkLatency();
+					parent.getChildrenIds().add(fogDevice.getId());
+					parent.getChildToLatencyMap().put(fogDevice.getId(), latency);
+				}
+			}
+			else if (fogDevice instanceof pfe.fog.cmp.ClusterFogDevice) {
+				for (int parentId : ((pfe.fog.cmp.ClusterFogDevice)fogDevice).getParentsIds()) {
+					FogDevice parent = getFogDeviceById(parentId);
+					if(parent == null)
+						continue;
+					double latency = fogDevice.getUplinkLatency();
+					parent.getChildrenIds().add(fogDevice.getId());
+					parent.getChildToLatencyMap().put(fogDevice.getId(), latency);
+				}
+			}
+			else if (fogDevice instanceof pfe.fog.cmp.GWFogDevice) {
+				for (int parentId : ((pfe.fog.cmp.GWFogDevice)fogDevice).getParentsIds()) {
+					FogDevice parent = getFogDeviceById(parentId);
+					if(parent == null)
+						continue;
 					double latency = fogDevice.getUplinkLatency();
 					parent.getChildrenIds().add(fogDevice.getId());
 					parent.getChildToLatencyMap().put(fogDevice.getId(), latency);
@@ -153,9 +171,13 @@ public class Controller extends SimEntity{
 	}
 	
 	private void printPowerDetails() {
+		double sum = 0;
 		for(FogDevice fogDevice : getFogDevices()){
-			System.out.println(fogDevice.getName() + " : Energy Consumed = "+fogDevice.getEnergyConsumption());
+			System.out.println(fogDevice.getName() + " : Energy Consumed = " + fogDevice.getEnergyConsumption() + " | Executed tuples = " + fogDevice.nbExecutedTuples);
+			sum += fogDevice.getEnergyConsumption();
 		}
+		double avg = sum / getFogDevices().size();
+		System.out.println("Average energy consumed = " + avg);
 	}
 
 	private String getStringForLoopId(int loopId){
@@ -169,6 +191,8 @@ public class Controller extends SimEntity{
 		return null;
 	}
 	private void printTimeDetails() {
+		float sum = 0;
+		int i = 0;
 		System.out.println("=========================================");
 		System.out.println("============== RESULTS ==================");
 		System.out.println("=========================================");
@@ -188,15 +212,23 @@ public class Controller extends SimEntity{
 			}
 			System.out.println(getStringForLoopId(loopId) + " ---> "+(average/count));*/
 			System.out.println(getStringForLoopId(loopId) + " ---> "+TimeKeeper.getInstance().getLoopIdToCurrentAverage().get(loopId));
+			if (TimeKeeper.getInstance().getLoopIdToCurrentAverage().get(loopId) != null) {
+				sum += TimeKeeper.getInstance().getLoopIdToCurrentAverage().get(loopId);
+				i++;
+			}
 		}
+		System.out.println("Average = " + sum / i);
 		System.out.println("=========================================");
 		System.out.println("TUPLE CPU EXECUTION DELAY");
 		System.out.println("=========================================");
-		
+		sum = 0;
+		i = 0;
 		for(String tupleType : TimeKeeper.getInstance().getTupleTypeToAverageCpuTime().keySet()){
 			System.out.println(tupleType + " ---> "+TimeKeeper.getInstance().getTupleTypeToAverageCpuTime().get(tupleType));
+			sum += TimeKeeper.getInstance().getTupleTypeToAverageCpuTime().get(tupleType);
+			i++;
 		}
-		
+		System.out.println("Average = " + sum / i);
 		System.out.println("=========================================");
 	}
 
@@ -256,6 +288,13 @@ public class Controller extends SimEntity{
 		}
 		
 		Map<Integer, List<AppModule>> deviceToModuleMap = modulePlacement.getDeviceToModuleMap();
+//		for (int deviceId : deviceToModuleMap.keySet()) {
+//		for (PowerHost host : ((FogDevice)CloudSim.getEntity(deviceId)).<PowerHost>getHostList()) {
+//			for (Vm vm : host.getVmList()) {
+//				System.out.println("HOST: " + CloudSim.getEntityName(deviceId) + " HOST : " + host.getId() + " VM : " + vm.getId());
+//			}
+//		}
+//	}
 		for(Integer deviceId : deviceToModuleMap.keySet()){
 			for(AppModule module : deviceToModuleMap.get(deviceId)){
 				sendNow(deviceId, FogEvents.APP_SUBMIT, application);

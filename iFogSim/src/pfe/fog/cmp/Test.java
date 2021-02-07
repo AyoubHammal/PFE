@@ -1,4 +1,4 @@
-package pfe.fog.entities;
+package pfe.fog.cmp;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,7 +9,6 @@ import org.cloudbus.cloudsim.Host;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Pe;
 import org.cloudbus.cloudsim.Storage;
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.power.PowerHost;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
@@ -36,6 +35,7 @@ import org.fog.utils.FogUtils;
 import org.fog.utils.TimeKeeper;
 import org.fog.utils.distribution.DeterministicDistribution;
 
+
 public class Test {
 	private static String topologyFile = "topologies/topologie2x2";
 	static List<FogDevice> fogDevices = new ArrayList<FogDevice>();
@@ -46,11 +46,10 @@ public class Test {
 	
 	static int nbOfLayers = 1;
 	static int nbOfNodePerLayer = 5;
-	static int tokenDelay = 3;
+	
 	static double transmitRate = 0.5;
 	
 	public static void main(String[] args) {
-		GWFogDevice.tokenDelay = tokenDelay;
 		try {
 			//Log.disable();
 			Log.printLine("Initialisation");
@@ -72,6 +71,7 @@ public class Test {
 			
 			Application application = createApplication(appId, broker.getId());
 			application.setUserId(broker.getId());
+			System.out.println(broker.getId());
 			
 			ModuleMapping moduleMapping = ModuleMapping.createModuleMapping();
 			
@@ -80,23 +80,25 @@ public class Test {
 				//moduleMapping.addModuleToDevice("m2", d.getName());
 			}
 			moduleMapping.addModuleToDevice("m1", "cloud");
-			//moduleMapping.addModuleToDevice("m2", "cloud");
 			
+			/*
+			 * moduleMapping.addModuleToDevice("m2", "Node2/1");
+			 * moduleMapping.addModuleToDevice("m2", "Node2/2");
+			 * moduleMapping.addModuleToDevice("m1", "Node1/1");
+			 * moduleMapping.addModuleToDevice("m1", "Node1/2");
+			 */
 			
 			Controller controller = new Controller("master-controller", 
 					physicalTopology.getFogDevices(), 
 					physicalTopology.getSensors(), 
 					physicalTopology.getActuators());
 			
-			ModulePlacementMapping mpm = new ModulePlacementMapping(physicalTopology.getFogDevices(),
-					application,
-					moduleMapping
-			);
-
 			controller.submitApplication(application, 0,
-					mpm);
-
-
+					new ModulePlacementMapping(physicalTopology.getFogDevices(),
+							application,
+							moduleMapping
+					));
+			
 			TimeKeeper.getInstance().setSimulationStartTime(Calendar.getInstance().getTimeInMillis());
 
 			CloudSim.startSimulation();
@@ -157,7 +159,6 @@ public class Test {
 			}
 			lastGw = gwd;
 		}
-		lastGw.setToken(true);
 		
 		
 		PhysicalTopology pt = new PhysicalTopology();
@@ -331,7 +332,7 @@ public class Test {
 	private static Application createApplication(String appId, int userId) {
 		Application application = Application.createApplication(appId, userId);
 		
-		application.addAppModule("m1", 100, 1000, 1000, 100);
+		application.addAppModule("m1", 100, 2000, 1000, 100);
 		//application.addAppModule("m2", 100, 500, 1000, 100);
 		
 		application.addAppEdge("T1", "m1", 3000, 500, "T1", Tuple.UP, AppEdge.SENSOR);

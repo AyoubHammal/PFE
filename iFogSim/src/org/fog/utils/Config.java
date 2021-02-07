@@ -2,9 +2,9 @@ package org.fog.utils;
 
 public class Config {
 
-	public static final double RESOURCE_MGMT_INTERVAL = 100;
-	public static int MAX_SIMULATION_TIME = 100;
-	public static int RESOURCE_MANAGE_INTERVAL = 100;
+	public static final double RESOURCE_MGMT_INTERVAL = 5;
+	public static int MAX_SIMULATION_TIME = 50;
+	public static int RESOURCE_MANAGE_INTERVAL = 5;
 	public static String FOG_DEVICE_ARCH = "x86";
 	public static String FOG_DEVICE_OS = "Linux";
 	public static String FOG_DEVICE_VMM = "Xen";
