@@ -537,7 +537,9 @@ public class FogDevice extends PowerDatacenter {
 			if(vm.getCloudletScheduler().runningCloudlets() > 0 || ((AppModule)vm).getName().equals(incomingOperator)){
 				getHost().getVmScheduler().allocatePesForVm(vm, new ArrayList<Double>(){
 					protected static final long serialVersionUID = 1L;
-				{add((double) getHost().getTotalMips());}});
+				//{add((double) getHost().getTotalMips());}
+					{add((double) vm.getMips());}
+					});
 			}else{
 				getHost().getVmScheduler().allocatePesForVm(vm, new ArrayList<Double>(){
 					protected static final long serialVersionUID = 1L;
@@ -653,7 +655,9 @@ public class FogDevice extends PowerDatacenter {
 				getHost().getVmScheduler().deallocatePesForVm(operator);
 				getHost().getVmScheduler().allocatePesForVm(operator, new ArrayList<Double>(){
 					protected static final long serialVersionUID = 1L;
-				{add((double) getHost().getTotalMips());}});
+				//{add((double) getHost().getTotalMips());}
+					{add((double) operator.getMips());}
+					});
 			}
 		}
 		
