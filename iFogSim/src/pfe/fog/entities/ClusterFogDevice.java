@@ -14,6 +14,7 @@ import org.fog.application.AppModule;
 import org.fog.entities.FogDevice;
 import org.fog.entities.FogDeviceCharacteristics;
 import org.fog.entities.Tuple;
+import org.fog.placement.Controller;
 import org.fog.utils.FogEvents;
 import org.fog.utils.Logger;
 import org.fog.utils.NetworkUsageMonitor;
@@ -23,7 +24,7 @@ public class ClusterFogDevice extends FogDevice {
 	protected List<Boolean> isNorthLinkBusyById = new ArrayList<Boolean>();
 	protected List<Boolean> isNorthLinkBusyByid = new ArrayList<Boolean>();
 	protected List<Queue<Tuple>> northTupleQueues = new ArrayList<Queue<Tuple>>();
-	
+
 	protected long availableMips;
 	protected int availableRam;
 	private int i = 0;
@@ -92,6 +93,21 @@ public class ClusterFogDevice extends FogDevice {
 		j = (j + 1) % getChildrenIds().size();
 	}
 	
+	protected int launchVm(Vm vm) {
+		if (getVmAllocationPolicy().allocateHostForVm(vm)) {
+			getVmList().add(vm);
+
+			if (vm.isBeingInstantiated()) {
+				vm.setBeingInstantiated(false);
+			}
+			vm.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(vm).getVmScheduler()
+					.getAllocatedMipsForVm(vm));
+		} else {
+			//echec de creation
+		}
+		return vm.getId();
+	}
+	
 	protected void processTupleArrival(SimEvent ev) {
 		Tuple tuple = (Tuple)ev.getData();
 		
@@ -121,46 +137,15 @@ public class ClusterFogDevice extends FogDevice {
 			if (tuple instanceof MatchedTuple) {
 				if (((MatchedTuple) tuple).getDestinationFogDevice() == getId()) {
 					// ce node est la destination
-					if(appToModulesMap.containsKey(tuple.getAppId())){
-						if(appToModulesMap.get(tuple.getAppId()).contains(tuple.getDestModuleName())){
-							int vmId = -1;
-							for(Vm vm : getHost().getVmList()){
-								if(((AppModule)vm).getName().equals(tuple.getDestModuleName()))
-									vmId = vm.getId();
-							}
-							if(vmId < 0
-									|| (tuple.getModuleCopyMap().containsKey(tuple.getDestModuleName()) && 
-											tuple.getModuleCopyMap().get(tuple.getDestModuleName())!=vmId )){
-								return;
-							}
-							tuple.setVmId(vmId);
-							//Logger.error(getName(), "Executing tuple for operator " + moduleName);
-							
-							updateTimingsOnReceipt(tuple);
-							
-							executeTuple(ev, tuple.getDestModuleName());
-						} else if (tuple.getDestModuleName()!=null){
-							
-							if (tuple.getDirection() == Tuple.UP) {
-								Logger.debug(getName(), "Sending UP tuple " + tuple.getCloudletId());
-								sendUp(tuple);
-							}
-							else if (tuple.getDirection() == Tuple.DOWN){
-								Logger.debug(getName(), "Sending UP tuple " + tuple.getCloudletId());
-								for (int childId : getChildrenIds())
-									sendDown(tuple, childId);
-							}
-						} else {
-							sendUp(tuple);
-						}
-					}else{
-						if(tuple.getDirection() == Tuple.UP)
-							sendUp(tuple);
-						else if(tuple.getDirection() == Tuple.DOWN){
-							for(int childId : getChildrenIds())
-								sendDown(tuple, childId);
-						}
-					}
+					AppModule m = ((Controller)CloudSim.getEntity(getControllerId())).getApplications().get(tuple.getAppId()).getModuleByName(tuple.getDestModuleName());
+					m = new AppModule(m);
+					int vmId = launchVm(m);
+					if (vmId == -1) {
+					} else {
+						tuple.setVmId(vmId);
+						updateTimingsOnReceipt(tuple);
+						executeTuple(ev, tuple.getDestModuleName());
+					}	
 				} else {
 					// ce node n'est pas la destination
 					if (getParentsIds().contains(((MatchedTuple) tuple).getDestinationFogDevice())) {

@@ -93,6 +93,9 @@ public class FogDevice extends PowerDatacenter {
 	
 	protected double totalCost;
 	
+	public int nbExecutedTuples = 0;
+	public int currentTuple = 0;
+	
 	protected Map<String, Map<String, Integer>> moduleInstanceCount;
 	
 	public FogDevice(
@@ -377,6 +380,7 @@ public class FogDevice extends PowerDatacenter {
 		double timeDiff = currentTime - getLastProcessTime();
 		double timeFrameDatacenterEnergy = 0.0;
 		
+		Log.formatLine("############## %s : ################", getName());
 		for (PowerHost host : this.<PowerHost> getHostList()) {
 			Log.printLine();
 
@@ -453,6 +457,7 @@ public class FogDevice extends PowerDatacenter {
 
 	protected void checkCloudletCompletion() {
 		boolean cloudletCompleted = false;
+		Vm vmCompleted = null;
 		List<? extends Host> list = getVmAllocationPolicy().getHostList();
 		for (int i = 0; i < list.size(); i++) {
 			Host host = list.get(i);
@@ -460,12 +465,13 @@ public class FogDevice extends PowerDatacenter {
 				while (vm.getCloudletScheduler().isFinishedCloudlets()) {
 					Cloudlet cl = vm.getCloudletScheduler().getNextFinishedCloudlet();
 					if (cl != null) {
-						
+						vmCompleted = vm;
 						cloudletCompleted = true;
 						Tuple tuple = (Tuple)cl;
 						TimeKeeper.getInstance().tupleEndedExecution(tuple);
 						Application application = getApplicationMap().get(tuple.getAppId());
-						Logger.debug(getName(), "Completed execution of tuple "+tuple.getCloudletId()+"on "+tuple.getDestModuleName());
+						Logger.debug(getName(), "Completed execution of tuple "+tuple.getCloudletId()+" on "+tuple.getDestModuleName());
+						
 						List<Tuple> resultantTuples = application.getResultantTuples(tuple.getDestModuleName(), tuple, getId(), vm.getId());
 						for(Tuple resTuple : resultantTuples){
 							resTuple.setModuleCopyMap(new HashMap<String, Integer>(tuple.getModuleCopyMap()));
@@ -478,8 +484,13 @@ public class FogDevice extends PowerDatacenter {
 				}
 			}
 		}
-		if(cloudletCompleted)
+		if(cloudletCompleted) {
+			currentTuple--;
+			getVmAllocationPolicy().deallocateHostForVm(vmCompleted);
+			getVmList().remove(vmCompleted);
+			Log.printLine("VM #" + vmCompleted.getId() + " has been deallocated from host #" + getHost().getId());
 			updateAllocatedMips(null);
+		}
 	}
 	
 	protected void updateTimingsOnSending(Tuple resTuple) {
@@ -720,6 +731,8 @@ public class FogDevice extends PowerDatacenter {
 	}
 	
 	protected void executeTuple(SimEvent ev, String moduleName){
+		nbExecutedTuples++;
+		currentTuple++;
 		Logger.debug(getName(), "Executing tuple on module "+moduleName);
 		Tuple tuple = (Tuple)ev.getData();
 		
@@ -754,16 +767,16 @@ public class FogDevice extends PowerDatacenter {
 		if(!appToModulesMap.containsKey(appId)){
 			appToModulesMap.put(appId, new ArrayList<String>());
 		}
-		appToModulesMap.get(appId).add(module.getName());
-		processVmCreate(ev, false);
-		if (module.isBeingInstantiated()) {
-			module.setBeingInstantiated(false);
-		}
-		
-		initializePeriodicTuples(module);
-		
-		module.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(module).getVmScheduler()
-				.getAllocatedMipsForVm(module));
+//		appToModulesMap.get(appId).add(module.getName());
+//		processVmCreate(ev, false);
+//		if (module.isBeingInstantiated()) {
+//			module.setBeingInstantiated(false);
+//		}
+//		
+//		initializePeriodicTuples(module);
+//		
+//		module.updateVmProcessing(CloudSim.clock(), getVmAllocationPolicy().getHost(module).getVmScheduler()
+//				.getAllocatedMipsForVm(module));
 	}
 	
 	private void initializePeriodicTuples(AppModule module) {

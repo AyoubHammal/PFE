@@ -2,6 +2,7 @@ package pfe.fog.entities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +13,12 @@ import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.SimEvent;
+import org.fog.application.AppModule;
 import org.fog.entities.Actuator;
 import org.fog.entities.FogDevice;
 import org.fog.entities.FogDeviceCharacteristics;
 import org.fog.entities.Tuple;
+import org.fog.placement.Controller;
 import org.fog.utils.FogEvents;
 import org.fog.utils.Logger;
 import org.fog.utils.NetworkUsageMonitor;
@@ -193,10 +196,12 @@ public class GWFogDevice extends FogDevice {
 		System.out.println(toBeMatchedTupleList);
 		
 		while (!toBeMatchedTupleList.isEmpty()) {
-			for (MatchedTuple mt : toBeMatchedTupleList) {
+			Iterator<MatchedTuple> it = toBeMatchedTupleList.iterator();
+			while (it.hasNext()) {
+				MatchedTuple mt = it.next();
 				int id = selectBestDeviceForTuple(mt,tuple_prepositionsList.get(mt));
 				if (id == -1) {
-					toBeMatchedTupleList.remove(mt);
+					it.remove();
 					toCloudTupleList.add(mt);
 				} else {
 					tuplesRequestingDevice.get(id).add(mt); 
@@ -250,6 +255,10 @@ public class GWFogDevice extends FogDevice {
 				bestId = id;
 			}
 		}
+		
+		if (calculateDistance((ClusterFogDevice)CloudSim.getEntity(bestId), mt) < 0)
+			return -1;
+		
 		return bestId;
 	}
 	
@@ -266,7 +275,10 @@ public class GWFogDevice extends FogDevice {
 	}
 	
 	private double calculateDistance(ClusterFogDevice d, Tuple t) {
-		return Math.sqrt(t.getUtilizationModelCpu().getUtilization(d.getAvailableMips()) + t.getUtilizationModelRam().getUtilization(d.getAvailableRam()));
+		AppModule m = ((Controller)CloudSim.getEntity(getControllerId())).getApplications().get(t.getAppId()).getModuleByName(t.getDestModuleName());
+		double hostAvailableMips = d.getHost().getAvailableMips();
+		double moduleMips = m.getMips();
+		return (hostAvailableMips - moduleMips);
 	}
 	
 	public List<Integer> getParentsIds() {
