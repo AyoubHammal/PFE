@@ -46,7 +46,7 @@ public class Test {
 	static int nbOfLayers = 10;
 	static int nbOfNodePerLayer = 3;
 
-	static double transmitRate = 1;
+	static double transmitRate = 5;
 	
 	static int numberOfSensorTypes = 5;
 	
