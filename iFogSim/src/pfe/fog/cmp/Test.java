@@ -121,7 +121,7 @@ public class Test {
 		int mips = 1000, ram = 1000;
 		for (int i = 0; i < nbOfLayers; i++) {
 			for (int j = 0; j < nbOfNodePerLayer; j++) {
-				ClusterFogDevice d = createClusterFogDevice("n" + i + "/" + j, mips, ram, 10000, 10000, i + 1, 0.0, 100, 50);
+				ClusterFogDevice d = createClusterFogDevice("n" + i + "/" + j, mips, ram, 10000, 10000, i + 1, 0.0, 107.339, 83.4333);
 				mips = mips + 100 == 2000 ? 1000 : mips + 100;
 				ram = ram + 200 == 3000 ? 1000 : ram + 200;
 				currentLayer.add(d);
@@ -146,7 +146,7 @@ public class Test {
 		// creation gw
 		GWFogDevice lastGw = null;
 		for (int j = 0; j < nbOfNodePerLayer; j++) {
-			GWFogDevice gwd = createGWFogDevice("GW" + j, 2200, 4000, 10000, 10000,  nbOfLayers, 0.0, 100, 50, clusterFogDevicesIds);
+			GWFogDevice gwd = createGWFogDevice("GW" + j, 2200, 4000, 10000, 10000,  nbOfLayers, 0.0, 107.339, 83.4333, clusterFogDevicesIds);
 			currentLayer.add(gwd);
 			fogDevices.add(gwd);
 			
