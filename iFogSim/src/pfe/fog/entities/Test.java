@@ -37,22 +37,23 @@ import org.fog.utils.TimeKeeper;
 import org.fog.utils.distribution.DeterministicDistribution;
 
 public class Test {
-	private static String topologyFile = "topologies/topologie2x2";
 	static List<FogDevice> fogDevices = new ArrayList<FogDevice>();
 	static List<Sensor> sensors = new ArrayList<Sensor>();
 	static List<Actuator> actuators = new ArrayList<Actuator>();
 	static List<Integer> clusterFogDevicesIds = new ArrayList<Integer>();
 	static List<ClusterFogDevice> clusterFogDevices = new ArrayList<ClusterFogDevice>();
 	
-	static int nbOfLayers = 7;
+	static int nbOfLayers = 10;
 	static int nbOfNodePerLayer = 3;
-	static int tokenDelay = 3;
+	static int tokenDelay = 2;
 	static double transmitRate = 1;
+	
+	static int numberOfSensorTypes = 5;
 	
 	public static void main(String[] args) {
 		GWFogDevice.tokenDelay = tokenDelay;
 		try {
-			//Log.disable();
+			Log.disable();
 			Log.printLine("Initialisation");
 			int num_user = 1;
 			Calendar calendar = Calendar.getInstance();
@@ -75,12 +76,13 @@ public class Test {
 			
 			ModuleMapping moduleMapping = ModuleMapping.createModuleMapping();
 			
-			for (ClusterFogDevice d : clusterFogDevices) {
-				moduleMapping.addModuleToDevice("m1", d.getName());
-				//moduleMapping.addModuleToDevice("m2", d.getName());
+			for (int i = 0; i < numberOfSensorTypes; i++) {
+				for (ClusterFogDevice d : clusterFogDevices) {
+					moduleMapping.addModuleToDevice("m" + (i + 1), d.getName());
+				}
+				moduleMapping.addModuleToDevice("m" + (i + 1), "cloud");
 			}
-			moduleMapping.addModuleToDevice("m1", "cloud");
-			//moduleMapping.addModuleToDevice("m2", "cloud");
+
 			
 			
 			Controller controller = new Controller("master-controller", 
@@ -115,9 +117,13 @@ public class Test {
 		// creation cluster
 		List<FogDevice> previousLayer = new ArrayList<FogDevice>();
 		List<FogDevice> currentLayer = new ArrayList<FogDevice>();
+		
+		int mips = 1000, ram = 1000;
 		for (int i = 0; i < nbOfLayers; i++) {
 			for (int j = 0; j < nbOfNodePerLayer; j++) {
-				ClusterFogDevice d = createClusterFogDevice("n" + i + "/" + j, 2200, 4000, 10000, 10000, i + 1, 0.0, 100, 50);
+				ClusterFogDevice d = createClusterFogDevice("n" + i + "/" + j, mips, ram, 10000, 10000, i + 1, 0.0, 100, 50);
+				mips = mips + 100 == 2000 ? 1000 : mips + 100;
+				ram = ram + 200 == 3000 ? 1000 : ram + 200;
 				currentLayer.add(d);
 				fogDevices.add(d);
 				clusterFogDevices.add(d);
@@ -143,18 +149,17 @@ public class Test {
 			GWFogDevice gwd = createGWFogDevice("GW" + j, 2200, 4000, 10000, 10000,  nbOfLayers, 0.0, 100, 50, clusterFogDevicesIds);
 			currentLayer.add(gwd);
 			fogDevices.add(gwd);
-			Sensor s = new Sensor("s" + j, "T1", userId, appId, new DeterministicDistribution(transmitRate));
-			sensors.add(s);
+			
+			for (int i = 0; i < numberOfSensorTypes; i++) {
+				Sensor s = new Sensor("s" + j + "/" + i, "T" + (i + 1), userId, appId, new DeterministicDistribution(transmitRate));
+				sensors.add(s);
+				s.setGatewayDeviceId(gwd.getId());
+				s.setLatency(1.0);
+			}
 			Actuator a = new Actuator("a" + j, userId, appId, "A1");
 			actuators.add(a);
-			s.setGatewayDeviceId(gwd.getId());
-			s.setLatency(1.0);
 			a.setGatewayDeviceId(gwd.getId());
 			a.setLatency(1.0);
-			s = new Sensor("s" + j, "T2", userId, appId, new DeterministicDistribution(transmitRate));
-			sensors.add(s);
-			s.setGatewayDeviceId(gwd.getId());
-			s.setLatency(1.0);
 			for (FogDevice cd : previousLayer) {
 				gwd.setParentId(cd.getId());
 				gwd.addParent(cd.getId());
@@ -335,39 +340,33 @@ public class Test {
 	private static Application createApplication(String appId, int userId) {
 		Application application = Application.createApplication(appId, userId);
 		
-		application.addAppModule("m1", 100, 500, 1000, 100);
-		application.addAppModule("m2", 100, 1500, 1000, 100);
+		int mips = 300;
+		int ram = 100;
+		int size = 1000;
+		for (int i = 0; i < numberOfSensorTypes; i++) {
+			application.addAppModule("m" + (i + 1), ram, mips, 1000, 100);
+			
+			mips = mips + 100;
+			ram = ram + 200;
+			size = size + 100;
+			
+			application.addAppEdge("T" + (i + 1), "m" + (i + 1), mips * 3, 50, "T" + (i + 1), Tuple.UP, AppEdge.SENSOR);
+
+			application.addAppEdge("m" + (i + 1), "A1", mips * 3, 50, "A1", Tuple.DOWN, AppEdge.ACTUATOR);
+			
+			application.addTupleMapping("m" + (i + 1), "T" + (i + 1), "A1", new FractionalSelectivity(1.0));
+		}
+
 		
-		application.addAppEdge("T1", "m1", 3000, 50, "T1", Tuple.UP, AppEdge.SENSOR);
-		application.addAppEdge("T2", "m2", 9000, 50, "T2", Tuple.UP, AppEdge.SENSOR);
-		//application.addAppEdge("m1", "m2", 3000, 500, "e1", Tuple.UP, AppEdge.MODULE);
-		//application.addAppEdge("m2", "m1", 3000, 500, "e2", Tuple.UP, AppEdge.MODULE);
-		application.addAppEdge("m1", "A1", 3000, 50, "A1", Tuple.DOWN, AppEdge.ACTUATOR);
-		application.addAppEdge("m2", "A1", 3000, 50, "A1", Tuple.DOWN, AppEdge.ACTUATOR);
-		
-		application.addTupleMapping("m1", "T1", "A1", new FractionalSelectivity(1.0));
-		application.addTupleMapping("m2", "T2", "A1", new FractionalSelectivity(1.0));
-		//application.addTupleMapping("m1", "T1", "e1", new FractionalSelectivity(1.0));
-		//application.addTupleMapping("m2", "e1", "e2", new FractionalSelectivity(1.0));
-		//application.addTupleMapping("m1", "e2", "A1", new FractionalSelectivity(1.0));
-		
-		final AppLoop loop1 = new AppLoop(new ArrayList<String>() {
-				{	
-					add("T1");
-					add("m1");
-					add("A1");
-				}
-			});
-		final AppLoop loop2 = new AppLoop(new ArrayList<String>() {
-			{	
-				add("T2");
-				add("m2");
-				add("A1");
-			}
-		});
-		List<AppLoop> loops = new ArrayList<AppLoop>() {
-			{add(loop1);add(loop2);}
-		};
+		List<AppLoop> loops = new ArrayList<AppLoop>();
+		for (int i = 0; i < numberOfSensorTypes; i++) {
+			ArrayList<String> loop = new ArrayList<String>();
+			loop.add("T" + (i + 1));
+			loop.add("m" + (i + 1));
+			loop.add("A1");
+			loops.add(new AppLoop(loop));
+		}
+
 		application.setLoops(loops);
 		
 		return application;

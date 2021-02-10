@@ -32,9 +32,6 @@ public class GWFogDevice extends FogDevice {
 	protected List<Boolean> isNorthLinkBusyByid = new ArrayList<Boolean>();
 	protected List<Queue<Tuple>> northTupleQueues = new ArrayList<Queue<Tuple>>();
 	protected List<Integer> clusterFogDevicesIds = new ArrayList<Integer>();
-
-	protected long availableMips;
-	protected int availableRam;
 	
 	public static int tokenDelay = 20;
 	
@@ -48,9 +45,6 @@ public class GWFogDevice extends FogDevice {
 			double uplinkLatency, double ratePerMips, List<Integer> clusterFogDevicesIds) throws Exception {
 		super(name, characteristics, vmAllocationPolicy, storageList, schedulingInterval, uplinkBandwidth, downlinkBandwidth, uplinkLatency, ratePerMips);
 		this.clusterFogDevicesIds = clusterFogDevicesIds;
-		
-		availableMips = characteristics.getMips();
-		availableRam = characteristics.getHostList().get(0).getRam();
 
 	}
 	
@@ -193,7 +187,7 @@ public class GWFogDevice extends FogDevice {
 			tuple_prepositionsList.put(mt, new ArrayList<Integer>(clusterFogDevicesIds));
 			// initailement chaque tuple peut se proposé à tout les noeuds.
 		}
-		System.out.println(toBeMatchedTupleList);
+		System.out.println("To be matched Tuples: " + toBeMatchedTupleList);
 		
 		while (!toBeMatchedTupleList.isEmpty()) {
 			Iterator<MatchedTuple> it = toBeMatchedTupleList.iterator();
@@ -238,16 +232,16 @@ public class GWFogDevice extends FogDevice {
 				}
 			}
 		}
-		System.out.println(selectedTupleForDevice);
+		printSelectionMap(selectedTupleForDevice);
 		for (Map.Entry<Integer, MatchedTuple> e : selectedTupleForDevice.entrySet())
 			if (e.getValue() != null)
 				matchedTupleList.get(matchedTupleList.indexOf(e.getValue())).setDestinationFogDeviceId(e.getKey());
+		System.out.println("To cloud: " + toCloudTupleList);
 		for (MatchedTuple mt : toCloudTupleList)
 			mt.setDestinationFogDeviceId(CloudSim.getEntityId("cloud"));
 	}
 	
 	private int selectBestDeviceForTuple(MatchedTuple mt, List<Integer> prepositionsList) {
-		System.out.println("SELECTION BEST DEVICE FOR TUPLE");
 		double minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(prepositionsList.get(0)), mt);
 		int bestId = prepositionsList.get(0);
 		for (int id : prepositionsList) {
@@ -259,13 +253,12 @@ public class GWFogDevice extends FogDevice {
 		}
 		
 		double dist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(bestId), mt);
-		if (dist == -1)
-			return -1;
+		if (dist == -1) 
+			return -1;	
 		return bestId;
 	}
 	
 	private MatchedTuple selectBestTupleForDevice(int id, List<MatchedTuple> tuplesRequestingDevice) {
-		System.out.println("SELECTION BEST TUPLE FOR DEVICE");
 		double minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), tuplesRequestingDevice.get(0));
 		MatchedTuple bestTuple = tuplesRequestingDevice.get(0);
 		for (MatchedTuple mt : tuplesRequestingDevice) {
@@ -284,13 +277,22 @@ public class GWFogDevice extends FogDevice {
 		double hostUsedMips = d.getHost().getUtilizationMips();
 		double hostMips = d.getHost().getTotalMips();
 		double moduleMips = m.getMips();
-		
+		((MatchedTuple)t).destModuleMips = moduleMips;
 //		System.out.println("-- Host: " + d.getName() + " MipsAvailable: " + hostAvailableMips + " Tuple: " + t.getCloudletId() + " Mips: " + moduleMips + " Dist: " + (hostAvailableMips > moduleMips ? hostAvailableMips - moduleMips : -1));
 //		return hostAvailableMips > moduleMips ? hostAvailableMips - moduleMips : -1;
 		
 		// formule de l'article
-		System.out.println("-- Host: " + d.getName() + " MipsAvailable: " + hostAvailableMips + " Tuple: " + t.getCloudletId() + " Mips: " + moduleMips + " Dist: " + (hostAvailableMips > moduleMips ? (hostUsedMips + moduleMips) / hostMips : -1));
+		//System.out.println("-- Host: " + d.getName() + " MipsAvailable: " + hostAvailableMips + " Tuple: " + t.getCloudletId() + " Mips: " + moduleMips + " Dist: " + (hostAvailableMips > moduleMips ? (hostUsedMips + moduleMips) / hostMips : -1));
 		return hostAvailableMips > moduleMips ? (hostUsedMips + moduleMips) / hostMips : -1;
+	}
+	
+	private void printSelectionMap(Map<Integer, MatchedTuple> selectedTupleForDevice) {
+		System.out.print("Selection Map: {");
+		for (Map.Entry<Integer, MatchedTuple> e : selectedTupleForDevice.entrySet()) {
+			if (e.getValue() != null)
+				System.out.print(CloudSim.getEntity(e.getKey()) + " = " + e.getValue() + ", ");
+		}
+		System.out.println("}");
 	}
 	
 	public List<Integer> getParentsIds() {
@@ -309,22 +311,6 @@ public class GWFogDevice extends FogDevice {
 		this.northTupleQueues = northTupleQueues;
 	}
 
-	public long getAvailableMips() {
-		return availableMips;
-	}
-
-	public void setAvailableMips(long availableMips) {
-		this.availableMips = availableMips;
-	}
-
-	public int getAvailableRam() {
-		return availableRam;
-	}
-
-	public void setAvailableRam(int availableRam) {
-		this.availableRam = availableRam;
-	}
-	
 	public List<Integer> getClusterFogDevicesIds() {
 		return clusterFogDevicesIds;
 	}

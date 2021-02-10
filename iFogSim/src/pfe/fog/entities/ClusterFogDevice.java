@@ -25,16 +25,12 @@ public class ClusterFogDevice extends FogDevice {
 	protected List<Boolean> isNorthLinkBusyByid = new ArrayList<Boolean>();
 	protected List<Queue<Tuple>> northTupleQueues = new ArrayList<Queue<Tuple>>();
 
-	protected long availableMips;
-	protected int availableRam;
 	private int i = 0;
 	private int j = 0;
 	public ClusterFogDevice(String name, FogDeviceCharacteristics characteristics, VmAllocationPolicy vmAllocationPolicy,
 			List<Storage> storageList, double schedulingInterval, double uplinkBandwidth, double downlinkBandwidth,
 			double uplinkLatency, double ratePerMips) throws Exception {
 		super(name, characteristics, vmAllocationPolicy, storageList, schedulingInterval, uplinkBandwidth, downlinkBandwidth, uplinkLatency, ratePerMips);
-		availableMips = characteristics.getMips();
-		availableRam = characteristics.getHostList().get(0).getRam();
 	}
 	
 	public void addParent(int patendId) {
@@ -189,23 +185,9 @@ public class ClusterFogDevice extends FogDevice {
 	public void setNorthTupleQueues(List<Queue<Tuple>> northTupleQueues) {
 		this.northTupleQueues = northTupleQueues;
 	}
-
-	public double getAvailableMips() {
-		return getHostList().get(0).getAvailableMips();
-		// return availableMips;
+	
+	@Override
+	public String toString() {
+		return getName() + "<" + getHost().getAvailableMips() + ">";
 	}
-
-	public void setAvailableMips(long availableMips) {
-		this.availableMips = availableMips;
-	}
-
-	public int getAvailableRam() {
-		return getHostList().get(0).getRam();
-		// return availableRam;
-	}
-
-	public void setAvailableRam(int availableRam) {
-		this.availableRam = availableRam;
-	}
-
 }

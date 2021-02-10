@@ -3,11 +3,14 @@ package pfe.fog.entities;
 import java.util.HashMap;
 
 import org.cloudbus.cloudsim.UtilizationModel;
+import org.cloudbus.cloudsim.core.CloudSim;
+import org.fog.application.Application;
 import org.fog.entities.Tuple;
 
 public class MatchedTuple extends Tuple {
 	
 	protected int destinationFogDeviceId;
+	public double destModuleMips;
 
 	public MatchedTuple(String appId, int cloudletId, int direction, long cloudletLength, int pesNumber,
 			long cloudletFileSize, long cloudletOutputSize,
@@ -41,7 +44,11 @@ public class MatchedTuple extends Tuple {
 		destinationFogDeviceId = id;
 	}
 	public  int getDestinationFogDevice() {
-	return destinationFogDeviceId;
+		return destinationFogDeviceId;
     }
 	
+	@Override
+	public String toString() {
+		return getCloudletId() + "<" + destModuleMips + ">";
+	}
 }
