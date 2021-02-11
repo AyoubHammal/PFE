@@ -59,8 +59,8 @@ elif parameter ==2:
     executTest()
     resultFile = paramJson["OutputFileName"]
 elif parameter == 3:
-  min = minV = int(input("Min: "))
-  max = maxV = int(input("Max: "))
+  min = minV = float(input("Min: "))
+  max = maxV = float(input("Max: "))
   step = int(input("Step: "))
   while minV <= maxV:
     paramFile = open("topologies/param.json", "r")
@@ -77,8 +77,8 @@ elif parameter == 3:
     executTest()
     resultFile = paramJson["OutputFileName"]
 elif parameter == 4:
-  min = minV = int(input("Min: "))
-  max = maxV = int(input("Max: "))
+  min = minV = float(input("Min: "))
+  max = maxV = float(input("Max: "))
   step = int(input("Step: "))
   while minV <= maxV:
     paramFile = open("topologies/param.json", "r")

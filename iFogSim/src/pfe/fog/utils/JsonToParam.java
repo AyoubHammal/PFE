@@ -17,10 +17,13 @@ public class JsonToParam {
 			
 			Config.nbOfLayers = (int)(long) obj.get("NumberOfLayers");
 			Config.nbOfNodePerLayer = (int)(long) obj.get("NumberOfNodePerLayer");
-			Config.tokenDelay = (double) obj.get("TokenDelay");
 			Config.transmitRate = (double) obj.get("TransmitRate");
 			Config.numberOfSensorTypes = (int)(long) obj.get("NumberOfSensorTypes");
-			
+			if (obj.get("TokenDelay") != null)
+				Config.tokenDelay = (double) obj.get("TokenDelay");
+			else
+				Config.tokenDelay = (int) (Config.transmitRate / (2 * Config.nbOfNodePerLayer));
+				
 			Config.minDeviceMips = (int)(long) obj.get("MinDeviceMips");
 			Config.maxDeviceMips = (int)(long) obj.get("MaxDeviceMips");
 			Config.deviceMipsStep = (int)(long) obj.get("DeviceMipsStep");
