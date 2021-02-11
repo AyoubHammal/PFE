@@ -45,8 +45,8 @@ public class Test {
 	
 	static int nbOfLayers = 10;
 	static int nbOfNodePerLayer = 3;
-	static int tokenDelay = 6;
-	static double transmitRate = 5;
+	static double tokenDelay = 1;
+	static double transmitRate = 2;
 	
 	static int numberOfSensorTypes = 5;
 	
@@ -122,7 +122,7 @@ public class Test {
 		for (int i = 0; i < nbOfLayers; i++) {
 			for (int j = 0; j < nbOfNodePerLayer; j++) {
 				ClusterFogDevice d = createClusterFogDevice("n" + i + "/" + j, mips, ram, 10000, 10000, i + 1, 0.0, 107.339, 83.4333);
-				mips = mips + 100 == 2000 ? 1000 : mips + 100;
+				mips = mips + 100 == 3000 ? 1000 : mips + 100;
 				ram = ram + 200 == 3000 ? 1000 : ram + 200;
 				currentLayer.add(d);
 				fogDevices.add(d);
@@ -340,8 +340,8 @@ public class Test {
 	private static Application createApplication(String appId, int userId) {
 		Application application = Application.createApplication(appId, userId);
 		
-		int mips = 300;
-		int ram = 100;
+		int mips = 500;
+		int ram = 500;
 		int size = 1000;
 		for (int i = 0; i < numberOfSensorTypes; i++) {
 			application.addAppModule("m" + (i + 1), ram, mips, 1000, 100);
@@ -350,9 +350,9 @@ public class Test {
 			ram = ram + 200;
 			size = size + 100;
 			
-			application.addAppEdge("T" + (i + 1), "m" + (i + 1), mips * 3, 50, "T" + (i + 1), Tuple.UP, AppEdge.SENSOR);
+			application.addAppEdge("T" + (i + 1), "m" + (i + 1), mips * 7, 50, "T" + (i + 1), Tuple.UP, AppEdge.SENSOR);
 
-			application.addAppEdge("m" + (i + 1), "A1", mips * 3, 50, "A1", Tuple.DOWN, AppEdge.ACTUATOR);
+			application.addAppEdge("m" + (i + 1), "A1", mips * 7, 50, "A1", Tuple.DOWN, AppEdge.ACTUATOR);
 			
 			application.addTupleMapping("m" + (i + 1), "T" + (i + 1), "A1", new FractionalSelectivity(1.0));
 		}

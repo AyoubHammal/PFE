@@ -33,7 +33,7 @@ public class GWFogDevice extends FogDevice {
 	protected List<Queue<Tuple>> northTupleQueues = new ArrayList<Queue<Tuple>>();
 	protected List<Integer> clusterFogDevicesIds = new ArrayList<Integer>();
 	
-	public static int tokenDelay = 20;
+	public static double tokenDelay = 20;
 	
 	// La liste des tuples matches
 	ArrayList<MatchedTuple> matchedTupleList = new ArrayList<MatchedTuple>();
@@ -185,7 +185,7 @@ public class GWFogDevice extends FogDevice {
 			MatchedTuple mt = new MatchedTuple(t);
 			toBeMatchedTupleList.add(mt);
 			tuple_prepositionsList.put(mt, new ArrayList<Integer>(clusterFogDevicesIds));
-			// initailement chaque tuple peut se proposé à tout les noeuds.
+			// initailement chaque tuple peut se proposï¿½ ï¿½ tout les noeuds.
 		}
 		System.out.println("To be matched Tuples: " + toBeMatchedTupleList);
 		
@@ -199,7 +199,7 @@ public class GWFogDevice extends FogDevice {
 					toCloudTupleList.add(mt);
 				} else {
 					tuplesRequestingDevice.get(id).add(mt); 
-			//Chaque tuple se propose au noeud qu'il préfère parmi ceux à qui il ne s'est pas déja présenté.
+			//Chaque tuple se propose au noeud qu'il prï¿½fï¿½re parmi ceux ï¿½ qui il ne s'est pas dï¿½ja prï¿½sentï¿½.
 				}
 			}
 			for (int id : clusterFogDevicesIds) {
@@ -210,23 +210,23 @@ public class GWFogDevice extends FogDevice {
 					{
 						if(!mt2.equals(mt)) tuple_prepositionsList.get(mt2).remove(Integer.valueOf(id));
 					}
-					/* Si id préfère mt à tout les autres tuple qui se sont proposé à lui, alors ces tuples
-				  	ne peuvent plus se proposé à lui. 
+					/* Si id prï¿½fï¿½re mt ï¿½ tout les autres tuple qui se sont proposï¿½ ï¿½ lui, alors ces tuples
+				  	ne peuvent plus se proposï¿½ ï¿½ lui. 
 					 */
 					if (selectedTupleForDevice.get(id) != null) 
-						// si le noeud est déja pris, alors on éclate le couple.
+						// si le noeud est dï¿½ja pris, alors on ï¿½clate le couple.
 					{
 						m = selectedTupleForDevice.get(id);
 						toBeMatchedTupleList.add(m);
-						// on ajoute l'ancien tuple à l'ensemble des tuple à matcher.
+						// on ajoute l'ancien tuple ï¿½ l'ensemble des tuple ï¿½ matcher.
 						tuple_prepositionsList.get(m).remove(Integer.valueOf(id));
 						// on supprime le neuds de la liste des neuds que le tuple peut se proposer.
 						matchedTupleList.remove(m);
 						// et on le supprime de la liste des tuples matcher.
 					}
 					toBeMatchedTupleList.remove(mt);
-					// on supprime le nouveau tuple préféré de la liste des tuples à matcher.
-					matchedTupleList.add(mt);// on ajoute le nouveau tuple préféré de la liste des tuples matchés. 
+					// on supprime le nouveau tuple prï¿½fï¿½rï¿½ de la liste des tuples ï¿½ matcher.
+					matchedTupleList.add(mt);// on ajoute le nouveau tuple prï¿½fï¿½rï¿½ de la liste des tuples matchï¿½s. 
 					selectedTupleForDevice.put(id, mt);// et on place le nouveau couple.
 					tuplesRequestingDevice.get(id).clear();
 				}
