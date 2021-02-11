@@ -131,7 +131,7 @@ public class GWFogDevice extends FogDevice {
 		}
 
 		if (tuple.getTupleType() == "TOKEN") {
-			System.out.println("Token arrived to " + getName());
+			//System.out.println("Token arrived to " + getName());
 			// Match
 			mapTupleToDevice();
 			// Envoi
@@ -151,7 +151,7 @@ public class GWFogDevice extends FogDevice {
 			// Envoi a la prochaine gateway
 			tuple.setSourceDeviceId(getId());
 			send(parentsIds.get(0), tokenDelay, FogEvents.TUPLE_ARRIVAL, tuple);
-			System.out.println("Sending token from " + getName() + " to " + CloudSim.getEntityName(getParentsIds().get(0)));
+			//System.out.println("Sending token from " + getName() + " to " + CloudSim.getEntityName(getParentsIds().get(0)));
 		} else
 			// Ajout a la queue
 			waitingQueue.add(tuple);
@@ -187,7 +187,7 @@ public class GWFogDevice extends FogDevice {
 			tuple_prepositionsList.put(mt, new ArrayList<Integer>(clusterFogDevicesIds));
 			// initailement chaque tuple peut se propos� � tout les noeuds.
 		}
-		System.out.println("To be matched Tuples: " + toBeMatchedTupleList);
+		//System.out.println("To be matched Tuples: " + toBeMatchedTupleList);
 		
 		while (!toBeMatchedTupleList.isEmpty()) {
 			Iterator<MatchedTuple> it = toBeMatchedTupleList.iterator();
@@ -232,11 +232,11 @@ public class GWFogDevice extends FogDevice {
 				}
 			}
 		}
-		printSelectionMap(selectedTupleForDevice);
+		//printSelectionMap(selectedTupleForDevice);
 		for (Map.Entry<Integer, MatchedTuple> e : selectedTupleForDevice.entrySet())
 			if (e.getValue() != null)
 				matchedTupleList.get(matchedTupleList.indexOf(e.getValue())).setDestinationFogDeviceId(e.getKey());
-		System.out.println("To cloud: " + toCloudTupleList);
+		//System.out.println("To cloud: " + toCloudTupleList);
 		for (MatchedTuple mt : toCloudTupleList)
 			mt.setDestinationFogDeviceId(CloudSim.getEntityId("cloud"));
 	}

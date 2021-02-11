@@ -118,9 +118,9 @@ public class GWFogDevice extends FogDevice {
 		int i = 0;
 		for (int id : getClusterFogDevicesIds()) {
 			ClusterFogDevice d = (ClusterFogDevice)CloudSim.getEntity(id);
-			System.out.println("testing tuple " + tuple.getCloudletId() + " with " + id + "(" + d.getHost().getAvailableMips() + "|" + m.getMips() + ")");
+			//System.out.println("testing tuple " + tuple.getCloudletId() + " with " + id + "(" + d.getHost().getAvailableMips() + "|" + m.getMips() + ")");
 			if (d.getHost().getAvailableMips() > m.getMips()) {
-				System.out.println("[" + id + " = " + tuple.getCloudletId() + "]");
+				//System.out.println("[" + id + " = " + tuple.getCloudletId() + "]");
 				mt.setDestinationFogDeviceId(id);
 				int link = -1;
 				if (parentsIds.contains(mt.getDestinationFogDevice()))
@@ -131,7 +131,7 @@ public class GWFogDevice extends FogDevice {
 				return;
 			}
 		}
-		System.out.println("[" + "cloud" + " = " + tuple.getCloudletId() + "]");
+		//System.out.println("[" + "cloud" + " = " + tuple.getCloudletId() + "]");
 		mt.setDestinationFogDeviceId(CloudSim.getEntity("cloud").getId());
 		int link = -1;
 		if (parentsIds.contains(mt.getDestinationFogDevice()))

@@ -5,11 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
-import org.cloudbus.cloudsim.power.PowerHost;
 import org.fog.application.AppEdge;
 import org.fog.application.AppLoop;
 import org.fog.application.AppModule;
@@ -23,8 +21,7 @@ import org.fog.utils.FogUtils;
 import org.fog.utils.NetworkUsageMonitor;
 import org.fog.utils.TimeKeeper;
 
-import pfe.fog.entities.ClusterFogDevice;
-import pfe.fog.entities.GWFogDevice;
+import pfe.fog.utils.ResultToCSV;
 
 public class Controller extends SimEntity{
 	
@@ -38,6 +35,11 @@ public class Controller extends SimEntity{
 	private Map<String, Integer> appLaunchDelays;
 
 	private Map<String, ModulePlacement> appModulePlacementPolicy;
+	
+	private double avgEnergie;
+	private double avgAppLoopDelay;
+	private double avgTupleCpuExecutionDelay;
+	private int totalExecutedTuples;
 	
 	public Controller(String name, List<FogDevice> fogDevices, List<Sensor> sensors, List<Actuator> actuators) {
 		super(name);
@@ -149,6 +151,7 @@ public class Controller extends SimEntity{
 			printPowerDetails();
 			printCostDetails();
 			printNetworkUsageDetails();
+			ResultToCSV.addLine(avgEnergie, avgAppLoopDelay, avgTupleCpuExecutionDelay, totalExecutedTuples);
 			System.exit(0);
 			break;
 			
@@ -174,12 +177,15 @@ public class Controller extends SimEntity{
 		double sum = 0;
 		int tupleCount = 0;
 		for(FogDevice fogDevice : getFogDevices()){
-			System.out.println(fogDevice.getName() + " : Energy Consumed = " + fogDevice.getEnergyConsumption() + " | Executed tuples = " + fogDevice.nbExecutedTuples);
+			System.out.println(fogDevice.getName() + "<" + fogDevice.getHost().getTotalMips() + ", " + fogDevice.getHost().getMaxPower() + "> : Energy Consumed = " + fogDevice.getEnergyConsumption() + " | Executed tuples = " + fogDevice.nbExecutedTuples);
 			sum += fogDevice.getEnergyConsumption();
 			tupleCount += fogDevice.nbExecutedTuples;
 		}
 		double avg = sum / getFogDevices().size();
 		System.out.println("Average energy consumed = " + avg + " | Total Executed Tuple Count = " + tupleCount);
+		avgEnergie = avg;
+		totalExecutedTuples = tupleCount;
+		
 	}
 
 	private String getStringForLoopId(int loopId){
@@ -219,6 +225,7 @@ public class Controller extends SimEntity{
 				i++;
 			}
 		}
+		avgAppLoopDelay = sum / i;
 		System.out.println("Average = " + sum / i);
 		System.out.println("=========================================");
 		System.out.println("TUPLE CPU EXECUTION DELAY");
@@ -230,6 +237,7 @@ public class Controller extends SimEntity{
 			sum += TimeKeeper.getInstance().getTupleTypeToAverageCpuTime().get(tupleType);
 			i++;
 		}
+		avgTupleCpuExecutionDelay = sum / i;
 		System.out.println("Average = " + sum / i);
 		System.out.println("=========================================");
 	}
