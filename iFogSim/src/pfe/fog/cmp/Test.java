@@ -117,7 +117,7 @@ public class Test {
 		int mipsStep = Config.deviceMipsStep, ramStep = Config.deviceRamStep;
 		for (int i = 0; i < Config.nbOfLayers; i++) {
 			for (int j = 0; j < Config.nbOfNodePerLayer; j++) {
-				double e = (mips / Config.minDeviceMips) * Config.deviceMaxEnergie;
+				double e = ((double)mips / (double)Config.minDeviceMips) * Config.deviceMaxEnergie;
 				
 				ClusterFogDevice d = createClusterFogDevice("n" + i + "/" + j, mips, ram, 
 						10000, 10000, i + 1, 0.0, e, Config.deviceMinEnergie);
