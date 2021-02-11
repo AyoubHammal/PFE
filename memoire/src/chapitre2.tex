@@ -1,0 +1,19 @@
+\chapter{Conception de la solution}
+\section{Introduction}
+Dans le chapitre précédent, nous avons présenté les différentes dimensions du problème de gestion de ressource dans les environnements fog, et nous avons vu également l’importance de cette dernière pour la concrétisation de cedit paradigme.
+Nous définirons dans ce chapitre notre solution de conception en nous basant sur les différents travaux traitant du sujet.
+\section{Motivation}
+Une bonne gestion de ressource permet d'accroître les performances globales du système, en réduisant le temps d'exécution des différentes applications, la latence, ainsi que les coûts énergétiques. Elle permet aussi d’exploiter au mieux les ressources matérielles disponibles, ce qui augmente le rendement et la rentabilité économique des différents équipements.\\ 
+Par conséquent, le développement d’un bon modèle de gestion de ressource se révèle d’une importance capitale pour une exploitation efficace et rentable d’une infrastructure fog.
+\section{Problématique}
+Suite à l’étude des travaux qui traitent de l’amélioration et de l’optimisation de la gestion des ressources, on constate que le problème de planification des ressources est un problème central qui nécessite d'être investigué afin d’effectuer une gestion de ressource optimale. \\
+Le problème consiste à concevoir un modèle de planification de ressource dynamique,efficace et évolutif, qui permet affecter les différentes demandes de ressources, effectuées par les appareils iot, au différent nœud fog d’une manière à optimiser au mieux certaines métriques de liées aux coûts.
+\section{État de l’art}
+Pour la réalisation de ce travail, on s’est inspiré d’un article publié  traitant partiellement du sujet. \\
+Dans ce travail \cite{jing2016}, les auteurs s’intéressent au processus d'approvisionnement dans un environnement cloud, dans lequel ce dernier peut être principalement décomposé en 3 étapes majeures que sont : 
+\begin{enumerate}
+    \item L’identification des noeuds concernés (c.-à-d. les nœuds sous-utilisés ou sur-utilisés). 
+    \item Sélection des VM à migrer.
+    \item Réallocation des VM aux nœuds sous-utilisés.
+\end{enumerate}
+La partie qui nous intéresse étant la troisième étape,  où ils ont proposé un mécanisme d’affectation de VM aux nœuds adéquat, modélisé comme étant un problème de correspondance (matching problem).
