@@ -246,14 +246,24 @@ public class GWFogDevice extends FogDevice {
 		int bestId = prepositionsList.get(0);
 		for (int id : prepositionsList) {
 			double dist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), mt);
-			if (minDist >= dist) {
+//			if (minDist == -1) {
+//				minDist = dist;
+//				bestId = id;
+//			} else if (dist != -1 && minDist >= dist) {
+//				minDist = dist;
+//				bestId = id;
+//			}
+			 if (minDist >= dist) {
 				minDist = dist;
 				bestId = id;
 			}
 		}
 		
+//		if (minDist == -1) {
+//			return -1;
+//		}
 		double dist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(bestId), mt);
-		if (dist >= 1) {
+		if (dist >= 0.9) {
 			return -1;
 		}
 		return bestId;
@@ -280,10 +290,10 @@ public class GWFogDevice extends FogDevice {
 		double moduleMips = m.getMips();
 		((MatchedTuple)t).destModuleMips = moduleMips;
 //		System.out.println("-- Host: " + d.getName() + " MipsAvailable: " + hostAvailableMips + " Tuple: " + t.getCloudletId() + " Mips: " + moduleMips + " Dist: " + (hostAvailableMips > moduleMips ? hostAvailableMips - moduleMips : -1));
-//		return hostAvailableMips > moduleMips ? hostAvailableMips - moduleMips : -1;
+//		return hostAvailableMips >= moduleMips ? hostUsedMips : -1;
 		
 		// formule de l'article
-		//System.out.println("-- Host: " + d.getName() + " MipsAvailable: " + hostAvailableMips + " total : " + hostMips + " used : " + hostUsedMips + " Tuple: " + t.getCloudletId() + " Mips: " + moduleMips + " Dist: " + ((hostUsedMips + moduleMips) / hostMips));
+//		System.out.println("-- Host: " + d.getName() + " MipsAvailable: " + hostAvailableMips + " total : " + hostMips + " used : " + hostUsedMips + " Tuple: " + t.getCloudletId() + " Mips: " + moduleMips + " Dist: " + ((hostUsedMips + moduleMips) / hostMips));
 		return (hostUsedMips + moduleMips) / hostMips;
 	}
 	

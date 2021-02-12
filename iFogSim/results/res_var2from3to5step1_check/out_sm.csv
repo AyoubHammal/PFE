@@ -1,0 +1,4 @@
+NumberOfLayers;NumberOfNodePerLayer;TokenDelay;TransmitRate;NumberOfSensorTypes;AvgEnergie;AvgAppLoopDelay;AvgTupleCpuExecutionDelay;TotalExecutedTuples
+4;3;0.000;4.000000;6;26787.544771;24.942572;30.899315;432
+4;4;0.000;4.000000;6;25156.384559;30.626669;46.090199;576
+4;5;0.000;4.000000;6;23579.017946;35.002651;45.305450;720
