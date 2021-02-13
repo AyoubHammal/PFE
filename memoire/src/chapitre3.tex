@@ -1,0 +1,101 @@
+\chapter{Implémentation et résultats}
+\section{Introduction}
+Dans le chapitre précédent, nous avons présenté toute la théorie mise en place pour la conception de notre solution de planification de ressources relative à la gestion des ressources dans les environnement fog. Pour cela, nous avons besoin d'outils nous permettant la quantification des performances, et ainsi l’évaluation des résultats. \\
+Ce chapitre commence par donner un aperçu global sur les différents outils utilisés pour mener à bien la simulation de cette solution ainsi que les différents éléments ajoutés au simulateur. Enfin nous présenterons les résultats qu’on va comparer avec les résultats d’une politique de gestion classique qu'est la politique “First fit”.\\
+\section{Outil de développement}
+Afin de pouvoir simuler la solution proposée, on a opté pour le simulateur “IFogSim”. En effet ce dernier opère suivant le paradigme événementiel, ce qui s’accorde parfaitement avec notre solution qui use du même concept. Développé exclusivement en java, l’IFogSim nous permet de mesurer l'impact technique résultant de la gestion en nous fournissant des données concernant la consommation d'énergie, les délais d'exécution et l’état du réseau.
+\subsection{Langage JAVA}
+Java est une technologie initialement développée par la société “Sun Microsystems” en 1995, cette dernière s'est vu par la suite par la société Oracle en 2009. Java fait office à la fois de langage de programmation orienté objet, mais aussi de machine virtuelle qui permet au langage java d'être multiplateforme. La technologie java bénéficie d’une grande popularité du au avantages considérable proposé par cette dernière parmi lesquels :
+\begin{itemize}
+    \item La portabilité : i.e la capacité du même code java à s'exécuter sur plusieurs systèmes d’exploitation.
+    \item Popularité
+    \item Richesses des bibliothèques disponible
+    \item Gratuité 
+\end{itemize}
+\subsection{L’outil IFogSim}
+IFogSim est un outil de modélisation d’environnements Cloud-Fog-IoT créé par
+Harshit Gupta (chef de projet) au Georgia Institute of Technology, Atlanta, GA, USA dans l’objectif de simuler l’impact des différentes techniques du management des ressources sur les environnements Fog. IFogSim mesure l’impact d’une politique sur un système par sa latence, l’utilisation de la bande passante, la consommation d’énergie et l’utilisation des ressources des nœuds. IFogSim a été conçu en tant qu’extension à l’outil CloudSim, qui est un simulateur Open Source d’applications Cloud développé en Java. IFogSim est donc lui aussi Open Source et programmé en Java .
+\subsection{Architecture de l’IFogSim}
+L’iFogSim est composé de 3 composant principaux que sont : 
+\begin{itemize}
+    \item Les composants physiques.
+    \item Les composant logique.
+    \item Les composant de gestion.
+\end{itemize}
+\subsubsection{Composants physique}
+Les composants physiques incluent le cloud, les nœuds Fog et les objets, qui sont organisés dans un ordre hiérarchique. Les noeud Fog de niveau inférieur sont directement connectés aux capteurs et actionneurs associés. Les noeud Fog agissent comme des centres de traitement de données en offrant de la mémoire et de la puissance de calcul. Chaque noeud Fog est créé avec une puissance de calcul et des attributs de consommation d'énergie spécifique (puissance occupée et inactive), qui reflètent ses capacités et son efficacité énergétique. Les capteurs génèrent des tuples qui peuvent être appelés tâches dans le cloud computing. La création de tuples (tâches) est pilotée par les événements et l'intervalle entre la génération de deux tuples est défini par une distribution déterministe définie lors de la création des capteurs.
+\subsubsection{Composants logique}
+Les modules d'application (AppModules) et les bords d'application (AppEdges) sont les composants logiques d'iFOGSim. Dans iFogSim, une application est considérée comme une collection des modules interdépendants, ce qui améliore par conséquent le concept d'application distribuée. La dépendance entre deux modules est définie par les fonctionnalités d'AppEdges qui sont le flux de données logique entre deux modules d’application. Dans iFogSim, chaque module d’application (AppModule) traite un type particulier de tâche (tuple). La transmission de tuples entre deux modules d’application (AppModules) peut être périodique.
+\subsubsection{Composants de gestion}
+Les composants de gestion d’IFogSim sont représentés par le « Controller» et le «ModuleMapping». Selon les exigences des AppModules, l'objet ModuleMapping identifie les noeud fog associé à chaque AppModules. L'objet Controller lance les AppModules sur leurs noeud Fog attribués en suivant les informations de placement fournies par l'objet ModuleMapping, et gère périodiquement les ressources des noeud Fog. Une fois la simulation terminée, l'objet Controller collecte les résultats des coûts, de l'utilisation du réseau et de la consommation d'énergie pendant la période de simulation à partir des noeud Fog.
+\begin{figure}[H]
+    \centering
+    \includegraphics[]{src/ressources/Diagramme d'interaction.jpg}
+    \caption{Diagramme représentant d'interaction des différent composant de l'IFogSim}
+    \label{fig:}
+\end{figure}
+\subsubsection{Description des classes principales :}
+Les principale classe de l’IFogSim sont les suivante :
+\begin{itemize}
+    \item \textbf{\emph{FogDevice :}} Cette classe spécifie les caractéristiques matérielles des nœuds Fog et leurs connexions au autre nœud de la topologie. Les principaux attributs de cette classe sont la mémoire accessible, le processeur, la taille de stockage, la bande passante de la liaison montante et la liaison descendante. Les méthodes de cette classe définissent la manière dont les ressources d’un nœud Fog sont planifiées entre les modules qui s’exécutent sur cette application, ainsi que leur déploiement. Par défaut, chaque FogDevice ne peut avoir hiérarchiquement qu’un seul père.
+    \item \textbf{\emph{Sensor :}}  Les instances de la classe Sensor sont des entités qui agissent en tant que capteurs IoT tel que décrits dans l'architecture. La classe contient des attributs représentant les caractéristiques d’un capteur (son nom, le tuple d’émission et un paramètre qui représente les conditions d’émission du Tuple). La classe contient un attribut de référence au dispositif Fog auquel le capteur est connecté et la latence de connexion entre eux. 
+    \item \textbf{\item{Actuator  :}} -  Cette classe modélise un actionneur en définissant l'effet de l'actionnement et ses propriétés de connexion au réseau. La classe définit une méthode pour effectuer une action à l'arrivée d'un tuple à partir d'un module d'application. Un attribut de la classe fait référence à la passerelle à laquelle l'actionneur est connecté et à la latence de cette connexion.
+    \item \textbf{\item{Tuple :}} Les tuples forment l'unité fondamentale de communication entre les entités dans le réseau Fog. Il peut être soit une tâche, soit une donnée. Un tuple est caractérisé par son type, sa source et sa destination. Les attributs de la classe spécifient la puissance de calcul nécessaire à son traitement (mesuré en millions d'instructions (MI)) et la longueur des données encapsulées dans le tuple.
+    \item \textbf{\item{Application :}} Les instances de cette classe représentent les éléments qui composent une application. Pour chaque tuple entrant, une instance AppModule le traite et génère des tuples en sortie, qui sont envoyés aux modules suivants. Le nombre de tuples de sortie par tuple d'entrée est déterminé à l'aide d'un modèle de sélectivité, qui peut être basé sur une sélectivité fractionnaire ou un modèle éclaté.
+    \begin{itemize}
+        \item \textbf{\emph{AppEdge :}} Une instance AppEdge dénote la dépendance entre une paire de modules d'application. Chaque AppEdge est caractérisé par le type de tuple qu'il transporte, les exigences de traitement et la longueur des données encapsulées dans ces tuples. l’iFogSim prend en charge deux types d’ AppEdge (périodique et événementiels). Les tuples dans les AppEdge périodiques sont émis à intervalles réguliers. Le tuple dans un AppEdge est basé sur un événement qui est envoyé lorsque le module source reçoit un tuple précis.
+        \item \textbf{\emph{AppLoop :}} est une classe supplémentaire, utilisée pour spécifier les boucles de contrôle de processus qui intéressent l'utilisateur. Dans l’iFogSim, le développeur peut spécifier les boucles de contrôle pour mesurer la latence de bout en bout. Une instance AppLoop est fondamentalement une liste de modules à partir de l'origine de la boucle jusqu'au module où la boucle se termine.
+    \end{itemize}
+    \item \textbf{\emph{Config :}} Cette classe abstraite a pour but de contenir toutes les paramètres qui affecte la simulation comme par example MAX\_SIMULATION\_TIME qui représente la durer de simulation.
+    \item \textbf{\emph{Controller :}} Cet objet se charge d’orchestrer la simulation. Concrètement, il sert à initialiser la topologie avant le début de la simulation, ainsi qu’à effectuer les traitements de fin de simulation (notamment afficher et exporter les résultats).
+\end{itemize}
+\begin{figure}[H]
+    \centering
+    \includegraphics[]{src/ressources/Diagramme de classe.jpg}
+    \caption{Diagramme de classe des classe principale de l'IFogSim}
+    \label{fig:}
+\end{figure}
+\section{Développement de la conception}
+Afin de mettre en œuvre la conception proposée, nous allons ajouter de nouvelle classe nécessaire à l’implémentation de la solution, mais aussi la modification de certaine classe principale de l’IFogSim afin de l’adapter à nos besoins.\\
+Les modification apporté sont mentionnait ci dessous :
+\begin{enumerate}
+    \item \textbf{Création d’une classe ClusterFogDevice :} Cette classe représente un nœud Fog quelconque du cluster. Elle étend la classe prédéfinie FogDevice et comporte en plus les attributs suivant:
+\begin{itemize}
+    \item \textbf{parentsIds :} qui est une liste qui contient les identificateurs des nœuds se trouvant au niveau supérieur.
+    \item \textbf{isNorthLinkBusyByid :} qui est une liste de booléen ou chaque élément indique si la liaison supérieure en question est occupée.
+    \item \textbf{northTupleQueues :} qui est une liste de liste de tuple qui associe à chaque liaison supérieur une file de tuple ou seront stocker les tuples à envoyer sur cette liaison si cette dernière est occupée.
+\end{itemize}
+De plus, la méthode  processTupleArrival, qui est la méthode exécutée par le noeud à  chaque arrivée d’un tuple, à été redéfinie afin d’implémenter la routine associée à une noeud fog décrite dans la conception.
+     \item \textbf{Création d’une classe GWFogDevice :} cette classe représente un nœud fog passerelle, c-a-d le noeud connecté directement aux capteurs et aux actionneurs. Cette classe étend également la classe FogDevice, et ajoute en plus les attributs suivant :
+     \begin{itemize}
+     \item \textbf{waitingQueue :} qui est une liste de tuple servant à stocker les demandes non encore affecté.
+     \item \textbf{tupleToMatchedDevice :} est une liste contenant les tuple non affecté à un neud.
+     \item \textbf{matchedTupleList :} qui est une liste comportant les tuples affectés à leurs nœuds respectifs.
+     \item \textbf{gwDevices :} est une liste de GWFogDevice, contenant l'ensemble de nœuds passerelle.
+     \item \textbf{isNorthLinkBusyByid :} qui représente la même chose que dans la classe.
+     \item \textbf{northTupleQueues :} elle représente également la meme chose que celle mentionner dans la classe ClusterFogDevice.
+     \item \textbf{clusterFogDevicesIds :} qui représente la liste de tout les noeuds fog du cluster.
+     \end{itemize}
+     \item \textbf{Création d’une classe MatchedTuple :} cette classe décrit  les tuples une fois à affecter à leur noeuds respectifs. Elle étand la classe Tuple, en ajoutant comme attribut :
+     \begin{itemize}
+         \item \textbf{destinationFogDeviceId :} qui contient l’identificateur du noeud de destination.
+         \item \textbf{destModuleMips :} qui décrit les exigences de traitement du module de destination.
+     \end{itemize}
+\end{enumerate}
+\section{Résultats et évaluation des performances :}
+Afin de pouvoir juger des performances ainsi que l’ampleur des gains apportés par notre modèle simplifié de planification de ressources,  nous évaluerons les performances de cette solution en mesurant le délai d'exécution des applications, et le délai d'exécution des tuples. Puis on comparera les résultat avec un modèle classique implémentant la stratégie “FirstFit”
+Les résultat sont représenter par les graphes suivant
+\begin{figure}[H]
+    \centering
+    \includegraphics[]{src/ressources/loopDelayPerLvl.png}
+    \caption{Délai moyen d'exécution d’une application en fonction du nombre de noeud par niveau}
+    \label{fig:}
+\end{figure}
+La figure montre un délai d'exécution d’une application est important et croissant linéairement de la part de la stratégie “First Fist” contrairement l’autre méthode qui semble suivre une croissance relativement logarithmique.
+\begin{figure}[H]
+    \centering
+    \includegraphics[]{src/ressources/tupleDelayPerLvl.png}
+    \caption{Délai moyen d'exécution d’un tuple en fonction du nombre de noeud par nivaux}
+    \label{fig:}
+\end{figure}
+On constate que le délai d'exécution d’un tuple dans la stratégie “First Fist” semble s'accélérer contrairement à l'autre solution ou elle suit une cadence doucement haussière. 
