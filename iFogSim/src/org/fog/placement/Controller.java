@@ -85,8 +85,8 @@ public class Controller extends SimEntity{
 					parent.getChildToLatencyMap().put(fogDevice.getId(), latency);
 				}
 			}
-			else if (fogDevice instanceof pfe.fog.cmp.ClusterFogDevice) {
-				for (int parentId : ((pfe.fog.cmp.ClusterFogDevice)fogDevice).getParentsIds()) {
+			else if (fogDevice instanceof pfe.fog.cmpFF.ClusterFogDevice) {
+				for (int parentId : ((pfe.fog.cmpFF.ClusterFogDevice)fogDevice).getParentsIds()) {
 					FogDevice parent = getFogDeviceById(parentId);
 					if(parent == null)
 						continue;
@@ -95,8 +95,8 @@ public class Controller extends SimEntity{
 					parent.getChildToLatencyMap().put(fogDevice.getId(), latency);
 				}
 			}
-			else if (fogDevice instanceof pfe.fog.cmp.GWFogDevice) {
-				for (int parentId : ((pfe.fog.cmp.GWFogDevice)fogDevice).getParentsIds()) {
+			else if (fogDevice instanceof pfe.fog.cmpFF.GWFogDevice) {
+				for (int parentId : ((pfe.fog.cmpFF.GWFogDevice)fogDevice).getParentsIds()) {
 					FogDevice parent = getFogDeviceById(parentId);
 					if(parent == null)
 						continue;
@@ -104,7 +104,48 @@ public class Controller extends SimEntity{
 					parent.getChildrenIds().add(fogDevice.getId());
 					parent.getChildToLatencyMap().put(fogDevice.getId(), latency);
 				}
-			} else {
+			}
+			else if (fogDevice instanceof pfe.fog.cmpBF.ClusterFogDevice) {
+				for (int parentId : ((pfe.fog.cmpBF.ClusterFogDevice)fogDevice).getParentsIds()) {
+					FogDevice parent = getFogDeviceById(parentId);
+					if(parent == null)
+						continue;
+					double latency = fogDevice.getUplinkLatency();
+					parent.getChildrenIds().add(fogDevice.getId());
+					parent.getChildToLatencyMap().put(fogDevice.getId(), latency);
+				}
+			}
+			else if (fogDevice instanceof pfe.fog.cmpBF.GWFogDevice) {
+				for (int parentId : ((pfe.fog.cmpBF.GWFogDevice)fogDevice).getParentsIds()) {
+					FogDevice parent = getFogDeviceById(parentId);
+					if(parent == null)
+						continue;
+					double latency = fogDevice.getUplinkLatency();
+					parent.getChildrenIds().add(fogDevice.getId());
+					parent.getChildToLatencyMap().put(fogDevice.getId(), latency);
+				}
+			} 
+			else if (fogDevice instanceof pfe.fog.cmpWF.ClusterFogDevice) {
+				for (int parentId : ((pfe.fog.cmpWF.ClusterFogDevice)fogDevice).getParentsIds()) {
+					FogDevice parent = getFogDeviceById(parentId);
+					if(parent == null)
+						continue;
+					double latency = fogDevice.getUplinkLatency();
+					parent.getChildrenIds().add(fogDevice.getId());
+					parent.getChildToLatencyMap().put(fogDevice.getId(), latency);
+				}
+			}
+			else if (fogDevice instanceof pfe.fog.cmpWF.GWFogDevice) {
+				for (int parentId : ((pfe.fog.cmpWF.GWFogDevice)fogDevice).getParentsIds()) {
+					FogDevice parent = getFogDeviceById(parentId);
+					if(parent == null)
+						continue;
+					double latency = fogDevice.getUplinkLatency();
+					parent.getChildrenIds().add(fogDevice.getId());
+					parent.getChildToLatencyMap().put(fogDevice.getId(), latency);
+				}
+			} 
+			else {
 				FogDevice parent = getFogDeviceById(fogDevice.getParentId());
 				if(parent == null)
 					continue;

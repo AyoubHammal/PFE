@@ -1,4 +1,4 @@
-package pfe.fog.cmp;
+package pfe.fog.cmpFF;
 
 import java.util.HashMap;
 
@@ -8,7 +8,9 @@ import org.fog.entities.Tuple;
 public class MatchedTuple extends Tuple {
 	
 	protected int destinationFogDeviceId;
+	public double destModuleMips;
 
+	
 	public MatchedTuple(String appId, int cloudletId, int direction, long cloudletLength, int pesNumber,
 			long cloudletFileSize, long cloudletOutputSize,
 			UtilizationModel utilizationModelCpu,

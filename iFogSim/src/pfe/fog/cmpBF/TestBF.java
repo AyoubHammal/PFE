@@ -1,4 +1,4 @@
-package pfe.fog.cmp;
+package pfe.fog.cmpBF;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,7 +39,7 @@ import org.fog.utils.distribution.DeterministicDistribution;
 import pfe.fog.utils.JsonToParam;
 import pfe.fog.utils.ResultToCSV;
 
-public class Test {
+public class TestBF {
 	static List<FogDevice> fogDevices = new ArrayList<FogDevice>();
 	static List<Sensor> sensors = new ArrayList<Sensor>();
 	static List<Actuator> actuators = new ArrayList<Actuator>();
@@ -48,7 +48,7 @@ public class Test {
 	
 	public static void main(String[] args) {
 		JsonToParam.readParam("topologies/param.json");
-		Config.outputFileName += "_ff.csv";
+		Config.outputFileName += "_bf.csv";
 		ResultToCSV.init();
 		try {
 			Log.disable();

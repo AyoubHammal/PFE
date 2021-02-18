@@ -263,7 +263,7 @@ public class GWFogDevice extends FogDevice {
 //			return -1;
 //		}
 		double dist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(bestId), mt);
-		if (dist >= 0.9) {
+		if (dist > 1) {
 			return -1;
 		}
 		return bestId;

@@ -39,7 +39,7 @@ import org.fog.utils.distribution.DeterministicDistribution;
 import pfe.fog.utils.JsonToParam;
 import pfe.fog.utils.ResultToCSV;
 
-public class Test {
+public class TestSM {
 	static List<FogDevice> fogDevices = new ArrayList<FogDevice>();
 	static List<Sensor> sensors = new ArrayList<Sensor>();
 	static List<Actuator> actuators = new ArrayList<Actuator>();

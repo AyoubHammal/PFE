@@ -1,4 +1,4 @@
-package pfe.fog.cmp;
+package pfe.fog.cmpWF;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -20,6 +20,7 @@ import org.fog.utils.FogEvents;
 import org.fog.utils.Logger;
 import org.fog.utils.NetworkUsageMonitor;
 
+
 public class GWFogDevice extends FogDevice {
 	protected List<GWFogDevice> gwDevices;
 	protected List<Integer> parentsIds = new ArrayList<Integer>();
@@ -27,6 +28,7 @@ public class GWFogDevice extends FogDevice {
 	protected List<Queue<Tuple>> northTupleQueues = new ArrayList<Queue<Tuple>>();
 	protected List<Integer> clusterFogDevicesIds = new ArrayList<Integer>();
 
+	private int i = 0;
 	
 	public GWFogDevice(String name, FogDeviceCharacteristics characteristics, VmAllocationPolicy vmAllocationPolicy,
 			List<Storage> storageList, double schedulingInterval, double uplinkBandwidth, double downlinkBandwidth,
@@ -109,30 +111,19 @@ public class GWFogDevice extends FogDevice {
 		}
 
 		// chercher le premier noeud capable d'executer le tuple 
-		sendTupleToDeviceFirstFit(tuple);
+		sendTupleToDeviceWorstFit(tuple);
 	}
 	
-	private void sendTupleToDeviceFirstFit(Tuple tuple) {
+	private void sendTupleToDeviceWorstFit(Tuple tuple) {
 		MatchedTuple mt = new MatchedTuple(tuple);
-		AppModule m = ((Controller)CloudSim.getEntity(getControllerId())).getApplications().get(mt.getAppId()).getModuleByName(mt.getDestModuleName());
-		int i = 0;
-		for (int id : getClusterFogDevicesIds()) {
-			ClusterFogDevice d = (ClusterFogDevice)CloudSim.getEntity(id);
-			//System.out.println("testing tuple " + tuple.getCloudletId() + " with " + id + "(" + d.getHost().getAvailableMips() + "|" + m.getMips() + ")");
-			if (d.getHost().getAvailableMips() > m.getMips()) {
-				//System.out.println("[" + id + " = " + tuple.getCloudletId() + "]");
-				mt.setDestinationFogDeviceId(id);
-				int link = -1;
-				if (parentsIds.contains(mt.getDestinationFogDevice()))
-					link = parentsIds.indexOf(mt.getDestinationFogDevice());
-				
-				sendUp(mt, link == -1 ? i : link);
-				i = (i + 1) % parentsIds.size();
-				return;
-			}
-		}
-		//System.out.println("[" + "cloud" + " = " + tuple.getCloudletId() + "]");
-		mt.setDestinationFogDeviceId(CloudSim.getEntity("cloud").getId());
+		
+		int id = selectBestDeviceForTuple(mt, clusterFogDevicesIds);
+		
+		if (id != -1)
+			mt.setDestinationFogDeviceId(id);
+		else
+			mt.setDestinationFogDeviceId(CloudSim.getEntity("cloud").getId());	
+		
 		int link = -1;
 		if (parentsIds.contains(mt.getDestinationFogDevice()))
 			link = parentsIds.indexOf(mt.getDestinationFogDevice());
@@ -141,9 +132,38 @@ public class GWFogDevice extends FogDevice {
 		i = (i + 1) % parentsIds.size();
 	}
 	
+	private int selectBestDeviceForTuple(MatchedTuple mt, List<Integer> prepositionsList) {
+		// Le meilleur c'est celui qui minimise l'utilisation
+		double minDist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(prepositionsList.get(0)), mt);
+		int bestId = prepositionsList.get(0);
+		for (int id : prepositionsList) {
+			double dist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(id), mt);
+			if (minDist >= dist) {
+				minDist = dist;
+				bestId = id;
+			}
+		}
+		
+		double dist = calculateDistance((ClusterFogDevice)CloudSim.getEntity(bestId), mt);
+		if (dist > 1) {
+			return -1;
+		}
+		return bestId;
+	}
 	
 	private double calculateDistance(ClusterFogDevice d, Tuple t) {
-		return 0;
+		AppModule m = ((Controller)CloudSim.getEntity(getControllerId())).getApplications().get(t.getAppId()).getModuleByName(t.getDestModuleName());
+		double hostAvailableMips = d.getHost().getAvailableMips();
+		double hostMips = d.getHost().getTotalMips();
+		double hostUsedMips = hostMips - hostAvailableMips;
+		double moduleMips = m.getMips();
+		((MatchedTuple)t).destModuleMips = moduleMips;
+//		System.out.println("-- Host: " + d.getName() + " MipsAvailable: " + hostAvailableMips + " Tuple: " + t.getCloudletId() + " Mips: " + moduleMips + " Dist: " + (hostAvailableMips > moduleMips ? hostAvailableMips - moduleMips : -1));
+//		return hostAvailableMips >= moduleMips ? hostUsedMips : -1;
+		
+		// formule de l'article
+//		System.out.println("-- Host: " + d.getName() + " MipsAvailable: " + hostAvailableMips + " total : " + hostMips + " used : " + hostUsedMips + " Tuple: " + t.getCloudletId() + " Mips: " + moduleMips + " Dist: " + ((hostUsedMips + moduleMips) / hostMips));
+		return (hostUsedMips + moduleMips) / hostMips;
 	}
 	
 	

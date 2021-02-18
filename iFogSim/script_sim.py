@@ -4,8 +4,10 @@ import pandas
 import matplotlib.pyplot as plt
 
 def executTest():
-  os.system("ant Test")
-  os.system("ant Test1")
+  os.system("ant TestSM")
+  os.system("ant TestBF")
+  os.system("ant TestFF")
+  os.system("ant TestWF")
 
 dirPath = "results/res"
 
@@ -132,14 +134,19 @@ dirPath += "_var" + str(parameter) + "from" + str(min) + "to" + str(max) + "step
 os.mkdir(dirPath)
 shutil.move("output/" + resultFile + "_sm.csv", dirPath + resultFile + "_sm.csv")
 shutil.move("output/" + resultFile + "_ff.csv", dirPath + resultFile + "_ff.csv")
+shutil.move("output/" + resultFile + "_bf.csv", dirPath + resultFile + "_bf.csv")
+shutil.move("output/" + resultFile + "_wf.csv", dirPath + resultFile + "_wf.csv")
 shutil.copy("topologies/param.json", dirPath + "param.json")
 
-# PARTIE PLOT
+
+############## PARTIE PLOT ##############
 res_sm = pandas.read_csv(dirPath + "out_sm.csv", sep = ";", header = 0, dtype = np.float64)
 res_ff = pandas.read_csv(dirPath + "out_ff.csv", sep = ";", header = 0, dtype = np.float64)
+res_bf = pandas.read_csv(dirPath + "out_bf.csv", sep = ";", header = 0, dtype = np.float64)
+res_wf = pandas.read_csv(dirPath + "out_wf.csv", sep = ";", header = 0, dtype = np.float64)
 
 # Energy per Level
-energyPerLvl = np.concatenate((res_sm[[index, "AvgEnergie"]].to_numpy(), res_ff[["AvgEnergie"]].to_numpy()), axis = 1).T
+energyPerLvl = np.concatenate((res_sm[[index, "AvgEnergie"]].to_numpy(), res_ff[["AvgEnergie"]].to_numpy(), res_bf[["AvgEnergie"]].to_numpy(),res_wf[["AvgEnergie"]].to_numpy()), axis = 1).T
 # Normalisation de l'energie
 maxEnergy = energyPerLvl[1:, :].max()
 print(maxEnergy)
@@ -149,6 +156,8 @@ print(energyPerLvl)
 fig, ax = plt.subplots()
 ax.plot(energyPerLvl[0], energyPerLvl[1], label = "Proposé")
 ax.plot(energyPerLvl[0], energyPerLvl[2], label = "First Fit")
+ax.plot(energyPerLvl[0], energyPerLvl[3], label = "Best Fit")
+ax.plot(energyPerLvl[0], energyPerLvl[4], label = "Worst Fit")
 ax.set_xlabel(x_label)
 ax.set_ylabel("Consommation d'énergie moyenne (échelle de 0 à 1)")
 ax.set_ylim(ymin=0)
@@ -156,7 +165,7 @@ ax.legend()
 plt.savefig(dirPath + "/energyPerLvl.png")
 
 # Loop Delay per Level
-tupleDelayPerLvl = np.concatenate((res_sm[[index, "AvgTupleCpuExecutionDelay"]].to_numpy(), res_ff[["AvgTupleCpuExecutionDelay"]].to_numpy()), axis = 1).T
+tupleDelayPerLvl = np.concatenate((res_sm[[index, "AvgTupleCpuExecutionDelay"]].to_numpy(), res_ff[["AvgTupleCpuExecutionDelay"]].to_numpy(), res_bf[["AvgTupleCpuExecutionDelay"]].to_numpy(), res_wf[["AvgTupleCpuExecutionDelay"]].to_numpy()), axis = 1).T
 manDelay = tupleDelayPerLvl[1:, :].max()
 print(manDelay)
 tupleDelayPerLvl[1:, :] = tupleDelayPerLvl[1:, :] / manDelay
@@ -164,6 +173,8 @@ print(tupleDelayPerLvl)
 fig, ax = plt.subplots()
 ax.plot(tupleDelayPerLvl[0], tupleDelayPerLvl[1], label = "Proposé")
 ax.plot(tupleDelayPerLvl[0], tupleDelayPerLvl[2], label = "First Fit")
+ax.plot(tupleDelayPerLvl[0], tupleDelayPerLvl[3], label = "Best Fit")
+ax.plot(tupleDelayPerLvl[0], tupleDelayPerLvl[4], label = "Worst Fit")
 ax.set_xlabel(x_label)
 ax.set_ylabel("Délai moyen d'exécution d'un tuple (échelle de 0 à 1)")
 ax.set_ylim(ymin=0)
@@ -171,7 +182,7 @@ ax.legend()
 plt.savefig(dirPath + "/tupleDelayPerLvl.png")
 
 # Loop Delay per Level
-loopDelayPerLvl = np.concatenate((res_sm[[index, "AvgAppLoopDelay"]].to_numpy(), res_ff[["AvgAppLoopDelay"]].to_numpy()), axis = 1).T
+loopDelayPerLvl = np.concatenate((res_sm[[index, "AvgAppLoopDelay"]].to_numpy(), res_ff[["AvgAppLoopDelay"]].to_numpy(), res_bf[["AvgAppLoopDelay"]].to_numpy(), res_wf[["AvgAppLoopDelay"]].to_numpy()), axis = 1).T
 manDelay = loopDelayPerLvl[1:, :].max()
 print(manDelay)
 loopDelayPerLvl[1:, :] = loopDelayPerLvl[1:, :] / manDelay
@@ -179,6 +190,8 @@ print(loopDelayPerLvl)
 fig, ax = plt.subplots()
 ax.plot(loopDelayPerLvl[0], loopDelayPerLvl[1], label = "Proposé")
 ax.plot(loopDelayPerLvl[0], loopDelayPerLvl[2], label = "First Fit")
+ax.plot(loopDelayPerLvl[0], loopDelayPerLvl[3], label = "Best Fit")
+ax.plot(loopDelayPerLvl[0], loopDelayPerLvl[4], label = "Worst Fit")
 ax.set_xlabel(x_label)
 ax.set_ylabel("Délai moyen d'exécution d'une application (échelle de 0 à 1)")
 ax.set_ylim(ymin=0)
