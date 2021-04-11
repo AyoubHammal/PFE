@@ -149,9 +149,7 @@ res_wf = pandas.read_csv(dirPath + "out_wf.csv", sep = ";", header = 0, dtype = 
 energyPerLvl = np.concatenate((res_sm[[index, "AvgEnergie"]].to_numpy(), res_ff[["AvgEnergie"]].to_numpy(), res_bf[["AvgEnergie"]].to_numpy(),res_wf[["AvgEnergie"]].to_numpy()), axis = 1).T
 # Normalisation de l'energie
 maxEnergy = energyPerLvl[1:, :].max()
-print(maxEnergy)
 energyPerLvl[1:, :] = energyPerLvl[1:, :] / maxEnergy
-print(energyPerLvl)
 
 fig, ax = plt.subplots()
 ax.plot(energyPerLvl[0], energyPerLvl[1], label = "Proposé")
@@ -167,9 +165,7 @@ plt.savefig(dirPath + "/energyPerLvl.png")
 # Loop Delay per Level
 tupleDelayPerLvl = np.concatenate((res_sm[[index, "AvgTupleCpuExecutionDelay"]].to_numpy(), res_ff[["AvgTupleCpuExecutionDelay"]].to_numpy(), res_bf[["AvgTupleCpuExecutionDelay"]].to_numpy(), res_wf[["AvgTupleCpuExecutionDelay"]].to_numpy()), axis = 1).T
 manDelay = tupleDelayPerLvl[1:, :].max()
-print(manDelay)
 tupleDelayPerLvl[1:, :] = tupleDelayPerLvl[1:, :] / manDelay
-print(tupleDelayPerLvl)
 fig, ax = plt.subplots()
 ax.plot(tupleDelayPerLvl[0], tupleDelayPerLvl[1], label = "Proposé")
 ax.plot(tupleDelayPerLvl[0], tupleDelayPerLvl[2], label = "First Fit")
@@ -184,9 +180,7 @@ plt.savefig(dirPath + "/tupleDelayPerLvl.png")
 # Loop Delay per Level
 loopDelayPerLvl = np.concatenate((res_sm[[index, "AvgAppLoopDelay"]].to_numpy(), res_ff[["AvgAppLoopDelay"]].to_numpy(), res_bf[["AvgAppLoopDelay"]].to_numpy(), res_wf[["AvgAppLoopDelay"]].to_numpy()), axis = 1).T
 manDelay = loopDelayPerLvl[1:, :].max()
-print(manDelay)
 loopDelayPerLvl[1:, :] = loopDelayPerLvl[1:, :] / manDelay
-print(loopDelayPerLvl)
 fig, ax = plt.subplots()
 ax.plot(loopDelayPerLvl[0], loopDelayPerLvl[1], label = "Proposé")
 ax.plot(loopDelayPerLvl[0], loopDelayPerLvl[2], label = "First Fit")
