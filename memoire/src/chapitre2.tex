@@ -1,16 +1,15 @@
-\chapter{Solution}
+\chapter{Solution d'allocation de ressources dans un environnement \emph{Fog Computing} basé sur l'algorithme de Gale-Shapley}
 \section{Introduction}
-Dans le chapitre précédent, nous avons présenté les différentes dimensions du problème de gestion de ressource dans les environnements fog, et nous avons vu également l’importance de cette dernière pour la concrétisation de ce-dit paradigme.
+Dans le chapitre précédent, nous avons présenté les différentes dimensions du problème de gestion de ressource dans les environnements fog, et nous avons vu également l’importance de cette dernière pour la concrétisation de cedit paradigme.
 Nous définirons dans ce chapitre notre solution de conception en nous basant sur les différents travaux traitant du sujet.
 \section{Motivation}
 Une bonne gestion de ressource permet d'accroître les performances globales du système, en réduisant le temps d'exécution des différentes applications, la latence, ainsi que les coûts énergétiques. Elle permet aussi d’exploiter au mieux les ressources matérielles disponibles, ce qui augmente le rendement et la rentabilité économique des différents équipements.\\ 
 Par conséquent, le développement d’un bon modèle de gestion de ressource se révèle d’une importance capitale pour une exploitation efficace et rentable d’une infrastructure Fog.
-\section{Problématique}
+\section{Problématique et article de référence}
 Suite à l’étude des travaux qui traitent de l’amélioration et de l’optimisation de la gestion des ressources, on constate que le problème de planification des ressources est un problème central qui nécessite d'être investigué afin d’effectuer une gestion de ressource optimale. \\
-Le problème consiste à concevoir un modèle de planification de ressource dynamique,efficace et évolutif, qui permet affecter les différentes demandes de ressources, effectuées par les appareils IoT, au différent nœud fog d’une manière à optimiser au mieux certaines métriques de liées aux coûts.
-\section{État de l’art}
-Pour la réalisation de ce travail\cite{jing2016}, on s’est inspiré d’un article publié  traitant partiellement du sujet. \\
-Dans ce travail, les auteurs s’intéressent au processus d'approvisionnement dans un environnement cloud, dans lequel ce dernier peut être principalement décomposé en 3 étapes majeures que sont : 
+Le problème consiste à concevoir un modèle de planification de ressource dynamique,efficace et évolutif, qui permet affecter les différentes demandes de ressources, effectuées par les appareils IoT, au différent nœud fog d’une manière à optimiser au mieux certaines métriques de liées aux coûts.\\
+Pour la réalisation de ce travail, nous nous sommes inspirés d’un article publié  traitant partiellement du sujet\cite{jing2016}. \\
+Dans ce travail, les auteurs s’intéressent au processus d'approvisionnement dans un environnement \emph{cloud}, dans lequel ce dernier peut être principalement décomposé en 3 étapes majeures que sont : 
 \begin{enumerate}
     \item L’identification des noeuds concernés (c.-à-d. les nœuds sous-utilisés ou sur-utilisés). 
     \item Sélection des VM à migrer.
@@ -18,73 +17,66 @@ Dans ce travail, les auteurs s’intéressent au processus d'approvisionnement d
 \end{enumerate}
 La partie qui nous intéresse étant la troisième étape,  où ils ont proposé un mécanisme d’affectation de VM aux nœuds adéquat, modélisé comme étant un problème de correspondance (matching problem).
 \section{Conception de la solution}
-\subsection{Hypothèses}
-La solution proposée nécessite de faire des hypothèses sur la topologie physique de l’infrastructure fog qui l’implémente.\\
-On suppose que : 
+\subsection{Contribution}
+Dans notre solution, nous proposons une implémentation de l'algorithme de gale-shapley pour l'allocation des noeuds d'un environnement fog afin de servir des demandes de services générés par les objets \emph{IoT}.
+\subsubsection{Hypothèses}
+La solution proposée nécessite de poser certaines hypothèses sur la topologie physique de l’infrastructure fog qui l’implémente.\\
 \begin{itemize}
-    \item La topologie est statique durant l’exploitation, c-a-d qu' une fois la solution implémentée, la topologie ne subit pas de modification.
-    \item La topologie suit une organisation matricielle, c-a-d que les nœuds fog sont organisés en des niveaux bien distincts avec le même nombre de nœuds dans chaque niveau.
-    \item La topologie est maillé entre les niveaux, c-a-d chaque nœud fog du cluster est relié physiquement à tous les nœuds du niveaux supérieure.
-    \item Chaque noeud à une connaissance de tous ses noeud parent et ses noeuds enfants (c-a-d respectivement les noeud du niveaux supérieur et les noeud du niveaux inférieur)
-    \item Dans ce modèle, on dispose au minimum de trois type de requête que sont : \\
+    \item La topologie est statique durant l’exploitation, c.-à-d. qu' une fois la solution implémentée, la topologie ne subit pas de modification.
+    \item La topologie suit une organisation matricielle, c.-à-d. que les nœuds fog sont organisés en des niveaux bien distincts avec le même nombre de nœuds dans chaque niveau.
+    \item La topologie est maillée entre les niveaux, c.-à-d. chaque nœud fog du cluster est relié physiquement à tous les nœuds du niveau supérieur.
+    \item Chaque noeud à une connaissance de tous ses noeuds parents et ses noeuds enfants (c.-à-d. respectivement les noeuds du niveau supérieur et les noeuds du niveau inférieur)
+    \item Dans ce modèle, nous disposons au minimum de trois types de requêtes qui sont : \\
           \begin{itemize}
-             \item La requête demande, qui correspond à une demande de services émise par les appareils IoT, elle comporte tous les détails de la demande.
-             \item la requête résultat, qui est généré après l’exécution d’une demande de service, elle est émise à destination de l'appareil émetteur.
-             \item La requête jeton, qui représente le jeton circulant entre les différents nœuds passerelle.
+             \item La requête \emph{demande}, qui correspond à une demande de services émise par les appareils IoT, elle comporte tous les détails de la demande.
+             \item la requête \emph{résultat}, qui est généré après l’exécution d’une demande de service, elle est émise à destination de l'objet \emph{IoT} émetteur.
+             \item La requête \emph{jeton}, qui représente le jeton circulant entre les différents nœuds passerelle suivant la politique du tourniquet (round-robin).
           \end{itemize}
 \end{itemize}
 \subsection{Topologie}
-Comme vu précédemment, une infrastructure fog est décomposé de 3 couches superposés que sont :
+Comme vu dans le chapitre introductif, une infrastructure \emph{Fog} classique est décomposée de 3 couches superposées qui sont :
 \begin{itemize}
-    \item \emph{La couche IoT}, qui représente l’ensemble des appareils iot qui effectue des demande de service.
-    \item \emph{La couche Fog}, qui représente l’ensemble des nœuds fog se trouvant à l’intermédiaire entre les appareils IoT et le cloud.
+    \item \emph{La couche IoT}, qui représente l’ensemble des objets \emph{IoT} qui effectue des demandes de service.
+    \item \emph{La couche Fog}, qui représente l’ensemble des nœuds \emph{Fog} se trouvant à l’intermédiaire entre les objets \emph{IoT} et le \emph{cloud}.
     \item \emph{La couche cloud} qui représente l’infrastructure cloud traditionnelle.
 \end{itemize}
 \begin{figure}[H]
     \centering
     \includegraphics[]{Topologie_générale de_l'infrastructure.pdf}
     \caption{Schémas représentant une architecture fog traditionnelle}
-    \label{fig:Topologie_generale de_linfrastructure}
+    \label{fig:Topologie_generale_de_linfrastructure}
 \end{figure}
-La solution proposée commence par découper la couche fog de l'infrastructure en un ensemble cluster, c-a-d chaque cluster regroupe un ensemble de nœud fog. Ensuite, chaque cluster est découpé en 2 couche superposé, que sont :
+La solution proposée commence par découper verticalement la couche f\emph{Fog} de l'infrastructure en un ensemble cluster (voir figure \ref{fig:Topologie_generale_de_linfrastructure}) , c.-à-d. chaque cluster regroupe un ensemble de nœuds \emph{Fog} inter-connecté. Ensuite, chaque cluster est découpé en 2 couches superposées, qui sont :
 \begin{itemize}
-    \item \emph{La couche des nœuds passerelles :} : cette couche est composé du niveau connecté directement à la couche iot.
-    \item \emph{La couche des nœuds Fog restant :} qui est composée des niveaux restants.
+    \item \emph{La couche des nœuds passerelles :}  cette couche est composée du niveau connecté directement à la couche \emph{IoT}.
+    \item \emph{La couche des nœuds Fog restants :} qui est composée des niveaux intermédiaires restants entre la couche des noeuds passerelles et le \emph{cloud}.
 \end{itemize}
 \begin{figure}[H]
     \centering
-    \includegraphics[]{ShémaCluster.pdf}
-    \caption{Schémas représentant une architecture fog répartie en cluster}
+    \includegraphics[scale=0.7]{ShémaCluster.pdf}
+    \caption{Schéma représentant une architecture \emph{fog} répartie en cluster}
     \label{fig:Infrastructure_fog_repartie_en_cluster}
 \end{figure}
 \subsection{Scénario}
 Ce scénario s’applique pour un cluster, il suffira par la suite de généraliser ce fonctionnement à l'ensemble des cluster défini par l’infrastructure.\\
-Les nœuds passerelle du cluster, c-a-d les nœuds connectés directement à la couche iot, reçoivent des demandes de services des différents appareils iot. Chaque nœud préserve ses demandes dans une file en attendant leur correspondance puis leur envoi à leur destination.\\
-On définit un jeton circulant d’un nœud passerelle à un autre suivant la politique du tourniquet (round robin). Si un nœud passerelle possède le jeton alors il effectue une correspondance des demandes qui se trouve dans sa file avec les nœuds fog du cluster, puis il envoie chaque demande au nœud fog correspondant, et  renvoie le jeton au prochain nœud passerelle et ainsi de suite.
-\begin{figure}[H]
-    \centering
-    \includegraphics[]{Organigramme-scenario globale.pdf}
-    \caption{Organigramme qui illustre les scénarios depuis la réception de la demande jusqu’au retour du résultat du traitement}
-    \label{fig:Topologie_generale de_linfrastructure}
-\end{figure}
+Les nœuds passerelles du cluster, c.-à-d. les nœuds connectés directement à la couche IoT, reçoivent des demandes de services des différents appareils IoT. Chaque nœud préserve ses demandes dans une file en attendant leur correspondance puis leur envoi à leur destination.\\
+Nous définissons un jeton circulant d’un nœud passerelle à un autre suivant la politique du tourniquet (round robin). Si un nœud passerelle possède le jeton à la réception alors il effectue une correspondance des demandes qui se trouve dans sa file d' avec les nœuds \emph{Fog} du cluster, puis il envoie chaque demande au nœud \emph{fog} correspondant, et  renvoie le jeton au prochain nœud passerelle et ainsi de suite (voir figure \ref{fig:Organigrame_scénario_globale}).
 \subsection{Description algorithmique du scénario}
-La solution est conçue suivant le paradigme événementiel, c-a-d une approche de l’algorithmique basé sur la notion d'événement, ou on cherche à associer à chaque événement une procédure à exécuter appelée “Routine”.   
-Notre solution comporte 2 routine principales que sont :
+La solution est conçue suivant le paradigme événementiel, c.-à-d. une approche de l’algorithmique basée sur la notion d'événement, ou on cherche à associer à chaque événement une procédure à exécuter appelée “Routine”.   
+Notre solution comporte 2 routines principales qui sont :
 \begin{itemize}
-    \item \emph{La routine associé au noeud passerelle}
-    \item \emph{La Routine associé au noeud Fog}
+    \item \emph{La routine associée au noeud passerelle}
+    \item \emph{La Routine associée au noeud Fog}
 \end{itemize}
 \subsubsection{Routine associée au nœud passerelle}
-Cette routine est exécutée au niveau des nœuds passerelle à chaque fois qu’une requête est reçue.
-Le pseudo code de cette routine est le suivant :\\
+Cette routine est exécutée au niveau des nœuds passerelles à chaque fois qu’une requête est reçue.
+Le pseudo-code de cette routine est le suivant :\\
 \begin{algorithm}[H]
- %\KwData{this text}
- %\KwResult{how to write algorithm with \LaTeX2e }
- \eIf{Requête reçus est de type jeton}
+ \eIf{Requête reçue est de type jeton}
  {  
-    // Appeler la  procédure Correspondance.\\
-    Correspondance (fileDemande, listeNoeuds);\\
-    // Puis on effectue le routage des demandes.\\
+    // appeler la  procédure Correspondance.\\
+    correspondance (fileDemande, listeNoeuds);\\
+    // puis on effectue le routage des demandes.\\
    \ForEach{Demande $D_i \in fileDemande$}
    {
      \eIf{listeParents.contient($D_i$.destination)}
@@ -92,33 +84,55 @@ Le pseudo code de cette routine est le suivant :\\
      {
          envoyer(demande, NoeudPèreParDéfaut);\\
         // on met à jour le nœud par défaut à chaque fois afin d'équilibrer la charge entre les différentes liaisons.\\
-	    NoeudPèreParDéfaut \gets prochainNoeudParent();\\
+     NoeudPèreParDéfaut \gets prochainNoeudParent();\\
      }
    }
  }
  {
-   \eIf{Requête reçus est de type résultat}
-   {// envoyer le résultat à l'appareil iot concerné.\\
-       \eIf{resultat.destinatinon est relié à ce noeud}
-       {envoyer(resultat,resultat.destination);}
+   \eIf{Requête reçue est de type résultat}
+   {// envoyer le résultat à l'appareil IoT concerné.\\
+        envoyer(resultat,resultat.destination);
    }
    {// la requête est par conséquent de type demande.\\
-     Enfiler( fileDemande,Demande);
+     enfiler( fileDemande,Demande);
    }
  }
  \caption{Routine associée aux nœuds passerelles\\ \\}
 \end{algorithm}
  \paragraph{Procédure de correspondance :}\\
- Pour l’implémentation de cette procédure, nous avons opté pour l’utilisation de l’algorithme de gale-shapley, qui est un algorithme conçu pour résoudre le problème des mariages stables.\\
-Il présente des propriété intéressante que sont :
+ Pour l’implémentation de cette procédure, nous avons opté pour l’utilisation de l’algorithme de Gale-Shapley \cite{gale-shapley}, qui est un algorithme conçu pour résoudre le problème des mariages stables.\\
+Il présente des propriétés intéressantes qui sont :
 \begin{itemize}
-    \item De bonne performance dû à sa complexité quadratique.
-    \item A sa terminaison toute demande sera associée à un nœud.
+    \item De bonne performance due à sa complexité quadratique.
+    \item Convergence, i.e toute demande sera associée à un nœud à la fin de l'exécution.
     \item Les couples (demande,nœud) résultant de cet algorithme sont stables.
     \item La configuration résultante est optimale en comparaison à toutes les autres solutions stables.
 \end{itemize}
-Cet algorithme nécessite la définition d’une relation de préférence, qu’on nommera dans cette solution “Relation d’adéquation” qui est associée à chaque demande et à chaque nœud. \\
-Pour ce faire, on définie une distance entre la demande et le noeud qui calculer de la manière suivante :
+Cet algorithme nécessite la définition d’une relation de préférence, que nous nommerons dans cette solution “Relation d’adéquation” qui est associée à chaque demande et à chaque nœud. \\
+Pour ce faire, nous définissons une distance entre la demande et le noeud, qui calculer de la manière suivante :
+\\ \\
+\begin{minipage}[t]{0.4\textwidth}
+\begin{flushleft}
+\begin{left}
+    \begin{tabular}{|c|p{4cm}|}
+    \hline
+    \diagbox{Symbole}& Définition \\
+    \hline
+    $C_u$& MIPS utilisé\\ 
+    \hline
+    $C_dem$&MIPS utilisé\\
+    \hline
+    $C_fd$&MIPS totale du noeud\\
+    \hline
+    $C_r$&MIPS disponible\\
+    \hline
+    \end{tabular}
+\end{left}
+\end{flushleft}
+\end{minipage}
+%
+\begin{minipage}[th]{0.4\textwidth}
+\begin{flushright} 
 \begin{center}
     $$Distance =\left \lbrace 
     \begin{array}{ll}
@@ -127,64 +141,76 @@ Pour ce faire, on définie une distance entre la demande et le noeud qui calcule
     \end{array}
 \right.$$
 \end{center}
-La relation de d’adéquation est définie par la distance minimale entre le nœud et la demande.\\
-Autrement dit, soit $D=\{D_1,D_2,..,D_n\}$ un ensemble de demande, et soit $N=\{N_1,N_2,..,N_n\}$.\\
-On dit que le noeud $N_i$ est le mieux adéquat à la demande $D_j$ ssi \\
-$Distance(D_j,N_j) = Min (Distance(D_j,N_m)), \forall m \in \{1,..,n\}$.\\
-\newpage
-\textbf{Pseudo code de la procédure :}\\
+\end{flushright}
+\end{minipage}
+\\ \\ \\
+La relation d’adéquation est définie par la distance minimale entre le nœud et la demande.\\
+Autrement dit, soit $D=\{D_1,D_2,..,D_n\}$ un ensemble de demandes, et soit $N=\{N_1,N_2,..,N_n\}$.\\
+On dit que le noeud $N_j$ est le mieux adéquat à la demande $D_i$ ssi \\
+$Distance(D_i,N_j) = Min (Distance(D_i,N_m)), \forall m \in \{1,..,n\}$.\\
+\textbf{Pseudo-code de la procédure :}\\
 \begin{algorithm}[H]
 \KwData{ListeDemandes, ListeNoeuds}
-// initialisation de toute les demandes à une destination null\\
+// initialisation de toutes les demandes à une destination null\\
 \ForEach{Demande $D_i \in ListeDemandes$}
 {
- // on affecte le noeud à la demande.\\
  $D_i$.destination \gets null;\\
 }
-\While{$\exists$ une\ demande\ $d$\ non\ affecté\ qui\ peut\ se\ proposer\ à\ un\ noeud}
+\While{$\exists$ une\ demande\ $d$\ non\ affectée\ qui\ peut\ se\ proposer\ à\ un\ noeud}
 {
-n \gets le\ noeud\ le\ mieux\ adéquat\ à\ $d$\ parmi\ la\ liste\ des\ demandes;\\
+n \gets le\ noeud\ le\ mieux\ adéquat\ à\ $d$\\ parmi\ la\ liste\ des\ noeuds\ auquel\ $d$\ ne\ s'est\ pas\ déjà\ proposé;\\
 \eIf{$n$ est libre}
 {
   d.destination \gets n;\\
 }
 {
-// si le noeud n’est pas libre et que $d$ est plus adéquate que la demande associé à n.\\
- \eIf{distance(n,n.demande) >distance(n,d)}
- {
-   // la demande associé à n est remplacer par d.\\
+// si le noeud n’est pas libre et que $d$ est plus adéquate que la demande associée à n.\\
+ \If{distance(n,n.demande) >distance(n,d)}
+ { n.demande.destination \gets null;\\
+   // la demande associée à n est remplacée par d.\\
    n.demande \gets d;\\
+   d.destination \gets n;\\
  }
+ 
 }
 }
  \caption{Procédure de correspondance\\ \\}
 \end{algorithm}
-\subsubsection{Routine associé au noeud fog :}
-Cette routine est exécutée au niveau des nœuds passerelle à chaque fois qu’une requête est reçue.\\
-\textbf{Pseudo code de la routine :}\\
+\subsubsection{Routine associée au noeud fog :}
+Cette routine est exécutée au niveau des nœuds passerelles à chaque fois qu’une requête est reçue.\\
+\textbf{Pseudo-code de la routine :}\\
 \begin{algorithm}[H]
  %\KwData{this text}
  %\KwResult{how to write algorithm with \LaTeX2e }
- \eIf{Requête reçus est de type demande}
+ \eIf{Requête reçue est de type demande}
  {  
-    \eIf{demande.destination correspond au noeud lui même}
+    \eIf{demande.destination correspond au noeud lui-même}
     { executer(demande);\\
      // puis effectuer le routage du résultat.\\
      \eIf{listeEnfants.contient(resultat.destination)}
      {envoyer(resultat, resultat.destination);\\}
-     {envoyer(resultat, NoeudFilsParDefaut);\\}
-     }
+     {envoyer(resultat, NoeudFilsParDefaut);\\
+     NoeudFilsParDéfaut \gets prochain noeud Fils();\\}
+    }
     {  // le noeud en question n’est pas la destination.\\
      \eIf{listeParents.contient(demande.destination)}
      {envoyer(demande, demande.destination);\\}
-     {envoyer(demande,NoeudPèreParDéfaut);\\}
+     {envoyer(demande,NoeudPèreParDéfaut);\\
+     NoeudPereParDéfaut \gets prochain noeud Pere();\\}
    }
  }
  { // la requête reçue est par conséquent une requête résultat.\\
    \eIf{listeEnfants.contient(resultat.destination)}
    {envoyer(resultat, resultat.destination);\\}
    {envoyer(resultat, NoeudFilsParDefaut);\\
-   NoeudFilsParDéfaut \gets prochain noeud Fils;\\}
+   NoeudFilsParDéfaut \gets prochain noeud Fils();\\}
  }
  \caption{Routine associée aux nœuds passerelles\\ \\}
 \end{algorithm}
+\begin{figure}[H]
+    \centering
+    \includegraphics[]{Organigramme-scénario-globale.pdf}
+    \caption{Organigramme qui illustre les scénarios depuis la réception de la demande jusqu’au retour du résultat du traitement}
+    \label{fig:Organigrame_scénario_globale}
+\end{figure}
+
