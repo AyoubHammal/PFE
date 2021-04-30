@@ -14,6 +14,8 @@ public class Config {
 	public static double FOG_DEVICE_COST_PER_STORAGE = 0.001;
 	public static double FOG_DEVICE_COST_PER_BW = 0.0;
 	
+	public static int highUsage;
+	
 	public static int nbOfLayers;
 	public static int nbOfNodePerLayer;
 	public static double tokenDelay;

@@ -43,6 +43,8 @@ public class JsonToParam {
 			Config.tupleCpuLengthFactor = (int)(long) obj.get("TupleCpuLengthFactor");
 			
 			Config.outputFileName = "output/" + (String) obj.get("OutputFileName");
+			
+			Config.highUsage = (int)(long) obj.get("HighUsage");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

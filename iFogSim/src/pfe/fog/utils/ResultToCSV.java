@@ -15,15 +15,15 @@ public class ResultToCSV {
 				writer = new PrintWriter(new FileWriter(Config.outputFileName, true), true);
 			} else {
 				writer = new PrintWriter(new FileWriter(Config.outputFileName), true);
-				writer.println("NumberOfLayers;NumberOfNodePerLayer;TokenDelay;TransmitRate;NumberOfSensorTypes;AvgEnergie;AvgAppLoopDelay;AvgTupleCpuExecutionDelay;TotalExecutedTuples");
+				writer.println("NumberOfLayers;NumberOfNodePerLayer;TokenDelay;TransmitRate;NumberOfSensorTypes;AvgEnergie;AvgAppLoopDelay;AvgTupleCpuExecutionDelay;TotalExecutedTuples;NbOfNodesHighCpuUsage;VarianceCpuUsage");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public static void addLine(double avgEnergie, double avgAppLoopDelay, double avgTupleCpuExecutionDelay, int totalExecutedTuples) {
-		String s = String.format("%d;%d;%.3f;%f;%d;%f;%f;%f;%d", Config.nbOfLayers,
+	public static void addLine(double avgEnergie, double avgAppLoopDelay, double avgTupleCpuExecutionDelay, int totalExecutedTuples, int nbOfNodesHighCpuUsage, double varianceCpuUsage) {
+		String s = String.format("%d;%d;%.3f;%f;%d;%f;%f;%f;%d;%d;%f", Config.nbOfLayers,
 																		Config.nbOfNodePerLayer,
 																		Config.tokenDelay,
 																		Config.transmitRate,
@@ -31,7 +31,9 @@ public class ResultToCSV {
 																		avgEnergie,
 																		avgAppLoopDelay,
 																		avgTupleCpuExecutionDelay,
-																		totalExecutedTuples).replace(',', '.');
+																		totalExecutedTuples,
+																		nbOfNodesHighCpuUsage,
+																		varianceCpuUsage).replace(',', '.');
 		
 		writer.flush();
 		writer.println(s);

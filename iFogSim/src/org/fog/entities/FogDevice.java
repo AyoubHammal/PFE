@@ -98,6 +98,9 @@ public class FogDevice extends PowerDatacenter {
 	
 	protected Map<String, Map<String, Integer>> moduleInstanceCount;
 	
+	public double avgUtilizationOfCpu= 0;
+	protected int cpt = 0;
+	
 	public FogDevice(
 			String name, 
 			FogDeviceCharacteristics characteristics,
@@ -394,6 +397,10 @@ public class FogDevice extends PowerDatacenter {
 					currentTime,
 					host.getId(),
 					host.getUtilizationOfCpu() * 100);
+			
+			avgUtilizationOfCpu = ((avgUtilizationOfCpu * cpt) + host.getUtilizationOfCpu() * 100) / (cpt + 1);
+			cpt++;
+			
 		}
 
 		if (timeDiff > 0) {

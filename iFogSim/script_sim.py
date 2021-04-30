@@ -1,3 +1,5 @@
+#!/bin/python3
+
 import os, json, shutil
 import numpy as np
 import pandas
@@ -16,13 +18,14 @@ resultFile = ""
 x_label = ""
 index = ""
 parameter = 0
-while parameter > 5 or parameter < 1:
+while parameter > 6 or parameter < 1:
   print("Select parameter to vary:")
   print("1. Number of layers")
   print("2. Number of nodes per layers")
   print("3. Token delay")
   print("4. Tuple transmission rate")
   print("5. Number of sensors types")
+  print("6. Number of layers and nodes per layers at the same time");
 
   parameter = int(input("? > "))
 
@@ -129,6 +132,27 @@ elif parameter == 5:
 
     executTest()
     resultFile = paramJson["OutputFileName"]
+elif parameter == 6:
+  x_label = "Nombre de niveaux et de noeuds par niveau (nxn)"
+  index = "NumberOfLayers"
+  min = minV = int(input("Min: "))
+  max = maxV = int(input("Max: "))
+  step = int(input("Step: "))
+  while minV <= maxV:
+    paramFile = open("topologies/param.json", "r")
+    paramJson = json.load(paramFile)
+    paramFile.close()
+
+    paramJson["NumberOfLayers"] = minV
+    paramJson["NumberOfNodePerLayer"] = minV
+    minV += step
+
+    paramFile = open("topologies/param.json", "w")
+    paramFile.write(json.dumps(paramJson))
+    paramFile.close()
+
+    executTest()
+    resultFile = paramJson["OutputFileName"]
 
 dirPath += "_var" + str(parameter) + "from" + str(min) + "to" + str(max) + "step" + str(step) + "/"
 os.mkdir(dirPath)
@@ -162,7 +186,7 @@ ax.set_ylim(ymin=0)
 ax.legend()
 plt.savefig(dirPath + "/energyPerLvl.png")
 
-# Loop Delay per Level
+# Tuple Execution Delay per Level
 tupleDelayPerLvl = np.concatenate((res_sm[[index, "AvgTupleCpuExecutionDelay"]].to_numpy(), res_ff[["AvgTupleCpuExecutionDelay"]].to_numpy(), res_bf[["AvgTupleCpuExecutionDelay"]].to_numpy(), res_wf[["AvgTupleCpuExecutionDelay"]].to_numpy()), axis = 1).T
 manDelay = tupleDelayPerLvl[1:, :].max()
 tupleDelayPerLvl[1:, :] = tupleDelayPerLvl[1:, :] / manDelay
@@ -191,3 +215,36 @@ ax.set_ylabel("Délai moyen d'exécution d'une application (échelle de 0 à 1)"
 ax.set_ylim(ymin=0)
 ax.legend()
 plt.savefig(dirPath + "/loopDelayPerLvl.png")
+
+# Number Of Nodes With High Cpu Usage
+nodesHighCpuUsage = np.concatenate((res_sm[[index, "NbOfNodesHighCpuUsage"]].to_numpy(), res_ff[["NbOfNodesHighCpuUsage"]].to_numpy(), res_bf[["NbOfNodesHighCpuUsage"]].to_numpy(), res_wf[["NbOfNodesHighCpuUsage"]].to_numpy()), axis = 1).T
+fig, ax = plt.subplots()
+ax.plot(nodesHighCpuUsage[0], nodesHighCpuUsage[1], label = "Proposé")
+ax.plot(nodesHighCpuUsage[0], nodesHighCpuUsage[2], label = "First Fit")
+ax.plot(nodesHighCpuUsage[0], nodesHighCpuUsage[3], label = "Best Fit")
+ax.plot(nodesHighCpuUsage[0], nodesHighCpuUsage[4], label = "Worst Fit")
+ax.set_xlabel(x_label)
+
+paramFile = open("topologies/param.json", "r")
+paramJson = json.load(paramFile)
+paramFile.close()
+highUsage = paramJson["HighUsage"]
+
+ax.set_ylabel("Nombre de noeuds avec plus " + str(highUsage) + "\% d'utilisation CPU")
+ax.set_ylim(ymin=0)
+ax.legend()
+plt.savefig(dirPath + "/nodesHighCpuUsagePerLvl.png")
+
+# Variance of Cpu Usage
+nodesHighCpuUsage = np.concatenate((res_sm[[index, "VarianceCpuUsage"]].to_numpy(), res_ff[["VarianceCpuUsage"]].to_numpy(), res_bf[["VarianceCpuUsage"]].to_numpy(), res_wf[["VarianceCpuUsage"]].to_numpy()), axis = 1).T
+fig, ax = plt.subplots()
+ax.plot(nodesHighCpuUsage[0], nodesHighCpuUsage[1], label = "Proposé")
+ax.plot(nodesHighCpuUsage[0], nodesHighCpuUsage[2], label = "First Fit")
+ax.plot(nodesHighCpuUsage[0], nodesHighCpuUsage[3], label = "Best Fit")
+ax.plot(nodesHighCpuUsage[0], nodesHighCpuUsage[4], label = "Worst Fit")
+ax.set_xlabel(x_label)
+
+ax.set_ylabel("La vriance de l'utilisation CPU entre les noeuds")
+ax.set_ylim(ymin=0)
+ax.legend()
+plt.savefig(dirPath + "/varCpuUsagePerLvl.png")
