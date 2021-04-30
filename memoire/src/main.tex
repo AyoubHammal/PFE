@@ -1,37 +1,7 @@
-\documentclass[a4paper, 11pt]{report}
+\documentclass[a4paper, 12pt]{report}
 
 %============================ PACKAGES ============================
-\input{Preambule.tex}
-%======================== COMMANDES ========================
-\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
-
-\graphicspath{{./ressources/}}
-
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
-
-\lstdefinestyle{mystyle}{
-    backgroundcolor=\color{backcolour},   
-    commentstyle=\color{codegreen},
-    keywordstyle=\color{magenta},
-    numberstyle=\tiny\color{codegray},
-    stringstyle=\color{codepurple},
-    basicstyle=\ttfamily\footnotesize,
-    breakatwhitespace=false,         
-    breaklines=true,                 
-    captionpos=b,                    
-    keepspaces=true,                 
-    numbers=left,                    
-    numbersep=5pt,                  
-    showspaces=false,                
-    showstringspaces=false,
-    showtabs=false,                  
-    tabsize=2
-}
-
-\lstset{style=mystyle}
+\input{preambule.tex}
 
 %======================== DEBUT DU DOCUMENT ========================
 \begin{document}
@@ -51,9 +21,11 @@
 
 \newpage
 
+\input{./introduction.tex}
 \input{./chapitre1.tex}
 \input{./chapitre2.tex}
 \input{./chapitre3.tex}
+\input{./conclusion.tex}
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 
