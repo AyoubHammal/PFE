@@ -95,7 +95,7 @@ La même procédure à été effectueé pour implémenter les politiques concurr
 
 \section{Résultats et évaluation des performances :}
 Afin de pouvoir juger des performances ainsi que l'ampleur des gains apportés par notre modèle de planification de ressources, nous évaluons les performances de cette solution en mesurant le délai d'exécution des applications, et le délai d'exécution des tuples. Puis nous comparons les résultats avec des modèles classiques implémentant les stratégies “FirstFit”,"BestFit","WorstFit".\par
-Les nœuds fog ainsi que les demandes générées sont créés avec une certaine hétérogénéité permettant de mieux étudier la capacité de notre algorithme à faire correspondre une variété de demandes à des nœuds avec de différentes capacités matérielles.\par
+Les nœuds \emph{Fog} ainsi que les demandes générées sont créés avec une certaine hétérogénéité permettant de mieux étudier la capacité de notre algorithme à faire correspondre une variété de demandes à des nœuds avec de différentes capacités matérielles.\par
 Les résultats sont représentés par les graphes suivants (les résultats sont normalisés par rapport à la valeur maximale, donc sur une échelle de 0 à 1) :
 
 \subsubsection{Scalabilité verticale}
@@ -104,19 +104,19 @@ Nous mesurons dans cette partie les performances du modèle par rapport à la va
 \begin{figure}[H]
   \centering
   \includegraphics[]{resultats/tupleDelayV.png}
-  \caption{Délai moyen d'exécution d'un tuple en fonction du nombre de nivaux}
+  \caption{Délai moyen d'exécution d'un tuple en fonction du nombre de niveaux}
   \label{fig:delai_tuple_vertical}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[]{resultats/loopDelayV.png}
-  \caption{Délai moyen d'exécution d'une application en fonction du nombre de nivaux}
+  \caption{Délai moyen d'exécution d'une application en fonction du nombre de niveaux}
   \label{fig:delai_application_vertical}
 \end{figure}
 
 Les figures \ref{fig:delai_tuple_vertical} et \ref{fig:delai_application_vertical} montrent, respectivement, la variation du délai moyen de l'exécution d'un tuple (représentant une demande de service) et le délai d'exécution d'une application complète selon la nombre de niveaux de l'architecture.\par
-Nous constatons une nette réduction du délai de traitement des tuples d'environ 75\%, en comparaison aux reste des algorithmes de la simulation. Cette réduction se stabilise au-delà du seuil de 18 niveaux, où le nombre de niveaux n'influence plus cette métrique. De même pour le délai d'exécution d'une application, où nous pouvons constater l'impact de la réduction du temps de réponse des tuples individuels.
+Nous constatons une nette réduction du délai de traitement des tuples d'environ 75\%, en comparaison aux autres algorithmes de la simulation. Cette réduction se stabilise au-delà du seuil de 18 niveaux, où le nombre de niveaux n'influence plus cette métrique. De même pour le délai d'exécution d'une application, où nous pouvons constater l'impact de la réduction du temps de réponse des tuples individuels.
 
 \subsubsection{Scalabilité horizontale}
 Nous mesurons dans cette partie les performances du modèle par rapport à la variation du nombre de nœuds par niveau de la matrice \emph{Fog} précédemment définie.\par
@@ -125,7 +125,7 @@ Le nombre de nœuds par niveau influence le nombre de tuples générés par les 
 \begin{figure}[H]
   \centering
   \includegraphics[]{resultats/tupleDelayH.png}
-  \caption{Délai moyen d'exécution d'un tuple en fonction du nombre de nœuds par nivaux}
+  \caption{Délai moyen d'exécution d'un tuple en fonction du nombre de nœuds par niveaux}
   \label{fig:delai_tuple_horizontal}
 \end{figure}
 
@@ -138,10 +138,10 @@ Le nombre de nœuds par niveau influence le nombre de tuples générés par les 
 
 Les figures \ref{fig:delai_tuple_horizontal} et \ref{fig:delai_application_horizontal} représentent, respectivement, la variation du délai de l'exécution d'un tuple et le délai d'exécution d'une application selon le nombre de nœuds par niveau.\par
 La figure \ref{fig:delai_tuple_horizontal} montre un délai d'exécution croissant linéairement de la part des stratégies classiques, contrairement à la méthode proposée qui semble suivre une tendance logarithmique. Nous concluons par conséquent que pour les stratégies classiques, l'augmentation du nombre de nœuds par niveau influe significativement sur le délai d'exécution d'une application, par opposition à la stratégie proposée ou la corrélation semble moins significative.\par
-Nous remarquons que pour la stratégie "Best Fit", la croissance de la duré d'exécution d'un tuple est linéairement croissante en fonction du nombre de nœuds par niveau. Pour la stratégie "First Fit", la durée d'exécution augmente jusqu'à se stabiliser quand le nombre de nœuds dépasse 19 nœuds par niveau. Ainsi que pour la stratégie "Worst Fit", nous constatons une augmentation suivie d'une phase de diminution à partir de 17 nœuds par nivaux. Enfin la stratégie proposée semble suivre une cadence doucement haussière en ayant de meilleurs résultats, ainsi qu'une meilleure stabilité du temps d'exécution.
+Nous remarquons que pour la stratégie "Best Fit", la croissance de la durée d'exécution d'un tuple est linéairement croissante en fonction du nombre de nœuds par niveau. Pour la stratégie "First Fit", la durée d'exécution augmente jusqu'à se stabiliser quand le nombre de nœuds dépasse 19 nœuds par niveau. Ainsi que pour la stratégie "Worst Fit", nous constatons une augmentation suivie d'une phase de diminution à partir de 17 nœuds par niveaux. Enfin la stratégie proposée semble suivre une cadence doucement haussière en ayant de meilleurs résultats, ainsi qu'une meilleure stabilité du temps d'exécution.
 
 \subsubsection{Étude selon le débit des demandes}
-Dans ce qui suit, nous étudions les performances de notre modèle selon le délai entre l'envoi de chaque demande. Naturellement, plus le délai entre les demandes est petit, plus il y a de charge et de congestion dans le réseau.
+Dans ce qui suit, nous étudions les performances de notre modèle selon le délai entre les envois de chaque demande. Naturellement, plus le délai entre les demandes est petit, plus il y a de charge et de congestion dans le réseau.
 
 \begin{figure}[H]
   \centering
@@ -158,7 +158,7 @@ Dans ce qui suit, nous étudions les performances de notre modèle selon le dél
 \end{figure}
 
 Les figures \ref{fig:delai_tuple_debit} et \ref{fig:delai_application_debit} représentent, respectivement, la variation du délai d'exécution d'un tuple et le délai d'exécution d'une application selon le délai de transmission entres les tuples consécutifs.
-Nous constatons que la durée d'exécution d'une application dans les stratégies classique est stable et proche de la valeur maximale, ce qui signifie que la diminution de la charge de travail, n'influe pas sur la dure d'exécution. En revanche, la stratégie proposée démontre des performances meilleures en termes de délai ainsi qu'une réaction à la variation du délai de transmission à partir de 9 unités de délai.\par
+Nous constatons que la durée d'exécution d'une application dans les stratégies classiques est stable et proche de la valeur maximale, ce qui signifie que la diminution de la charge de travail, n'influe pas sur la durée d'exécution. En revanche, la stratégie proposée démontre des performances meilleures en termes de délai ainsi qu'une réaction à la variation du délai de transmission à partir de 9 unités de temps de délai.\par
 
 \section{Conclusion}
-Nous avons réussi à montrer l'efficacité de notre technique dans la réduction du temps d'exécution des demandes de services, témoignant ainsi d'une distribution équitable et efficace des charges de travail sur l'ensemble des nœuds du cluster. Cette technique permet aussi de minimiser l'interaction des objets IoT avec le Cloud et le coût du trafic réseau engendré.
+Nous avons réussi à montrer l'efficacité de notre technique dans la réduction du temps d'exécution des demandes de services, témoignant ainsi d'une meilleure gestion et répartition de ressources de l'ensemble des nœuds du cluster.
