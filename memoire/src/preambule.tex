@@ -6,7 +6,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
-\usepackage[top=2cm, bottom=2cm, left=3cm, right=2cm]{geometry}
+\usepackage[top=2.5cm, bottom=2.5cm, left=2.5cm, right=2cm]{geometry}
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{setspace}
@@ -18,8 +18,20 @@
 \usepackage{eso-pic}        % Facilite le positionnement des images de manière absolu
 \usepackage{booktabs}
 \usepackage[]{siunitx}
-\usepackage[upright]{fourier}          
+\usepackage[upright]{fourier}
+\usepackage{fancyhdr}
+\usepackage[automake]{glossaries-extra}
+      
 %======================== COMMANDES ========================
+\setlength{\headheight}{26pt}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{1pt}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{}
+\renewcommand{\footrulewidth}{1pt}
+\fancyfoot[C]{\textbf{\thepage}} 
+\fancyfoot[L]{}
+\fancyfoot[R]{} 
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
-
 \graphicspath{{./ressources/}}
+\makeglossaries
