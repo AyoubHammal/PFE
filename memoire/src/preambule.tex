@@ -21,8 +21,10 @@
 \usepackage[upright]{fourier}
 \usepackage{fancyhdr}
 \usepackage[automake]{glossaries-extra}
-      
+\usepackage[nottoc]{tocbibind}
+\usepackage{etoolbox}
 %======================== COMMANDES ========================
+\patchcmd{\chapter}{\thispagestyle{plain}}{\thispagestyle{fancy}}{}{}
 \setlength{\headheight}{26pt}
 \pagestyle{fancy}
 \renewcommand{\headrulewidth}{1pt}
