@@ -28,13 +28,13 @@ L'iFogSim est composé de 3 composants principaux, à savoir :
 \end{itemize}
 
 \subsubsection{Composants physiques}
-Les composants physiques incluent le cloud, les nœuds Fog et les objets, qui sont organisés dans un ordre hiérarchique. Les noeuds Fog de niveau inférieur sont directement connectés aux capteurs et actionneurs associés. Les noeuds Fog agissent comme des centres de traitement de données en offrant de la mémoire et de la puissance de calcul. Chaque noeud Fog est créé avec une puissance de calcul et des attributs de consommation d'énergie spécifique (puissance occupée et inactive), qui reflètent ses capacités et son efficacité énergétique. Les capteurs génèrent des tuples qui peuvent être appelés tâches dans le cloud computing. La création de tuples (tâches) est pilotée par les événements et l'intervalle entre la génération de deux tuples est régi par une distribution déterministe définie lors de la création des capteurs.
+Les composants physiques incluent le cloud, les nœuds Fog et les objets, qui sont organisés dans un ordre hiérarchique. Les nœuds Fog de niveau inférieur sont directement connectés aux capteurs et actionneurs associés. Les nœuds Fog agissent comme des centres de traitement de données en offrant de la mémoire et de la puissance de calcul. Chaque nœud Fog est créé avec une puissance de calcul et des attributs de consommation d'énergie spécifique (puissance occupée et inactive), qui reflètent ses capacités et son efficacité énergétique. Les capteurs génèrent des tuples qui peuvent être appelés tâches dans le cloud computing. La création de tuples (tâches) est pilotée par les événements et l'intervalle entre la génération de deux tuples est régi par une distribution déterministe définie lors de la création des capteurs.
 
 \subsubsection{Composants logiques}
 Les modules d'application (AppModules) et les bords d'application (AppEdges) sont les composants logiques d'IFogSim. Dans IFogSim, une application est considérée comme une collection des modules interdépendants, ce qui améliore par conséquent le concept d'application distribuée. La dépendance entre deux modules est définie par les fonctionnalités d'AppEdges qui sont le flux de données logique entre deux modules d'application. Dans iFogSim, chaque module d'application (AppModule) traite un type particulier de tâche (tuple). La transmission de tuples entre deux modules d'application (AppModules) peut être périodique.
 
 \subsubsection{Composants de gestion}
-Les composants de gestion d'IFogSim sont représentés par le « Controller» et le «ModuleMapping». Selon les exigences des AppModules, l'objet ModuleMapping identifie les noeuds fog associés à chaque AppModules. L'objet Controller lance les AppModules sur leurs noeuds Fog attribués en suivant les informations de placement fournies par l'objet ModuleMapping, et gère périodiquement les ressources des noeuds Fog. Une fois la simulation terminée, l'objet Controller collecte les résultats des coûts, de l'utilisation du réseau et de la consommation d'énergie pendant la période de simulation à partir des noeuds Fog.
+Les composants de gestion d'IFogSim sont représentés par le « Controller» et le «ModuleMapping». Selon les exigences des AppModules, l'objet ModuleMapping identifie les nœuds Fog associés à chaque AppModules. L'objet Controller lance les AppModules sur leurs nœuds Fog attribués en suivant les informations de placement fournies par l'objet ModuleMapping, et gère périodiquement les ressources des nœuds Fog. Une fois la simulation terminée, l'objet Controller collecte les résultats des coûts, de l'utilisation du réseau et de la consommation d'énergie pendant la période de simulation à partir des nœuds Fog.
 \begin{figure}[H]
     \centering
     \includegraphics[]{Diagramme d'interaction.pdf}
@@ -74,8 +74,8 @@ Les manipulations effectuées pour mettre en oeuvre cette solution sont énumér
     \item \textbf{isNorthLinkBusyById :} qui est une liste de booléens où chaque élément indique si la liaison supérieure en question est occupée.
     \item \textbf{northTupleQueues :} qui est une liste de files d'attente de tuple qui associe à chaque liaison supérieure une file de tuples où seront stockés les tuples à envoyer sur cette liaison si cette dernière est occupée.
 \end{itemize}
-De plus, la méthode  processTupleArrival, qui est la méthode exécutée par le noeud à chaque arrivée d'un tuple, a été redéfinie afin d'implémenter la routine associée à un noeud fog et qui est décrite dans la conception.
-     \item \textbf{Création d'une classe GWFogDevice :} cette classe représente un nœud Fog passerelle, c.-à-d. le noeud connecté directement aux capteurs et aux actionneurs. Cette classe étend également la classe FogDevice, et ajoute les attributs suivants :
+De plus, la méthode  processTupleArrival, qui est la méthode exécutée par le nœud à chaque arrivée d'un tuple, a été redéfinie afin d'implémenter la routine associée à un nœud Fog et qui est décrite dans la conception.
+     \item \textbf{Création d'une classe GWFogDevice :} cette classe représente un nœud Fog passerelle, c.-à-d. le nœud connecté directement aux capteurs et aux actionneurs. Cette classe étend également la classe FogDevice, et ajoute les attributs suivants :
      \begin{itemize}
      \item \textbf{waitingQueue :} qui est une liste de tuples servant à stocker les demandes non encore affectées.
      \item \textbf{tupleToMatchedDevice :} est une liste contenant les tuples non affectés à un neud.
@@ -83,11 +83,11 @@ De plus, la méthode  processTupleArrival, qui est la méthode exécutée par le
      \item \textbf{gwDevices :} est une liste de GWFogDevice, contenant l'ensemble de nœuds passerelles.
      \item \textbf{isNorthLinkBusyById :} qui représente la même chose que dans la classe.
      \item \textbf{northTupleQueues :} elle représente également la même chose que celle mentionnée dans la classe ClusterFogDevice.
-     \item \textbf{clusterFogDevicesIds :} qui représente la liste de tous les noeuds Fog du cluster.
+     \item \textbf{clusterFogDevicesIds :} qui représente la liste de tous les nœuds Fog du cluster.
      \end{itemize}
-     \item \textbf{Création d'une classe MatchedTuple :} cette classe décrit les tuples une fois affectés à leurs noeuds respectifs. Elle représente un enrichissement de la classe Tuple par les attributs suivants :
+     \item \textbf{Création d'une classe MatchedTuple :} cette classe décrit les tuples une fois affectés à leurs nœuds respectifs. Elle représente un enrichissement de la classe Tuple par les attributs suivants :
      \begin{itemize}
-         \item \textbf{destinationFogDeviceId :} qui contient l'identificateur du noeud de destination.
+         \item \textbf{destinationFogDeviceId :} qui contient l'identificateur du nœud de destination.
          \item \textbf{destModuleMips :} qui décrit les exigences de traitement du module de destination.
      \end{itemize}
 \end{enumerate}
@@ -99,7 +99,8 @@ Les nœuds \emph{Fog} ainsi que les demandes générées sont créés avec une c
 Les résultats sont représentés par les graphes suivants (les résultats sont normalisés par rapport à la valeur maximale, donc sur une échelle de 0 à 1) :
 
 \subsubsection{Scalabilité verticale}
-Nous mesurons dans cette partie les performances du modèle par rapport à la variation du nombre de niveaux de la matrice \emph{Fog} précédemment définie.
+Nous mesurons dans cette partie les performances du modèle par rapport à la variation du nombre de niveaux de la matrice \emph{Fog} précédemment définie.\par
+Nous fixons dans cette expérience le nombre de nœudspar niveau à 5 nœuds.
 
 \begin{figure}[H]
   \centering
@@ -120,7 +121,8 @@ Nous constatons une nette réduction du délai de traitement des tuples d'enviro
 
 \subsubsection{Scalabilité horizontale}
 Nous mesurons dans cette partie les performances du modèle par rapport à la variation du nombre de nœuds par niveau de la matrice \emph{Fog} précédemment définie.\par
-Le nombre de nœuds par niveau influence le nombre de tuples générés par les objets IoT car chaque nœud passerelle est relié à un ensemble d’objets IoT. Ainsi l’augmentation du nombre de nœuds passerelle augmente aussi le nombre de demandes générées.
+Le nombre de nœuds par niveau influence le nombre de tuples générés par les objets IoT car chaque nœud passerelle est relié à un ensemble d’objets IoT. Ainsi l’augmentation du nombre de nœuds passerelle augmente aussi le nombre de demandes générées.\par
+Nous fixons le nombre de niveaux à 10 niveaux.
 
 \begin{figure}[H]
   \centering
@@ -140,8 +142,16 @@ Les figures \ref{fig:delai_tuple_horizontal} et \ref{fig:delai_application_horiz
 La figure \ref{fig:delai_tuple_horizontal} montre un délai d'exécution croissant linéairement de la part des stratégies classiques, contrairement à la méthode proposée qui semble suivre une tendance logarithmique. Nous concluons par conséquent que pour les stratégies classiques, l'augmentation du nombre de nœuds par niveau influe significativement sur le délai d'exécution d'une application, par opposition à la stratégie proposée ou la corrélation semble moins significative.\par
 Nous remarquons que pour la stratégie "Best Fit", la croissance de la durée d'exécution d'un tuple est linéairement croissante en fonction du nombre de nœuds par niveau. Pour la stratégie "First Fit", la durée d'exécution augmente jusqu'à se stabiliser quand le nombre de nœuds dépasse 19 nœuds par niveau. Ainsi que pour la stratégie "Worst Fit", nous constatons une augmentation suivie d'une phase de diminution à partir de 17 nœuds par niveaux. Enfin la stratégie proposée semble suivre une cadence doucement haussière en ayant de meilleurs résultats, ainsi qu'une meilleure stabilité du temps d'exécution.
 
+\subsubsection{Exploitation des résultats des expériences sur la scalabilité pour déduire le schémas de clusterisation}
+Nous observons, à partir de l'union des deux expériences précédentes, une baisse des performances dès que le nombre de nœuds passerelles dépasse le nombre de niveaux du cluster Fog.\par
+Afin que l'effet de la clusterisation soit bénéfique, ce dernier se doit de respecter la contrainte suivante:\\
+Soit $N$ et $M$ le nombre de nœuds passerelles et le nombre de niveaux (y compris les nœuds passerelles) respectivement.\\
+Soit $n_i$ le nombre de nœuds passerelles pour le cluster numéro $i$ des $p$ clusters.\\
+$$\forall i \le p,\ n_i \le M - 1$$
+
 \subsubsection{Étude selon le débit des demandes}
-Dans ce qui suit, nous étudions les performances de notre modèle selon le délai entre les envois de chaque demande. Naturellement, plus le délai entre les demandes est petit, plus il y a de charge et de congestion dans le réseau.
+Dans ce qui suit, nous étudions les performances de notre modèle selon le délai entre les envois de chaque demande. Naturellement, plus le délai entre les demandes est petit, plus il y a de charge et de congestion dans le réseau.\par
+Nous fixons dans cette expérience le nombre de niveaux à 7 niveux et le nombre de nœuds par niveau à 5 nœuds ($5 \le 7 - 1$).
 
 \begin{figure}[H]
   \centering

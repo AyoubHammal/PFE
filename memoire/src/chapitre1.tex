@@ -3,18 +3,18 @@
 \section{Introduction}
 Nous présentons dans ce chapitre les principaux concepts liés au \emph{\gls{Fog Computing}}. Nous commençons d'abord par introduire l'Internet des objets et leur relation au Fog Computing. Puis, nous expliquons les techniques de migration de conteneurs entre les nœuds Fog. Enfin, nous terminons ce chapitre par une taxonomie des travaux similaires axés sur la gestion de ressources des nœuds Fog, ainsi que les différents défis rencontrés. 
 
-\section{Internet des objets}
+\section{Internet des objets (IoT)}
 \subsection{Définition}
 Le terme Internet des objets (Internet of Things ou \emph{\gls{IoT}}) décrit le réseau d'appareils physiques - souvent hétérogène - interconnectés, et dont le rôle principal est la récolte et l'échange d'information, ainsi que l'interaction avec l'environnement extérieur \cite{patel2016}. Cette infrastructure est dite intelligente, dotée de la capacité de s'auto-organiser, partager l'information de manière optimale et de réagir aux changements environnementaux \cite{madakam2015}.\par
 Les objets dans ce type de réseau sont de capacité limitée, que ce soit en puissance de calcul ou en consommation d'énergie. Ce sont majoritairement des objets électroniques quotidiens (à l'exemple de smartphones, véhicules ou équipements ménagers), chacun avec sa propre identité pour communiquer avec le reste des objets et synchroniser les efforts de réponses aux différentes situations externes auxquelles ils sont exposés.
 
 \subsection{Histoire et Évolution}
 L'idée d'interconnecter des dispositifs électroniques moyennant un réseau informatique est apparue dans les années 80s, à l'Université de Carnegie Melon, où on avait relié un distributeur de boissons fraîches à un ordinateur de monitorage. Ce qui a permis aux programmeurs de consulter la disponibilité des boissons à distance et d'éviter les trajets inutiles \cite{madakam2015}.\par
-Cependant, le premier à avoir introduit ce concept est Kevin Ashton en 1999, qui travaillait dans l'optimisation de chaîne de production chez Procter \& Gamble. Dans sa présentation portant le nom de la technologie, il a développé l'idée de décharger l'homme de la tâche de récolte d'information (en 1999, 50 petabytes d'information étaient créés par des êtres humains), et de plutôt exploiter la masse d'engins et capteurs disponibles déjà déployés à ce moment-là \cite{ashton2009}.\par
-Cette infrastructure n'a été adoptée en industrie qu'en fin de l'année 2000s, où le ratio d'objets/hommes est passé à 1.84 pour 0.08 en 2003. Depuis, les constructeurs du domaine de téléinformatique concentrent leurs efforts sur la production de capteurs et d'appareils IoT avec différentes fonctionnalités dans le but de combler les besoins des diverses industries, allant de l'agriculture et domaine médical jusqu'à l'industrie militaire.
+Cependant, le premier à avoir introduit ce concept est Kevin Ashton en 1999, qui travaillait dans l'optimisation de chaîne de production chez Procter \& Gamble. Ashton avait constaté qu'en 1999, 50 petabytes d'information étaient créés par des êtres humains. D'où, il a dévelopé l'idée de décharger l'homme de cette tâche fastidieuse de récolte d'information et ce, lors d'une présentation portant le nom de la technologie (Internet of Things). Il propose plutôt d'exploiter la masse d'engins et de capteurs disponibles et déjà déployés à ce moment là \cite{ashton2009}.\par
+Cette infrastructure n'a été adoptée en industrie qu'en fin de l'année 2000s. Depuis, les constructeurs du domaine de téléinformatique concentrent leurs efforts sur la production de capteurs et d'appareils IoT avec différentes fonctionnalités dans le but de combler les besoins des diverses industries, allant de l'agriculture et domaine médical jusqu'à l'industrie militaire.
 
 \subsection{Architecture}
-L'architecture d'un réseau Iot se décompose en 4 couches flexibles. Chaque couche est constituée de plusieurs technologies et standards \cite{patel2016}. Cet aspect modulaire permet une meilleure scalabilité de l'infrastructure et une meilleure adaptation aux besoins émergeants. Les couches de ce modèle sont comme suit:
+L'architecture d'un réseau IoT se décompose en 4 couches flexibles. Chaque couche est constituée de plusieurs technologies et standards \cite{patel2016}. Cet aspect modulaire permet une meilleure scalabilité de l'infrastructure et une meilleure adaptation aux besoins émergeants. Les couches de ce modèle sont comme suit:
 \begin{enumerate}
   \item \emph{La couche de capteurs et d'objets intelligents:} Elle est formée d'objets connectés munis de capteurs et/ou d'actionneurs. C'est la couche la plus proche de l'environnement physique, celle-ci transforme les événements générés par ce dernier en un flux d'information à temps réel, et se charge de leur transmission. Les capteurs ont différentes spécifications, comme la mesure de la température, ou la pression, la capture de mouvement …, et sont connectés soit à des passerelles à l'aide de réseaux filaires (Ethernet) ou non (Wi-Fi, Bluetooth, RFID …), soit directement à la couche applicative. Un exemple de ce type de technologie est les WSNs, caractérisés par leur basse consommation d'énergie et grande zone de couverture.
   \item \emph{La couche réseau et passerelles:} Cette couche garantit la transmission de la masse d'information générée par la couche précédente, tout en respectant la qualité de service exigée par les applications servies. Plusieurs infrastructures et protocoles de communication ont été mis en place dans le but d'optimiser l'acheminement et traitement d'information, comme le concept de Fog Computing qu'on détaillera par la suite.
@@ -32,8 +32,8 @@ L'installation d'objets intelligents s'est démocratisée depuis quelques année
 \end{itemize}
 
 \subsection{Problèmes et difficultés}
-Avec la croissance du nombre d'objets connectés, les attaques cybercriminelles deviennent excentriques. Ce réseau peut être vulnérable contre l'injection de données erronées qui peuvent influencer des prises de décision parfois critiques. Les nœuds intercommunicants disposent de ressources limitées, et ainsi, ils peuvent être sujets à des attaques de déni de service (\emph{DDOS}). La grande quantité de données produite doit être protégée tout au long du circuit liant les couches présentées précédemment. Un travail de supervision doit être mené dans le but de garantir la confidentialité des données récoltées, et empêcher les pratiques abusives comme la vente de données d'utilisateurs \cite{COLAKOVIC201817}.\par
 Le provisionnement en énergie est devenu une des préoccupations de la société actuelle. On cherche à optimiser l'utilisation de ressources énergétiques, soit pour étendre l'autonomie des objets et capteurs mobiles, ou bien pour réduire les frais d'approvisionnement en électricité. Des algorithmes de gestion et allocation des ressources ont été proposés pour minimiser cette consommation, mais les recherches sur ce sujet sont toujours actives.\par
+Avec la croissance du nombre d'objets connectés, les attaques cybercriminelles deviennent excentriques. Ce réseau peut être vulnérable contre l'injection de données erronées qui peuvent influencer des prises de décision parfois critiques. Les nœuds intercommunicants disposent de ressources limitées, et ainsi, ils peuvent être sujets à des attaques de déni de service (\emph{DDOS}). La grande quantité de données produite doit être protégée tout au long du circuit liant les couches présentées précédemment. Un travail de supervision doit être mené dans le but de garantir la confidentialité des données récoltées, et empêcher les pratiques abusives comme la vente de données d'utilisateurs \cite{COLAKOVIC201817}.\par
 De plus, certaines applications demandent une certaine réactivité et une grande vitesse de réponse pour accomplir des missions critiques comme pour la conduite de véhicules automobiles ou la surveillance médicale. Ces exigences sont souvent restreintes par d'autres contraintes comme la mobilité des objets connectés ou la congestion dans le réseau de communication.
 %------------------------------------------------------------
 \section{Fog Computing}
@@ -81,11 +81,12 @@ Bien que le Fog Computing ait apporté des avantages considérables, ce paradigm
   \item \emph{Gestion et provision de ressources:} Les noeuds Fog sont généralement des équipements à capacité limités, il est par conséquent indispensable de disposer de solution efficace en termes de gestion de ressource, par exemple l'ordonnancement des différentes applications.
 \end{itemize}
 %------------------------------------------------------------
-\section{Migration de Conteneurs}
+\section{Migration dans les environnements Fog Computing}
 
 \subsection{Définitions et concepts}
 La \emph{\gls{virtualisation}} introduit une couche d'abstraction logicielle entre le matériel et le système d'exploitation ou les applications qui s'exécutent dessus. En séparant les ressources logiques des ressources physiques sous-adjacentes, la virtualisation permet l'affectation flexible de charges de travail entre les machines physiques.
-On considère la \emph{\gls{migration}}d'instance virtuelle (\emph{\gls{machine virtuelle}} ou \emph{\gls{conteneur}}), comme le processus de copie et déplacement de l'état de cette dernière d'un hôte physique à un autre \cite{boutaba2013}.\par
+La \emph{\gls{migration}}d'instance virtuelle (\emph{\gls{machine virtuelle}} ou \emph{\gls{conteneur}}) est considérée comme le processus de copie et déplacement de l'état de cette dernière d'un hôte physique à un autre \cite{boutaba2013}.\par
+\subsection{Migration VMs-Conteneurs}
 La migration d'instance virtuelle joue un rôle essentiel dans les environnements Fog étant donné qu'elle permet de garantir la continuité des services, quels que soient les besoins en mobilité exprimés par les objets connectés à cet environnement.
 Il existe deux grandes techniques de virtualisation logicielle exploitées dans les architectures orientées services: les machines virtuelles et les conteneurs. Leurs principales différences résident dans leur évolutivité et leur portabilité \cite{redhat} (voir Figure \ref{fig:vmvsconteneur}).\par
 Dans le cas général, le volume d'un conteneur se compte en mégaoctets. Il ne comporte rien de plus gros qu'une application et ses fichiers qu'elle en dépend. Ce sont des paquets à monofonctionnalité, effectuant des tâches spécifiques (appelées microservices) \cite{redhat}. C'est une méthode de virtualisation au niveau du système d'exploitation(Software Virtualization) qui vise à exécuter plusieurs systèmes totalement isolés (conteneurs) sur un seul hôte de contrôle (un simple système d'exploitation). Les conteneurs partagent le noyau avec l'hôte et fournissent un environnement indépendant qui possède son propre CPU, mémoire, bloc d'E/S, réseau et le mécanisme de contrôle des ressources.\par
@@ -178,7 +179,7 @@ Nous distinguons deux types de migrations \cite{puliafito2019}:
 \label{fig:migration_hybride}
 \end{figure}
 
-\subsection{Travaux et optimisation réalisés}
+\subsection{Taxonomie, Travaux réalisés}
 Les travaux réalisés dans le domaine de virtualisation et migration de ressources virtuelles ont été classifiés selon la littérature en trois catégories selon l'objectif à optimiser \cite{rejiba2019}.
 \begin{itemize}
   \item \emph{Optimisation du coût de la migration} : Visant soit à réduire les migrations coûteuses ou à trouver des compromis de coût de migration. Les processus de décision markovien constituent l'une des approches les plus utilisées pour modéliser le compromis de migration. Plus récemment, les efforts se sont progressivement déplacés vers la résolution du problème MDP en utilisant des approches apprentissage approfondi, qui ne nécessitent pas de connaissances préalables sur la dynamique de l'environnement MDP.
@@ -269,7 +270,7 @@ Les stratégies d'approvisionnement dynamique sont classées en 3 types de polit
   \item \emph{Politique hybride:} elle adopte par conséquent les deux précédentes politiques,  la politique réactive est souvent utilisée pour approvisionner des ressources à une nouvelle demande qui arrive dans le système, tandis que la politique proactive permet d'anticiper les prochaines évolutions de la demande. 
 \end{itemize}
 
-\subsection{Taxonomie des architectures}
+\subsection{Architectures proposées}
  Les différentes approches de gestion de ressources dans les environnements \emph{Fog} ont été classées suivant leurs architectures 3 types \cite{ch2019} :
  \begin{itemize}
   \item \emph{Les architectures basées sur flux de données (Data flow architectures):} Ces types d'architecture se basent sur le sens de transfert des charges de travail, par exemple les charges de travail peuvent être transférées de l'utilisateur au nœud \emph{Fog} ou des serveurs \emph{Cloud} vers les nœuds.
@@ -279,4 +280,4 @@ Les stratégies d'approvisionnement dynamique sont classées en 3 types de polit
 
 \section{Conclusion}
 Nous avons présenté dans ce chapitre les différents composants logiciels et matériels de l'architectures Fog, en l'occurrence les objets IoT, les VMs et les conteneurs ainsi que les contraintes de gestion de ressources imposées par ce paradigme.\par
-Dans le chapitre suivant, nous introduisons notre solution pour l'allocation de ressources d'un environnement Fog de manière à respecter les exigences de qualité de service imposées par la nature des services proposés par les objets IoT.
+Dans ce qui suit, nous nous intéresserons à la problèmatique de la gestion efficace de ressources disponibles dans les environnements Fog. Nous introduiserons dans ce cadre notre solution d'allocation de ressources, et l'algorithme sur lequel elle est basée.
