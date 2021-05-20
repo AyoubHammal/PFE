@@ -56,11 +56,11 @@ Comme vu dans le chapitre introductif, une infrastructure \emph{Fog} classique e
 \end{itemize}
 \begin{figure}[H]
     \centering
-    \includegraphics[]{Topologie_générale_de_l'infrastructure.pdf}
+    \includegraphics[scale=0.8]{Topologie_générale_de_l'infrastructure.pdf}
     \caption{Schémas représentant une architecture Fog traditionnelle}
     \label{fig:Topologie_generale_de_linfrastructure}
 \end{figure}
-SMRA commence par découper verticalement la couche \emph{Fog} de l'infrastructure en un ensemble de clusters\footnote{Nous discutons des critères de scalabilité verticale et horizontale du cluster dans le chapitre suivant, où nous montrons les résultats obtenus par rapport à différentes dimensions du cluster.} (voir Figure \ref{fig:Infrastructure_fog_repartie_en_cluster}) , c.-à-d. chaque cluster regroupe un ensemble de nœuds \emph{Fog} inter-connecté. Ensuite, chaque cluster est découpé en 2 couches superposées, qui sont :
+\par SMRA commence par découper verticalement la couche \emph{Fog} de l'infrastructure en un ensemble de clusters\footnote{Nous discutons des critères de scalabilité verticale et horizontale du cluster dans le chapitre suivant, où nous montrons les résultats obtenus par rapport à différentes dimensions du cluster.} (voir Figure \ref{fig:Infrastructure_fog_repartie_en_cluster}) , c.-à-d. chaque cluster regroupe un ensemble de nœuds \emph{Fog} inter-connecté. Ensuite, chaque cluster est découpé en 2 couches superposées, qui sont :
 \begin{itemize}
     \item \emph{La couche des nœuds passerelles :}  cette couche est composée du niveau connecté directement à la couche \emph{IoT}.
     \item \emph{La couche des nœuds Fog restants :} qui est composée des niveaux intermédiaires restants entre la couche des nœuds passerelles et le \emph{cloud}.

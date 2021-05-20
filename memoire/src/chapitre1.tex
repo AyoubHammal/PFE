@@ -95,7 +95,7 @@ Donc la différence principale est que les conteneurs permettent de virtualiser 
 Les conteneurs partagent en pratique le même noyau du système d'exploitation hôte contrairement aux technologies de machines virtuelles où le matériel est virtualisé pour exécuter plusieurs instances de système d'exploitation. Cela permet de lancer un nombre beaucoup plus important de conteneurs que de machines virtuelles sur le même matériel, et ainsi fournir une haute disponibilité capable de satisfaire la demande imposée par les réseaux de nouvelle génération telle que la 5G. Des exemples de systèmes à base de conteneurs sont Docker, OpenVZ, LXC et LXD. 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.2]{vm-container.jpg}
+\includegraphics[scale=0.9]{vm-container.pdf}
 \caption{Architecture de machine virtuelle, et de conteneur \cite{alibabacloud}}
 \label{fig:vmvsconteneur}
 \end{figure}
@@ -148,7 +148,7 @@ Nous distinguons deux types de migrations \cite{puliafito2019}:
 \textbf{La migration avec pré-copie (méthode itérative)}: Dans ce cas, toutes les pages sont transférées au serveur de destination avant de geler le container. Mais quand les processus continuent leur exécution normale, les pages peuvent être modifiées et les pages transférées peuvent devenir obsolètes. C'est pourquoi les pages doivent être transférées itérativement. Sur la première étape, toutes les pages sont marquées d'un drapeau propre (clean flag) et transférées sur le serveur de destination [46]. Certaines pages peuvent être modifiées pendant ce processus, et l'indicateur propre sera supprimé dans ce cas. Sur la deuxième étape, seules les pages modifiées sont transférées vers le serveur de destination (voir Figure \ref{fig:migration_avec_precopie1}). La figure \ref{fig:migration_avec_precopie2} montre le séquencement des opérations de cette migration.\par
 \begin{figure}[H]
 \centering
-\includegraphics[scale=1]{iterative_migration.pdf}
+\includegraphics[scale=0.9]{iterative_migration.pdf}
 \caption{Itérations de la migration avec pré-copie \cite{mirkin2008}}
 \label{fig:migration_avec_precopie1}
 \end{figure}
@@ -161,7 +161,7 @@ Nous distinguons deux types de migrations \cite{puliafito2019}:
 \textbf{La migration avec post-copie (fainéante)}: Par opposition à la technique précédente, toutes les pages mémoire allouées par les processus sont marquées d'un drapeau spécial, qui est effacé si une page est modifiée. Après cela, un conteneur peut être gelé et son état peut être sauvegardé, mais dans ce cas, seules les pages sans cet indicateur sont stockées. Cela permet de réduire la taille d'un fichier de vidage (dump). Puis au besoin, la machine destination génère des demandes de pages défectueuses (page-in swap), auxquelles la machine source répond en envoyant ces pages (à l'aide du daemon “page-out”), puis ces pages sont chargées en mémoire sur le serveur de destination (voir Figure \ref{fig:migration_avec_postcopie1}). C'est pour cette raison qu'elle est appelée migration fainéante. La figure \ref{fig:migration_avec_postcopie2} donne le schéma global de cette migration.\par
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.7]{lazy_migration.png}
+\includegraphics[scale=0.9]{lazy_migration.pdf}
 \caption{Envoi des pages défectueuses \cite{mirkin2008}}
 \label{fig:migration_avec_postcopie1}
 \end{figure}
