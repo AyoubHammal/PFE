@@ -133,7 +133,7 @@ Nous distinguons deux types de migrations \cite{puliafito2019}:
       \item \emph{La migration à froid}: Dans cette approche l'instance est suspendue au lieu d'être complètement arrêté comme dans une migration froide. L'environnement virtuel est déplacé vers un autre serveur et le système d'exploitation est repris à destination. L'état des applications dans le système d'exploitation invité peut être conservé pendant la migration (stateful-state). La durée de l'indisponibilité est égale à la durée totale de migration (voir Figure \ref{fig:migration_a_froid}). Par contre, les pages mémoires ne sont transférées qu'une seule fois, ce qui réduit le temps de transfert et la quantité de données échangées.
       \begin{figure}[H]
       \centering
-      \includegraphics[scale=0.7]{migration_a_froid.png}
+      \includegraphics[scale=1]{migration_a_froid.pdf}
       \caption{La migration à froid \cite{puliafito2019}}
       \label{fig:migration_a_froid}
       \end{figure}
@@ -148,13 +148,13 @@ Nous distinguons deux types de migrations \cite{puliafito2019}:
 \textbf{La migration avec pré-copie (méthode itérative)}: Dans ce cas, toutes les pages sont transférées au serveur de destination avant de geler le container. Mais quand les processus continuent leur exécution normale, les pages peuvent être modifiées et les pages transférées peuvent devenir obsolètes. C'est pourquoi les pages doivent être transférées itérativement. Sur la première étape, toutes les pages sont marquées d'un drapeau propre (clean flag) et transférées sur le serveur de destination [46]. Certaines pages peuvent être modifiées pendant ce processus, et l'indicateur propre sera supprimé dans ce cas. Sur la deuxième étape, seules les pages modifiées sont transférées vers le serveur de destination (voir Figure \ref{fig:migration_avec_precopie1}). La figure \ref{fig:migration_avec_precopie2} montre le séquencement des opérations de cette migration.\par
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{iterative_migration.png}
+\includegraphics[scale=1]{iterative_migration.pdf}
 \caption{Itérations de la migration avec pré-copie \cite{mirkin2008}}
 \label{fig:migration_avec_precopie1}
 \end{figure}
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.7]{migration_avec_precopie.png}
+\includegraphics[scale=1]{migration_avec_precopie.pdf}
 \caption{La migration avec pré-copie \cite{puliafito2019}}
 \label{fig:migration_avec_precopie2}
 \end{figure}
@@ -167,14 +167,14 @@ Nous distinguons deux types de migrations \cite{puliafito2019}:
 \end{figure}
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.7]{migration_avec_postcopie.png}
+\includegraphics[scale=1]{migration_avec_postcopie.pdf}
 \caption{La migration avec post-copie \cite{puliafito2019}}
 \label{fig:migration_avec_postcopie2}
 \end{figure}
 \textbf{La migration hybride}: Les premières étapes coïncident avec celles de la migration avec pré-copie, une seule phase de pré-copie est effectuée avant la phase de post-copie,de cette manière l'hôte cible dispose déjà de toute la mémoire, seules les pages sales devront être transférées en post-copie. Une fois la mémoire copiée, le conteneur source est arrêté, et le conteneur destination est lancé sur l'hôte cible et la phase de post-copie commence \cite{wikimigration} (voir Figure \ref{fig:migration_hybride}).
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.7]{migration_hybride.png}
+\includegraphics[scale=1]{migration-hybride.pdf}
 \caption{La migration hybride \cite{puliafito2019}}
 \label{fig:migration_hybride}
 \end{figure}
