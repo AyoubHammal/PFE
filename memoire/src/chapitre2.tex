@@ -1,12 +1,15 @@
 \chapter{Solution d'allocation de ressources dans un environnement \emph{Fog Computing}: Stable Matching based Resources Allocation (SMRA)}
 
+
 \section{Introduction}
-Nous avons vu à travers le chapitre précédent que le Fog Computing est caractérisé par l'homogéniété de ses composants materiels et des requêtes y circulant. D'où le besoin d'une technique de gestion efficace permettant d'établir une correspondance entre les demandes des Objets IoT et les ressources disponibles.\par
+Nous avons vu à travers le chapitre précédent que le Fog Computing est caractérisé par l'hétérogénéité de ses composants à la fois matériel et applicatif. D'où le besoin d'une technique efficace permettant la gestion de l'allocation de ressources du Fog aux différentes applications l'utilisant.\par
 Nous définirons dans ce chapitre les concepts sur lesquels repose note solution, et puis nous présenterons les algorithmes qui la composent et son scénario d'exécution nominal.
+
 
 \section{Motivation}
 Une bonne gestion de ressources permet d'accroître les performances globales du système, en réduisant le temps d'exécution des différentes applications, la latence, ainsi que les coûts énergétiques. Elle permet aussi d'exploiter au mieux les ressources matérielles disponibles, ce qui augmente le rendement et la rentabilité économique des différents équipements.\\ 
 Par conséquent, le développement d'un bon modèle de gestion de ressource se révèle d'une importance capitale pour une exploitation efficace et rentable d'une infrastructure Fog.
+
 
 \section{Problématique et article de référence}
 Suite à l'étude des travaux qui traitent de l'amélioration et de l'optimisation de la gestion des ressources, on constate que le problème de planification des ressources est un problème central qui nécessite d'être investigué afin d'effectuer une gestion de ressources optimale. \\
@@ -20,12 +23,19 @@ Dans ce travail, les auteurs s'intéressent au processus d'approvisionnement dan
 \end{enumerate}
 La partie qui nous intéresse est la troisième étape où ils proposent un mécanisme d'affectation de VMs aux nœuds adéquat, modélisé comme étant un problème de correspondance (matching problem).
 
-\section{Conception de la solution}
-\subsection{Contribution}
-Dans notre solution, nous proposons une nouvelle technique l'allocation des nœuds d'un environnement Fog afin de mieux servir les requêtes générés par les objets \emph{IoT}, cette technique se base sur une implémentation de l'algorithme de gale-shapley \cite{gale-shapley} (Stable Matching based Resources Allocation ou SMRA) et elle est détaillée dans ce qui suit.\par
+
+\section{Contribution}
+
+
+Dans ce travail, nous proposons une nouvelle technique d'allocation des nœuds d'un environnement Fog afin de mieux servir les requêtes générées par les objets \emph{IoT}. Cette technique, regroupé sous le sigle \emph{SMRA} pur \emph{Stable Matching based Resources Allocation}, se base sur une implémentation de l'algorithme de \emph{Gale-Shapley} \cite{gale-shapley}, et sera détaillé dans ce qui suit.\par
+
 
 \subsubsection{Hypothèses}
-Afin de pouvoir se focaliser sur le problème de correspondance entre les demandes de services et les nœuds Fog, et à cause des limites de l'envrionnement de simulation, nous devons d'abord formuler certaines hypothèses sur la topologie physique de l'infrastructure Fog.\\
+
+
+Afin de pouvoir nous focaliser sur le problème de correspondance entre les demandes de services et les nœuds Fog, et à cause des limites de l'environnement de simulation, nous devons d'abord formuler certaines hypothèses sur la topologie physique de l'infrastructure Fog.\\
+
+
 \begin{itemize}
     \item La topologie est statique durant l'exploitation: une fois la solution implémentée, la topologie ne subit pas de modification.
     \item La topologie suit une organisation matricielle: les nœuds Fog sont organisés en des niveaux bien distincts avec le même nombre de nœuds dans chaque niveau.
@@ -39,32 +49,47 @@ Afin de pouvoir se focaliser sur le problème de correspondance entre les demand
           \end{itemize}
 \end{itemize}
 
-SMRA se décompose en 4 aspects interdépendants que nous détaillons par la suite: 
+
+
+\subsection{Architecture SMRA}
+
+
+SMRA se décompose en 4 aspects interdépendants que nous détaillons par la suite:
+
+
 \begin{description}
-  \item[La clusterisation:] en regroupant les nœuds Fog dans des groupe (Cluster) de par leur proximité géographique.
-  \item[le profiling:] en attribuant des différents profiles ou rôles aux différents nœuds d'un cluster.
-  \item[La traîtement par lôt (Batch Computin):] les demandes sont regroupées et traitées par lôt selon leurs ordres d'arrivée.
-  \item[Le matching:] le processus de correspondance et de redirection des demandes vers les nœuds Fog adéquats.
+  \item[La clusterisation (Clusterization):] en regroupant les nœuds Fog dans des groupes (Cluster) de par leur proximité géographique.
+  \item[le profilage (Profiling):] en attribuant différents profiles ou rôles aux différents nœuds d'un cluster.
+  \item[Le traitement par lot (Batch processing):] les demandes sont regroupées et traitées par lot selon leurs ordres d'arrivée.
+  \item[La correspondance (matching):] le processus d'association et de redirection des demandes vers les nœuds Fog adéquats.
 \end{description}
 
-\subsection{Topologie}
-Comme vu dans le chapitre introductif, une infrastructure \emph{Fog} classique est décomposée de 3 couches superposées qui sont (voir Figure \ref{fig:Topologie_generale_de_linfrastructure}) :
+
+
+\subsection{Clusterisation (Clusterization)}
+
+
+Comme vu précédemment, une infrastructure \emph{Fog} classique est décomposée de 3 couches superposées qui sont (voir Figure \ref{fig:Topologie_generale_de_linfrastructure}) :
+
+
 \begin{itemize}
     \item \emph{La couche IoT}, qui représente l'ensemble des objets \emph{IoT} qui effectue des demandes de service.
     \item \emph{La couche Fog}, qui représente l'ensemble des nœuds \emph{Fog} se trouvant à l'intermédiaire entre les objets \emph{IoT} et le \emph{cloud}.
     \item \emph{La couche Cloud} qui représente l'infrastructure Cloud traditionnelle.
 \end{itemize}
+
+
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.8]{Topologie_générale_de_l'infrastructure.pdf}
+    \includegraphics[scale=0.7]{Topologie_générale_de_l'infrastructure.pdf}
     \caption{Schémas représentant une architecture Fog traditionnelle}
     \label{fig:Topologie_generale_de_linfrastructure}
 \end{figure}
-\par SMRA commence par découper verticalement la couche \emph{Fog} de l'infrastructure en un ensemble de clusters\footnote{Nous discutons des critères de scalabilité verticale et horizontale du cluster dans le chapitre suivant, où nous montrons les résultats obtenus par rapport à différentes dimensions du cluster.} (voir Figure \ref{fig:Infrastructure_fog_repartie_en_cluster}) , c.-à-d. chaque cluster regroupe un ensemble de nœuds \emph{Fog} inter-connecté. Ensuite, chaque cluster est découpé en 2 couches superposées, qui sont :
-\begin{itemize}
-    \item \emph{La couche des nœuds passerelles :}  cette couche est composée du niveau connecté directement à la couche \emph{IoT}.
-    \item \emph{La couche des nœuds Fog restants :} qui est composée des niveaux intermédiaires restants entre la couche des nœuds passerelles et le \emph{cloud}.
-\end{itemize}
+
+
+\par SMRA commence par découper verticalement la couche \emph{Fog} de l'infrastructure en un ensemble de clusters\footnote{Nous discutons des critères de scalabilité verticale et horizontale du cluster dans le chapitre suivant, où nous montrons les résultats obtenus par rapport à différentes dimensions du cluster.} (voir Figure \ref{fig:Infrastructure_fog_repartie_en_cluster}) , c.-à-d. chaque cluster regroupe un ensemble de nœuds \emph{Fog} inter-connecté.
+
+
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.8]{ShémaCluster.pdf}
@@ -72,18 +97,47 @@ Comme vu dans le chapitre introductif, une infrastructure \emph{Fog} classique e
     \label{fig:Infrastructure_fog_repartie_en_cluster}
 \end{figure}
 
+
+\subsection{Profilage (Profiling)}
+Une fois l'infrastructure est répartie en cluster, SMRA attribue des profiles aux noeuds constituant le cluster (voir Figure \ref{fig:profilage}) en définissons deux profile que sont :
+\begin{itemize}
+  \item Le profil \emph{Noeud Passerelles} : qui est adoptée par les noeuds du niveau connecté directement à la couche \emph{IoT}.
+  \item Le profil \emph{Noeud Fog} : qui est attribué aux noeuds des niveaux intermédiaires restants entre la couche des nœuds passerelles et le \emph{cloud}. 
+\end{itemize}
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.8]{ShémaProfile.pdf}
+  \caption{Schéma représentant les profils des noeuds au sein d'un cluster}
+  \label{fig:profilage}
+\end{figure}
+
+
 \subsection{Scénario}
 Ce scénario s'applique pour un cluster, puisque les clusters sont indépendants, il suffit par la suite de généraliser ce fonctionnement à l'ensemble des clusters défini par l'infrastructure.\par
 Les nœuds passerelles du cluster, reçoivent des demandes de services des différents appareils IoT. Chaque nœud préserve ses demandes dans une file en attendant leur correspondance puis leur envoi à leur destination.\par
 Nous définissons un jeton circulant d'un nœud passerelle à un autre suivant la politique du tourniquet (round robin). Si un nœud passerelle possède le jeton à la réception alors il effectue une correspondance des demandes qui se trouve dans sa file d'attente avec les nœuds \emph{Fog} du cluster, puis il envoie chaque demande au nœud \emph{Fog} correspondant, et  renvoie le jeton au prochain nœud passerelle et ainsi de suite (voir Figure \ref{fig:Organigrame_scénario_globale}).
 
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[]{Organigramme-scénario-globale.pdf}
+  \caption{Organigramme du scénario d'exécution du SMRA}
+  \label{fig:Organigrame_scénario_globale}
+\end{figure}
+
+
 \subsection{Description algorithmique du scénario}
+
+
 SMRA est conçu suivant le paradigme événementiel, c.-à-d. une approche algorithmique basée sur la notion d'événement, où on cherche à associer à chaque événement une procédure à exécuter appelée “Routine”.   
 SMRA comporte 2 routines principales qui sont :
 \begin{itemize}
     \item \emph{La Routine associée aux nœuds passerelles}
-    \item \emph{La Routine associée au nœud Fog restants}
+    \item \emph{La Routine associée au nœud Fog}
 \end{itemize}
+
 
 \subsubsection{Routine associée aux nœuds passerelles}
 Cette routine est exécutée au niveau des nœuds passerelles à chaque fois qu'une requête est reçue.
@@ -144,7 +198,7 @@ Pour ce faire, nous définissons une distance entre la demande et le nœud, qui 
     \hline
     $C_{dem}$ & MIPS exigés par le service à exécuter \\
     \hline
-    $C_fd$ & MIPS totale du nœud \\
+    $C_fd$ & MIPS total du nœud \\
     \hline
     $C_r$ & MIPS disponible \\
     \hline
@@ -214,6 +268,7 @@ $Distance(D_i,N_j) = Min (Distance(D_i,N_m)), \forall m \in \{1,..,n\}$. \\
   \caption{Procédure de correspondance}
 \end{algorithm}
 
+
 \subsubsection{Routine associée au nœud Fog :}
 Cette routine est exécutée au niveau des nœuds Fog à chaque fois qu'une requête est reçue.\\
 \textbf{Pseudo-code de la routine :}\\
@@ -261,13 +316,9 @@ Cette routine est exécutée au niveau des nœuds Fog à chaque fois qu'une requ
   }
   \caption{Routine associée aux nœuds passerelles}
 \end{algorithm}
-\begin{figure}[H]
-    \centering
-    \includegraphics[]{Organigramme-scénario-globale.pdf}
-    \caption{Organigramme du scénarion d'exécution du SMRA}
-    \label{fig:Organigrame_scénario_globale}
-\end{figure}
+
 
 \section{Conclusion}
 Dans ce chapitre, nous avons présenté notre solution en introduisant les entités interagissantes de notre environnement tout en formulant certaines hypothèses sur ce dernier. Nous décrivons aussi le scénario nominal d'exécution et nous détaillons les algorithmes exploités à chaque niveau.\par
 Dans le prochain chapitre, nous passerons à l'étape d'implémentation de la solution sur une plateforme de simulation d'environnement Fog, et nous finirons par une discussion des résultats obtenus.
+

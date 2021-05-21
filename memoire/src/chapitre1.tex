@@ -45,7 +45,7 @@ D'autres problèmes peuvent être cités également, comme le problème de conge
 C'est pour répondre donc à ces problèmes que le Fog Computing a été proposée comme une extension du paradigme Cloud en 2012, et qui a vu par la suite la création d'un consortium dédié qu'est l'\textbf{OpenFog Consortium} afin de faciliter l'interopérabilité des différentes solutions technologiques.
 
 \subsection{Définition et concept}
-Selon la définition proposée par CISCO \cite{bonomi2012}, le terme Fog computing désigne : \og{}une plate-forme hautement virtualisée qui fournit des services de calcul, de stockage et de mise en réseau entre les appareils finaux et les centres de données de Cloud Computing traditionnels, généralement, mais pas exclusivement, située à la périphérie du réseau\fg{}.\par
+Selon CISCO \cite{bonomi2012}, le terme \emph{Fog computing} désigne : \og{}une plate-forme hautement virtualisée qui fournit des services de calcul, de stockage et de mise en réseau entre les appareils finaux et les centres de données de Cloud Computing traditionnels, située généralement, mais pas exclusivement, à la périphérie du réseau\fg{}.\par
 L'\emph{OpenFog Consortium} \cite{OpenFog2017} le définit aussi comme étant : \og{} Une architecture horizontale au niveau du système qui distribue des fonctions de calcul, de stockage, de contrôle et de mise en réseau plus proches des utilisateurs le long du continuum Cloud-objet\fg{}.\par
 Le terme réfère aussi à une infrastructure matérielle et applicative distribuée qui vise à stocker et à traiter les données issues des différents appareils connectés afin de se substituer au Cloud pour certains traitements.\par
 La principale idée du Fog Computing est l'instrumentalisation des différents équipements qui constitue les noeuds du réseau (routeurs, commutateurs, passerelles, etc.) comme étant un centre de traitement et de stockage de donnés distribué qui est à la fois intermédiaire au Cloud et en même temps proche des extrémités du réseau.
@@ -85,7 +85,7 @@ Bien que le Fog Computing ait apporté des avantages considérables, ce paradigm
 
 \subsection{Définitions et concepts}
 La \emph{\gls{virtualisation}} introduit une couche d'abstraction logicielle entre le matériel et le système d'exploitation ou les applications qui s'exécutent dessus. En séparant les ressources logiques des ressources physiques sous-adjacentes, la virtualisation permet l'affectation flexible de charges de travail entre les machines physiques.
-La \emph{\gls{migration}}d'instance virtuelle (\emph{\gls{machine virtuelle}} ou \emph{\gls{conteneur}}) est considérée comme le processus de copie et déplacement de l'état de cette dernière d'un hôte physique à un autre \cite{boutaba2013}.\par
+La \emph{\gls{migration}} d'instance virtuelle (\emph{\gls{machine virtuelle}} ou \emph{\gls{conteneur}}) est considérée comme le processus de copie et déplacement de l'état de cette dernière d'un hôte physique à un autre \cite{boutaba2013}.\par
 \subsection{Migration VMs-Conteneurs}
 La migration d'instance virtuelle joue un rôle essentiel dans les environnements Fog étant donné qu'elle permet de garantir la continuité des services, quels que soient les besoins en mobilité exprimés par les objets connectés à cet environnement.
 Il existe deux grandes techniques de virtualisation logicielle exploitées dans les architectures orientées services: les machines virtuelles et les conteneurs. Leurs principales différences résident dans leur évolutivité et leur portabilité \cite{redhat} (voir Figure \ref{fig:vmvsconteneur}).\par
@@ -95,7 +95,7 @@ Donc la différence principale est que les conteneurs permettent de virtualiser 
 Les conteneurs partagent en pratique le même noyau du système d'exploitation hôte contrairement aux technologies de machines virtuelles où le matériel est virtualisé pour exécuter plusieurs instances de système d'exploitation. Cela permet de lancer un nombre beaucoup plus important de conteneurs que de machines virtuelles sur le même matériel, et ainsi fournir une haute disponibilité capable de satisfaire la demande imposée par les réseaux de nouvelle génération telle que la 5G. Des exemples de systèmes à base de conteneurs sont Docker, OpenVZ, LXC et LXD. 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.9]{vm-container.pdf}
+\includegraphics[scale=0.8]{vm-container.pdf}
 \caption{Architecture de machine virtuelle, et de conteneur \cite{alibabacloud}}
 \label{fig:vmvsconteneur}
 \end{figure}
