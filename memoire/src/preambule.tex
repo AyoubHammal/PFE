@@ -25,10 +25,7 @@
 \usepackage{etoolbox}
 \usepackage{sectsty}
 \usepackage[pagestyles]{titlesec}
-\titleformat{\chapter}[display]
-{\normalfont\huge\sc\centering}{\vspace{5cm}\centering\chaptertitlename \thechapter}{30pt}{\Huge}
-\titlespacing*{\chapter}
-{0pt}{50pt}{10pt}
+
 %======================== COMMANDES ========================
 \patchcmd{\chapter}{\thispagestyle{plain}}{\thispagestyle{fancy}}{}{}
 \setlength{\headheight}{26pt}
@@ -42,4 +39,8 @@
 \fancyfoot[R]{} 
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 \graphicspath{{./ressources/}}
+\titleformat{\chapter}[display]
+{\normalfont\huge\sc\centering}{\vspace{5cm}\centering\chaptertitlename \thechapter}{30pt}{\Huge}
+\titlespacing*{\chapter}
+{0pt}{50pt}{10pt}
 \makeglossaries
