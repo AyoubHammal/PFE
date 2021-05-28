@@ -52,7 +52,7 @@ public class TestSM {
 		ResultToCSV.init();
 		GWFogDevice.tokenDelay = Config.tokenDelay;
 		try {
-			Log.disable();
+			Log.enable();
 			int num_user = 1;
 			Calendar calendar = Calendar.getInstance();
 			boolean trace_flag = true;
