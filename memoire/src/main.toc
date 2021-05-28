@@ -1,0 +1,74 @@
+\babel@toc {french}{}
+\contentsline {chapter}{Table des figures}{3}{chapter*.2}%
+\contentsline {chapter}{Glossaire}{4}{section*.3}%
+\contentsline {chapter}{\numberline {1}Introduction générale}{5}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Introduction}{6}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Présentation}{6}{section.1.2}%
+\contentsline {chapter}{\numberline {2}Généralités}{7}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Introduction}{8}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Internet des objets (IoT)}{8}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Définition}{8}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Histoire et Évolution}{8}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Architecture}{8}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Quelques domaines d'application}{9}{subsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.2.5}Problèmes et difficultés}{9}{subsection.2.2.5}%
+\contentsline {section}{\numberline {2.3}Fog Computing}{10}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Histoire et évolution}{10}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Définition et concept}{10}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Architecture}{10}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}Avantages}{11}{subsection.2.3.4}%
+\contentsline {subsection}{\numberline {2.3.5}Défis et verrous scientifiques}{12}{subsection.2.3.5}%
+\contentsline {section}{\numberline {2.4}Migration dans les environnements Fog Computing}{12}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Définitions et concepts}{12}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Migration VMs-Conteneurs}{12}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}Avantages et inconvénients}{13}{subsection.2.4.3}%
+\contentsline {subsubsection}{Avantages de la virtualisation et de la migration}{13}{subsection.2.4.3}%
+\contentsline {subsubsection}{Inconvénients}{14}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.4.4}Techniques de migration}{14}{subsection.2.4.4}%
+\contentsline {subsection}{\numberline {2.4.5}Taxonomie, Travaux réalisés}{17}{subsection.2.4.5}%
+\contentsline {section}{\numberline {2.5}Gestion des ressources dans les environnements Fog Computing}{18}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}Définition}{18}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}Dimensions du problème}{18}{subsection.2.5.2}%
+\contentsline {subsubsection}{Placement d'application}{19}{figure.2.9}%
+\contentsline {subsubsection}{Planification des ressources :}{19}{figure.2.9}%
+\contentsline {subsubsection}{Déchargement des tâches}{20}{figure.2.9}%
+\contentsline {subsubsection}{Équilibrage de charge}{20}{figure.2.9}%
+\contentsline {subsubsection}{Allocation des ressources}{20}{figure.2.9}%
+\contentsline {subsubsection}{Approvisionnement en ressources}{21}{figure.2.9}%
+\contentsline {subsection}{\numberline {2.5.3}Architectures proposées}{21}{subsection.2.5.3}%
+\contentsline {section}{\numberline {2.6}Conclusion}{21}{section.2.6}%
+\contentsline {chapter}{\numberline {3}Solution d'allocation de ressources dans un environnement \emph {Fog Computing}: Stable Matching based Resources Allocation (SMRA)}{23}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Introduction}{24}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Motivation}{24}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Problématique et article de référence}{24}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Contribution}{24}{section.3.4}%
+\contentsline {subsubsection}{Hypothèses}{24}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Architecture SMRA}{25}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Clusterisation (Clusterization)}{25}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Profilage (Profiling)}{27}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}Scénario}{27}{subsection.3.4.4}%
+\contentsline {subsection}{\numberline {3.4.5}Description algorithmique du scénario}{28}{subsection.3.4.5}%
+\contentsline {subsubsection}{Routine associée aux nœuds passerelles}{28}{subsection.3.4.5}%
+\contentsline {paragraph}{Procédure de correspondance :}{29}{algocf.1}%
+\contentsline {subsubsection}{Routine associée au nœud Fog :}{30}{algocf.2}%
+\contentsline {section}{\numberline {3.5}Conclusion}{31}{section.3.5}%
+\contentsline {chapter}{\numberline {4}Implémentation et résultats}{32}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Introduction}{33}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Outil de développement}{33}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Langage JAVA}{33}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}L'outil IFogSim}{33}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Architecture de l'IFogSim}{33}{subsection.4.2.3}%
+\contentsline {subsubsection}{Composants physiques}{33}{subsection.4.2.3}%
+\contentsline {subsubsection}{Composants logiques}{34}{subsection.4.2.3}%
+\contentsline {subsubsection}{Composants de gestion}{34}{subsection.4.2.3}%
+\contentsline {subsubsection}{Description des classes principales}{35}{figure.4.1}%
+\contentsline {section}{\numberline {4.3}Développement de la conception}{36}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Résultats et évaluation des performances :}{37}{section.4.4}%
+\contentsline {subsubsection}{Scalabilité verticale}{37}{section.4.4}%
+\contentsline {subsubsection}{Scalabilité horizontale}{39}{figure.4.4}%
+\contentsline {subsubsection}{Exploitation des résultats des expériences sur la scalabilité pour déduire le schémas de clusterisation}{41}{figure.4.6}%
+\contentsline {subsubsection}{Étude selon le débit des demandes}{42}{figure.4.6}%
+\contentsline {section}{\numberline {4.5}Conclusion}{43}{section.4.5}%
+\contentsline {chapter}{\numberline {5}Conclusion générale}{44}{chapter.5}%
+\contentsline {chapter}{\numberline {6}Annexe}{46}{chapter.6}%
+\contentsline {chapter}{Bibliographie}{47}{chapter*.5}%

@@ -1,0 +1,61 @@
+This is BibTeX, Version 0.99d (TeX Live 2020/Debian)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: IEEEtran.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: references.bib
+-- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
+-- http://www.michaelshell.org/tex/ieeetran/bibtex/
+-- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+Warning--empty journal in OpenFog2017
+Warning--missing publisher in boutaba2013
+Too many commas in name 1 of "Jing V. Wang, Kai-Yin Fok, Chi-Tsun Cheng, Chi K. Tse" for entry jing2016
+while executing---line 2403 of file IEEEtran.bst
+
+Done.
+You've used 22 entries,
+            4087 wiz_defined-function locations,
+            951 strings with 11084 characters,
+and the built_in function-call counts, 13645 in all, are:
+= -- 1134
+> -- 249
+< -- 96
++ -- 146
+- -- 48
+* -- 645
+:= -- 2197
+add.period$ -- 43
+call.type$ -- 22
+change.case$ -- 25
+chr.to.int$ -- 207
+cite$ -- 24
+duplicate$ -- 1038
+empty$ -- 1115
+format.name$ -- 54
+if$ -- 3136
+int.to.chr$ -- 0
+int.to.str$ -- 22
+missing$ -- 174
+newline$ -- 99
+num.names$ -- 19
+pop$ -- 394
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 2
+skip$ -- 1048
+stack$ -- 0
+substring$ -- 533
+swap$ -- 802
+text.length$ -- 27
+text.prefix$ -- 0
+top$ -- 5
+type$ -- 22
+warning$ -- 2
+while$ -- 56
+width$ -- 24
+write$ -- 236
+(There was 1 error message)
