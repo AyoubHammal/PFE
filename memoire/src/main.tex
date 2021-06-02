@@ -1,47 +1,30 @@
-\documentclass[a4paper, 11pt]{report} % ajouter l'attribut "final" au document "book" pour la version imprimable
+\documentclass[a4paper, 11pt]{report}
 
 %============================ PACKAGES ============================
-\input{preambule.tex}
-%======================== INFOS DE LA PAGE DE GARDES ========================
-% Infos de la page de garde
-\input{PageDeGarde}
-\author{Ayoub \scshape{HAMMAL}}
-\helper{ Mehdi \scshape{LERARI}}
-\title{Conception et implémentation d'une
-technique d'allocation de ressources dans un environnement \emph{Fog Computing}}
-\specialite{Réseaux et Systèmes Distribués}
-\domaine{Mathématiques et Informatique}
-\filiere{Informatique}
-\dept{d'Informatique}
-\faculte{d'\'{E}lectronique et d'Informatique} 
-\directeur{Dr. Khaled \scshape{ZERAOULIA}}
-\date{XX XXX 2021}
-\jurya{XXXX \scshape{YYYY}}{ }{Président du jury}
-\juryb{XXXX \scshape{YYYY}}{ }{Membre du jury}
-\ecole{Université des Sciences et de la Technologie \scshape{Houari Boumédiène}}
-%======================== Méta-données du PDF ======================
-\hypersetup{
-    	pdfauthor={Ayoub HAMMAL et Mehdi LERARI},
-    	pdfsubject={Mémoire de Licence},
-    	pdftitle={Conception et implémentation d'une
-	technique d'allocation de ressources dans un environnement Fog Computing},
-    	pdfkeywords={XXXX,XXXX,XXXX,XXXX,XXXX},
-	}
+\input{./preambule.tex}
 %======================== Glossaire ================================
-\input{glossaire.tex}
+\input{./glossaire.tex}
 %======================== Début du document ========================
 \begin{document}
 
 %Page de garde
-\pagedegarde
+\input{./titre.tex}
+
+\pagenumbering{roman}
+
 %table des matières
 \tableofcontents
+
 %liste des figures
 \listoffigures
-\thispagestyle{fancy}
+
 %liste des abréviations et glossaire
+
 \printglossary
-\thispagestyle{fancy}
+
+\newpage
+\setcounter{page}{1}
+\pagenumbering{arabic}
 
 \input{./introduction.tex}
 \input{./chapitre1.tex}
@@ -51,5 +34,5 @@ technique d'allocation de ressources dans un environnement \emph{Fog Computing}}
 \input{./annexe.tex}
 \bibliographystyle{IEEEtran}
 \bibliography{references}
-\input{PageDeCouverture}
+
 \end{document}
