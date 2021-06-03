@@ -1,0 +1,17 @@
+\newpage
+\begin{tikzpicture}[remember picture,overlay]
+	\draw[very thick]
+	([yshift=-1cm,xshift=2cm]current page.north west)--
+	([yshift=-1cm,xshift=-1cm]current page.north east)--
+	([yshift=1cm,xshift=-1cm]current page.south east)--
+	([yshift=1cm,xshift=2cm]current page.south west)--cycle;
+\end{tikzpicture}
+
+\thispagestyle{empty}
+
+\begin{center}
+	\Huge \color[RGB]{18,96,149} \bfseries{Conception et implémentation d'une technique d'allocation de ressources dans un environnement \emph{Fog Computing}}\\
+\end{center}
+\vspace{1.5 cm}
+\input{ressources/résumé/ResumeFR}
+\input{ressources/résumé/ResumeEN}

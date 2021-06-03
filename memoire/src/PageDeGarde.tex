@@ -1,0 +1,135 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%           Page de Garde		         %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+\def\@ecole{école}
+\newcommand{\ecole}[1]{
+	\def\@ecole{#1}
+}
+
+\def\@specialite{Spécialité}
+\newcommand{\specialite}[1]{
+	\def\@specialite{#1}
+}
+
+\def\@faculte{Faculté}
+\newcommand{\faculte}[1]{
+	\def\@faculte{#1}
+}
+
+\def\@filiere{Filière}
+\newcommand{\filiere}[1] {
+	\def\@filiere{#1}
+}
+
+\def\@dept{Département}
+\newcommand{\dept}[1]{
+	\def\@dept{#1}
+}
+
+\def\@domaine{Domaine}
+\newcommand{\domaine}[1]{
+	\def\@domaine{#1}
+}
+
+\def\@directeur{directeur}
+\newcommand{\directeur}[1]{
+	\def\@directeur{#1}
+}
+
+\def\@helper{helper}
+\newcommand{\helper}[1]{
+	\def\@helper{#1}
+}
+
+\def\@jurya{}{}{}
+\newcommand{\jurya}[3]{
+	\def\@jurya{#1,	& #2	& #3\\}
+}
+\def\@juryb{}{}{}
+\newcommand{\juryb}[3]{
+	\def\@juryb{#1,	& #2	& #3\\}
+}
+\makeatother
+
+\makeatletter
+\newcommand{\pagedegarde}{
+	\thispagestyle{empty}
+	\begin{titlepage}
+		\begin{tikzpicture}[remember picture,overlay]
+			\draw[very thick]
+			([yshift=-1cm,xshift=2cm]current page.north west)--
+			([yshift=-1cm,xshift=-1cm]current page.north east)--
+			([yshift=1cm,xshift=-1cm]current page.south east)--
+			([yshift=1cm,xshift=2cm]current page.south west)--cycle;
+		\end{tikzpicture}
+		\hspace{4}
+		\includegraphics[width=0.15\textwidth]{USTHBLogo.png}
+		\hspace{12}
+		\large {\bfseries{ République Algérienne Démocratique et Populaire }}
+		\hspace{8}
+		\includegraphics[width=0.15\textwidth]{USTHBLogo.png}
+		
+		
+		\centering{
+			{\bfseries Ministère de l'Enseignement Supérieur et de la Recherche Scientifique}\\}
+		\vspace{0.5cm}
+		{\Large
+			{\bfseries \@ecole}\\
+			\vspace{0.25cm}
+			
+			\vspace{0,5cm}
+			{\bfseries Faculté \@faculte}\\
+			{\bfseries Département \@dept}\\
+		}\\
+		
+		\vspace{0.5cm}
+		
+		\large M\'{E}MOIRE DE LICENCE\\
+		
+		\vspace{0.75cm}
+
+		{\large \textit{Domaine} : \bfseries {\@domaine}}\\
+		{\large \textit{Filière} : \bfseries {\@filiere}}\\
+		{\large \textit{Spécialité} : \bfseries{\@specialite}}\\
+		\vspace{0.5cm}
+		\HRule \\[0.4cm]
+		{\huge{\bfseries{Thème}}}\\
+		\vspace{0.25cm}
+		{\Huge \color[RGB]{18,96,149} \bfseries{\@title}\\[0.4cm] }
+		\HRule \\[0.3cm]
+		\vfill
+		\vspace{0.3cm}
+		\textit{Réalisé par}\\
+		\vspace{0.125cm}
+		{\Large {\bfseries \@author}} \\
+		\vspace{0.125cm}
+		\textit{et}\\
+		\vspace{0.125cm}
+		{\Large {\bfseries \@helper}} \\
+		\vspace{0.5cm}
+		\textit{Soutenu le} : {\bfseries \@date} \\
+		\vfill
+		\vspace{0.25cm}
+		
+		\large \textit{Devant le jury composé de\\}
+		\vspace{0.25cm}
+		\begin{tabular}{>{\bfseries}llr}
+			
+			\@jurya
+			\@juryb
+			%\@juryc
+		\end{tabular}
+		\vfill
+		\vspace{0.5cm}
+		Dirigé par : {\bfseries \@directeur}\\
+		\vfill
+		\vspace{0.25cm}
+		\textbf{Binôme \No XXXX}
+		
+	\end{titlepage}
+	\restoregeometry  
+}
+\makeatother

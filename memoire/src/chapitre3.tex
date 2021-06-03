@@ -1,4 +1,5 @@
 \chapter{Implémentation et résultats}
+\thispagestyle{fancy}
 \section{Introduction}
 Dans le chapitre précédent, nous avons présenté toute la théorie mise en place pour la conception de notre solution de planification de ressources relative à la gestion des ressources dans les environnements Fog. Pour cela, nous avons besoin d'outils nous permettant la quantification des performances et la production de résultat, afin de pouvoir effectuer l'évaluation.\\
 Ce chapitre commence par donner un aperçu global sur les différents outils utilisés pour mener à bien la simulation de cette solution, ainsi que les différents éléments ajoutés au simulateur. Enfin nous présentons les résultats en les comparant avec les résultats des différentes politiques gestion classique que sont les politiques : “First fit”, "Best Fit" et "Worst fit".\\
@@ -94,24 +95,24 @@ De plus, la méthode  processTupleArrival, qui est la méthode exécutée par le
 La même procédure à été effectueé pour implémenter les politiques concurrentes.
 
 \section{Résultats et évaluation des performances :}
-Afin de pouvoir juger des performances ainsi que l'ampleur des gains apportés par notre modèle de planification de ressources, nous évaluons les performances de cette solution en mesurant le délai d'exécution des applications, et le délai d'exécution des tuples. Puis nous comparons les résultats avec des modèles classiques implémentant les stratégies “FirstFit”,"BestFit","WorstFit".\par
+Afin de pouvoir juger des performances ainsi que l'ampleur des gains apportés par notre modèle de planification de ressources, nous évaluerons les performances de cette solution en mesurant le délai d'exécution des applications, et le délai d'exécution des tuples. Puis nous comparerons les résultats avec des modèles classiques implémentant les stratégies “FirstFit”,"BestFit","WorstFit".\par
 Les nœuds \emph{Fog} ainsi que les demandes générées sont créés avec une certaine hétérogénéité permettant de mieux étudier la capacité de notre algorithme à faire correspondre une variété de demandes à des nœuds avec de différentes capacités matérielles.\par
 Les résultats sont représentés par les graphes suivants (les résultats sont normalisés par rapport à la valeur maximale, donc sur une échelle de 0 à 1) :
 
 \subsubsection{Scalabilité verticale}
 Nous mesurons dans cette partie les performances du modèle par rapport à la variation du nombre de niveaux de la matrice \emph{Fog} précédemment définie.\par
-Nous fixons dans cette expérience le nombre de nœudspar niveau à 5 nœuds.
+Nous fixons dans cette expérience le nombre de nœuds par niveau à 5 nœuds.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[]{resultats/tupleDelayV.pdf}
+  \includegraphics[scale=0.9]{resultats/tupleDelayV.pdf}
   \caption{Délai moyen d'exécution d'un tuple en fonction du nombre de niveaux}
   \label{fig:delai_tuple_vertical}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[]{resultats/loopDelayV.pdf}
+  \includegraphics[scale=0.9]{resultats/loopDelayV.pdf}
   \caption{Délai moyen d'exécution d'une application en fonction du nombre de niveaux}
   \label{fig:delai_application_vertical}
 \end{figure}
@@ -126,14 +127,14 @@ Nous fixons le nombre de niveaux à 10 niveaux.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[]{resultats/tupleDelayH.pdf}
+  \includegraphics[scale=0.9]{resultats/tupleDelayH.pdf}
   \caption{Délai moyen d'exécution d'un tuple en fonction du nombre de nœuds par niveaux}
   \label{fig:delai_tuple_horizontal}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[]{resultats/loopDelayH.pdf}
+  \includegraphics[scale=0.9]{resultats/loopDelayH.pdf}
   \caption{Délai moyen d'exécution d'une application en fonction du nombre de nœuds par niveau}
   \label{fig:delai_application_horizontal}
 \end{figure}
@@ -155,14 +156,14 @@ Nous fixons dans cette expérience le nombre de niveaux à 7 niveux et le nombre
 
 \begin{figure}[H]
   \centering
-  \includegraphics[]{resultats/tupleDelayT.pdf}
+  \includegraphics[scale=0.9]{resultats/tupleDelayT.pdf}
   \caption{Délai moyen d'exécution d'un tuple en fonction du taux de transmission}
   \label{fig:delai_tuple_debit}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[]{resultats/loopDelayT.pdf}
+  \includegraphics[scale=0.9]{resultats/loopDelayT.pdf}
   \caption{Délai moyen d'exécution d'une application en fonction du taux de transmission}
   \label{fig:delai_application_debit}
 \end{figure}

@@ -1,4 +1,5 @@
 \chapter{Solution d'allocation de ressources dans un environnement \emph{Fog Computing}: Stable Matching based Resources Allocation (SMRA)}
+\thispagestyle{fancy}
 \section{Introduction}
 Nous avons vu à travers le chapitre précédent que le Fog Computing est caractérisé par l'hétérogénéité de ses composants à la fois matériel et applicatif. D'où le besoin d'une technique efficace permettant la gestion de l'allocation de ressources du Fog aux différentes applications l'utilisant.\par
 Nous définirons dans ce chapitre les concepts sur lesquels repose note solution, et puis nous présenterons les algorithmes qui la composent et son scénario d'exécution nominal.
@@ -60,9 +61,7 @@ SMRA se décompose en 4 aspects interdépendants que nous détaillons par la sui
   \item[Le traitement par lot (Batch processing):] les demandes sont regroupées et traitées par lot selon leurs ordres d'arrivée.
   \item[La correspondance (matching):] le processus d'association et de redirection des demandes vers les nœuds Fog adéquats.
 \end{description}
-
-
-
+\newpage
 \subsection{Clusterisation (Clusterization)}
 
 
@@ -78,7 +77,7 @@ Comme vu précédemment, une infrastructure \emph{Fog} classique est décomposé
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.7]{Topologie_générale_de_l'infrastructure.pdf}
+    \includegraphics[scale=0.9]{Topologie_générale_de_l'infrastructure.pdf}
     \caption{Schémas représentant une architecture Fog traditionnelle}
     \label{fig:Topologie_generale_de_linfrastructure}
 \end{figure}
@@ -89,7 +88,7 @@ Comme vu précédemment, une infrastructure \emph{Fog} classique est décomposé
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.8]{ShémaCluster.pdf}
+    \includegraphics[scale=0.9]{ShémaCluster.pdf}
     \caption{Schéma représentant une architecture \emph{Fog} répartie en clusters}
     \label{fig:Infrastructure_fog_repartie_en_cluster}
 \end{figure}
@@ -105,7 +104,7 @@ Une fois l'infrastructure est répartie en cluster, SMRA attribue des profiles a
 
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.8]{ShémaProfile.pdf}
+  \includegraphics[scale=0.9]{ShémaProfile.pdf}
   \caption{Schéma représentant les profils des noeuds au sein d'un cluster}
   \label{fig:profilage}
 \end{figure}
