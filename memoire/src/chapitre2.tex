@@ -5,40 +5,28 @@ Nous avons vu à travers le chapitre précédent que le Fog Computing est caract
 Nous définirons dans ce chapitre les concepts sur lesquels repose note solution, et puis nous présenterons les algorithmes qui la composent et son scénario d'exécution nominal.
 
 
-\section{Motivation}
-Une bonne gestion de ressources permet d'accroître les performances globales du système, en réduisant le temps d'exécution des différentes applications, la latence, ainsi que les coûts énergétiques. Elle permet aussi d'exploiter au mieux les ressources matérielles disponibles, ce qui augmente le rendement et la rentabilité économique des différents équipements.\\ 
-Par conséquent, le développement d'un bon modèle de gestion de ressource se révèle d'une importance capitale pour une exploitation efficace et rentable d'une infrastructure Fog.
 
-
-
-\section{Problématique et article de référence}
-Suite à l'étude des travaux qui traitent de l'amélioration et de l'optimisation de la gestion des ressources, on constate que le problème de planification des ressources est un problème central qui nécessite d'être investigué afin d'effectuer une gestion de ressources optimale. \\
-Le problème consiste à concevoir un modèle de planification de ressources dynamique, efficace et évolutif, qui permet d'affecter les différentes demandes de ressources, effectuées par les appareils IoT, aux différents nœuds Fog d'une manière à optimiser au mieux certaines métriques liées aux coûts.\\
-Pour la réalisation de ce travail, nous nous sommes inspirés d'un article publié traitant une problématique similaire \cite{jing2016}. \\
+\section{Problématique}
+Suite à l'étude des travaux qui traitent de l'amélioration et de l'optimisation de la gestion des ressources, on constate que le problème de planification des ressources est un problème central qui nécessite d'être investigué afin d'effectuer une gestion de ressources optimale.\par
+Le problème consiste à concevoir un modèle de planification de ressources dynamique, efficace et évolutif, qui permet d'affecter les différentes demandes de ressources, effectuées par les appareils IoT, aux différents nœuds Fog d'une manière à optimiser au mieux certaines métriques liées aux coûts.\par
+Pour la réalisation de ce travail, nous nous sommes inspirés d'un article publié traitant une problématique similaire \cite{jing2016}.\par
 Dans ce travail, les auteurs s'intéressent au processus d'approvisionnement dans un environnement \emph{Cloud}, dans lequel ce processus peut être principalement décomposé en 3 étapes majeures à savoir : 
 \begin{enumerate}
     \item L'identification des nœuds concernés (c.-à-d. les nœuds sous-utilisés ou sur-utilisés). 
     \item Sélection des VMs à migrer.
     \item Réallocation des VMs aux nœuds sous-utilisés.
 \end{enumerate}
+\par
 La partie qui nous intéresse est la troisième étape où ils proposent un mécanisme d'affectation de VMs aux nœuds adéquat, modélisé comme étant un problème de correspondance (matching problem).
 
 
 
 \section{Contribution}
-
-
-
-Dans ce travail, nous proposons une nouvelle technique d'allocation des nœuds d'un environnement Fog afin de mieux servir les requêtes générées par les objets \emph{IoT}. Cette technique, regroupé sous le sigle \emph{SMRA} pur \emph{Stable Matching based Resources Allocation}, se base sur une implémentation de l'algorithme de \emph{Gale-Shapley} \cite{gale-shapley}, et sera détaillé dans ce qui suit.\par
-
+Dans ce travail, nous proposons une nouvelle technique d'allocation des nœuds d'un environnement Fog afin de mieux servir les requêtes générées par les objets \emph{IoT}. Cette technique, regroupé sous le sigle \emph{SMRA} pour \emph{Stable Matching based Resources Allocation}, se base sur une implémentation de l'algorithme de \emph{Gale-Shapley} \cite{gale-shapley}, et sera détaillé dans ce qui suit.\par
 
 
 \subsubsection{Hypothèses}
-
-
-
-Afin de pouvoir nous focaliser sur le problème de correspondance entre les demandes de services et les nœuds Fog, et à cause des limites de l'environnement de simulation, nous devons d'abord formuler certaines hypothèses sur la topologie physique de l'infrastructure Fog.\\
-
+Afin de pouvoir nous focaliser sur le problème de correspondance entre les demandes de services et les nœuds Fog, et à cause des limites de l'environnement de simulation, nous devons d'abord formuler certaines hypothèses sur la topologie physique de l'infrastructure Fog.
 
 
 \begin{itemize}
@@ -148,11 +136,11 @@ Nous définissons un jeton circulant d'un nœud passerelle à un autre suivant l
 
 
 
-SMRA est conçu suivant le paradigme événementiel, c.-à-d. une approche algorithmique basée sur la notion d'événement, où on cherche à associer à chaque événement une procédure à exécuter appelée “Routine”.   
-SMRA comporte 2 routines principales qui sont :
+SMRA est conçu suivant le paradigme événementiel, c.-à-d. une approche algorithmique basée sur la notion d'événement, où on cherche à associer à chaque événement une procédure à exécuter appelée “Routine”.\par   
+Nous proposons deux routines principales composant le SMRA, qui sont :
 \begin{itemize}
     \item \emph{La Routine associée aux nœuds passerelles}
-    \item \emph{La Routine associée au nœud Fog}
+    \item \emph{La Routine associée aux nœuds Fog}
 \end{itemize}
 
 
@@ -339,5 +327,5 @@ Cette routine est exécutée au niveau des nœuds Fog à chaque fois qu'une requ
 
 
 \section{Conclusion}
-Dans ce chapitre, nous avons présenté notre solution en introduisant les entités interagissantes de notre environnement tout en formulant certaines hypothèses sur ce dernier. Nous avons décrit aussi le scénario nominal d'exécution et nous avons détaillé les algorithmes exploités à chaque niveau.\par
- Dans le prochain chapitre, nous passerons à l'étape d'implémentation de la solution sur une plateforme de simulation d'environnement Fog, et nous finirons par une discussion des résultats obtenus.
+Dans ce chapitre, nous avons présenté notre solution en introduisant les entités interagissantes de notre environnement tout en formulant certaines hypothèses sur ce dernier. Nous avons décrit aussi le scénario nominal d'exécution ainsi que les algorithmes exploités à chaque niveau.\par
+Dans le prochain chapitre, nous passerons à l'étape d'implémentation de la solution sur une plateforme de simulation d'environnement Fog, et nous cloturerons par une discussion des résultats obtenus.
